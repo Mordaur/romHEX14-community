@@ -93,7 +93,8 @@ A2LImportDialog::A2LImportDialog(const QVector<MapInfo>  &maps,
 
     // ── OK / Cancel ───────────────────────────────────────────────────
     auto *bb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
-    bb->button(QDialogButtonBox::Ok)->setText(tr("Import Selected"));
+    m_okButton = bb->button(QDialogButtonBox::Ok);
+    m_okButton->setText(tr("Import Selected"));
     root->addWidget(bb);
 
     // ── Connections ───────────────────────────────────────────────────
@@ -104,7 +105,7 @@ A2LImportDialog::A2LImportDialog(const QVector<MapInfo>  &maps,
         QTreeWidgetItemIterator it(m_tree);
         while (*it) {
             auto *item = *it;
-            if (item->childCount() == 0 && !item->isHidden()) {
+            if (item->childCount() == 0) {
                 item->setCheckState(ColName,
                     item->checkState(ColName) == Qt::Checked
                     ? Qt::Unchecked : Qt::Checked);
@@ -112,14 +113,7 @@ A2LImportDialog::A2LImportDialog(const QVector<MapInfo>  &maps,
             ++it;
         }
         m_tree->blockSignals(false);
-        // Refresh all group states
-        for (int i = 0; i < m_tree->topLevelItemCount(); i++)
-            refreshAncestors(m_tree->topLevelItem(i)->child(0)); // trigger from first leaf
-        for (int i = 0; i < m_tree->topLevelItemCount(); i++) {
-            auto *g = m_tree->topLevelItem(i);
-            if (g->childCount() > 0)
-                g->setCheckState(ColName, childrenState(g));
-        }
+        refreshAllGroupStates();
         updateCount();
     });
 
@@ -240,8 +234,15 @@ void A2LImportDialog::addGroupNode(QTreeWidgetItem          *parent,
         addMapLeaf(groupItem, mapIdx[cn]);
     }
 
-    // Update label with actual count
+    // Update label with actual count; drop groups that ended up empty —
+    // childless group items would otherwise be indistinguishable from map leaves
     int actual = groupItem->childCount();
+    if (actual == 0) {
+        if (parent) parent->removeChild(groupItem);
+        else        m_tree->takeTopLevelItem(m_tree->indexOfTopLevelItem(groupItem));
+        delete groupItem;
+        return;
+    }
     groupItem->setText(ColName,
         (g.description.isEmpty()
              ? g.name
@@ -312,15 +313,27 @@ void A2LImportDialog::refreshAncestors(QTreeWidgetItem *item)
     }
 }
 
+void A2LImportDialog::refreshAllGroupStates()
+{
+    m_tree->blockSignals(true);
+    QTreeWidgetItemIterator it(m_tree);
+    while (*it) {
+        auto *item = *it;
+        if (item->childCount() > 0)
+            item->setCheckState(ColName, childrenState(item));
+        ++it;
+    }
+    m_tree->blockSignals(false);
+}
+
 Qt::CheckState A2LImportDialog::childrenState(QTreeWidgetItem *group) const
 {
+    // Count ALL leaf nodes — check state is independent of filter visibility
     int checked = 0, unchecked = 0, total = 0;
 
-    // Recursively count visible leaf nodes
     std::function<void(QTreeWidgetItem*)> count = [&](QTreeWidgetItem *node) {
         for (int i = 0; i < node->childCount(); i++) {
             auto *child = node->child(i);
-            if (child->isHidden()) continue;
             if (child->childCount() > 0) {
                 count(child);
             } else {
@@ -342,22 +355,20 @@ Qt::CheckState A2LImportDialog::childrenState(QTreeWidgetItem *group) const
 
 void A2LImportDialog::selectAll(bool checked)
 {
+    // Applies to every map, including those hidden by the filter — the check
+    // state (not visibility) decides what is imported, so "Select None" must
+    // really mean none.
     m_tree->blockSignals(true);
     QTreeWidgetItemIterator it(m_tree);
     while (*it) {
         auto *item = *it;
-        if (item->childCount() == 0 && !item->isHidden())
+        if (item->childCount() == 0)
             item->setCheckState(ColName, checked ? Qt::Checked : Qt::Unchecked);
         ++it;
     }
     m_tree->blockSignals(false);
 
-    // Refresh all group states
-    for (int i = 0; i < m_tree->topLevelItemCount(); i++) {
-        auto *g = m_tree->topLevelItem(i);
-        if (g->childCount() > 0)
-            g->setCheckState(ColName, childrenState(g));
-    }
+    refreshAllGroupStates();
     updateCount();
 }
 
@@ -388,14 +399,8 @@ void A2LImportDialog::applyFilter(const QString &text)
 
     m_tree->blockSignals(false);
 
-    // Refresh group check states based on visible children
-    for (int i = 0; i < m_tree->topLevelItemCount(); i++) {
-        auto *g = m_tree->topLevelItem(i);
-        if (g->childCount() > 0 && !g->isHidden())
-            g->setCheckState(ColName, childrenState(g));
-    }
-
-    updateCount();
+    // The filter only changes what is visible — check states (and therefore
+    // the import set and count) are unaffected.
 }
 
 void A2LImportDialog::refreshGroupVisibility(QTreeWidgetItem *group)
@@ -423,30 +428,36 @@ void A2LImportDialog::updateCount()
     QTreeWidgetItemIterator it(m_tree);
     while (*it) {
         auto *item = *it;
-        if (item->childCount() == 0 && !item->isHidden()) {
+        if (item->childCount() == 0) {
             total++;
             if (item->checkState(ColName) == Qt::Checked) checked++;
         }
         ++it;
     }
     m_countLabel->setText(tr("%1 of %2 selected").arg(checked).arg(total));
+    if (m_okButton) {
+        m_okButton->setText(tr("Import Selected (%1)").arg(checked));
+        m_okButton->setEnabled(checked > 0);
+    }
 }
 
 // ── Result ────────────────────────────────────────────────────────────────────
 
 QVector<MapInfo> A2LImportDialog::selectedMaps() const
 {
+    // Every checked map is imported, whether or not the filter currently
+    // hides it — the count label and OK button always show the true total.
     QVector<MapInfo> result;
     QSet<int> added;
     QTreeWidgetItemIterator it(m_tree);
     while (*it) {
         auto *item = *it;
         if (item->childCount() == 0
-            && !item->isHidden()
             && item->checkState(ColName) == Qt::Checked)
         {
-            int idx = item->data(ColName, Qt::UserRole).toInt();
-            if (idx >= 0 && !added.contains(idx)) {
+            const QVariant v = item->data(ColName, Qt::UserRole);
+            const int idx = v.toInt();
+            if (v.isValid() && idx >= 0 && idx < m_maps.size() && !added.contains(idx)) {
                 result.append(m_maps[idx]);
                 added.insert(idx);
             }

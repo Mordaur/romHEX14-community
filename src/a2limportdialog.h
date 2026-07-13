@@ -16,6 +16,7 @@
 #include "a2lparser.h"
 
 class QCloseEvent;
+class QPushButton;
 
 class A2LImportDialog : public QDialog {
     Q_OBJECT
@@ -45,6 +46,7 @@ private:
     void onItemChanged(QTreeWidgetItem *item, int col);
     void cascadeDown(QTreeWidgetItem *item, Qt::CheckState state);
     void refreshAncestors(QTreeWidgetItem *item);
+    void refreshAllGroupStates();
     Qt::CheckState childrenState(QTreeWidgetItem *group) const;
 
     // Selection helpers
@@ -56,6 +58,7 @@ private:
     QTreeWidget *m_tree       = nullptr;
     QLabel      *m_countLabel = nullptr;
     QLineEdit   *m_searchBox  = nullptr;
+    QPushButton *m_okButton   = nullptr;
 
     QVector<MapInfo>  m_maps;
     QVector<A2LGroup> m_groups;
