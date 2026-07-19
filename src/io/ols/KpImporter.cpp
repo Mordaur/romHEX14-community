@@ -346,6 +346,128 @@ MapDimensions dimensionsFromLegacyRecord(const QByteArray &record,
     return dims;
 }
 
+// ── Schema-750 axis sub-blocks ────────────────────────────────────────────
+// After the main address triplet, kind-3 records carry one axis sub-block
+// (X) and kind-4/5 records carry two (X = columns first, then Y = rows).
+// Each sub-block is, in order:
+//   [u32 len][axis name]            (NOT NUL-terminated in all files)
+//   ... padding/flags ...
+//   [u32 len][unit]                 (optional; absent on some axes)
+//   [double factor][double offset]  (offset pair only when offset != 0)
+//   [u32 0|1][u32 axisAddr][u32 1|3][u32 dataSize][u32 0x0A]   <- anchor
+//   ... [u32 len][axis id slug][NUL]
+// Validated against the issue-#32 TunerPro XDF: 61/61 axis addresses and
+// element sizes, 79/79 scale factors once the factor/offset pair rule is
+// applied.
+struct Kp750Axis {
+    uint32_t rawAddr = 0;
+    int      dataSize = 2;
+    QString  name;
+    QString  unit;
+    double   factor = 0.0;
+    double   offset = 0.0;
+    bool     hasFactor = false;
+};
+
+// A length-prefixed string candidate: printable Latin-1 with at least one
+// ASCII-printable byte (rejects the FF FF FF FF sentinel read as "ÿÿÿÿ").
+static bool readKpString(const QByteArray &rec, qsizetype pos, qsizetype limit,
+                         bool requireNul, QString *out, qsizetype *end)
+{
+    const uint32_t len = peekU32(rec, pos);
+    if (len < 1 || len > 100) return false;
+    const qsizetype textEnd = pos + 4 + qsizetype(len);
+    if (textEnd > limit || textEnd > rec.size()) return false;
+    if (requireNul && (textEnd >= rec.size() || rec.at(int(textEnd)) != '\0'))
+        return false;
+    bool hasAscii = false;
+    for (qsizetype i = pos + 4; i < textEnd; ++i) {
+        const auto b = static_cast<uint8_t>(rec.at(int(i)));
+        if (b < 0x20 || b == 0x7F) return false;
+        if (b >= 0x21 && b <= 0x7E) hasAscii = true;
+    }
+    if (!hasAscii) return false;
+    if (out) *out = decodeKpText(rec.mid(int(pos + 4), int(len)));
+    if (end) *end = textEnd + (requireNul ? 1 : 0);
+    return true;
+}
+
+QVector<Kp750Axis> parseSchema750Axes(const QByteArray &record, qsizetype start)
+{
+    QVector<Kp750Axis> axes;
+    qsizetype segStart = start;
+    qsizetype q = start;
+    while (q + 20 <= record.size() && axes.size() < 2) {
+        const uint32_t pre = peekU32(record, q);
+        if (pre <= 1) {
+            const uint32_t addr = peekU32(record, q + 4);
+            const uint32_t f3   = peekU32(record, q + 8);
+            const uint32_t ds   = peekU32(record, q + 12);
+            const uint32_t mark = peekU32(record, q + 16);
+            if (addr >= 0x1000 && addr < 0x10000000 && mark == 0x0A
+                && (f3 == 1 || f3 == 3) && (ds == 1 || ds == 2 || ds == 4)) {
+                Kp750Axis ax;
+                ax.rawAddr  = addr;
+                ax.dataSize = int(ds);
+
+                // Strings between the previous sub-block and this anchor:
+                // first is the axis name, second (if any) the unit.
+                for (qsizetype b = segStart; b + 5 < q; ) {
+                    QString s;
+                    qsizetype e = 0;
+                    if (readKpString(record, b, q, false, &s, &e)) {
+                        if (ax.name.isEmpty())      ax.name = s;
+                        else if (ax.unit.isEmpty()) ax.unit = s;
+                        b = e;
+                    } else {
+                        ++b;
+                    }
+                }
+
+                // Scaling: the last plausible double before the anchor. When
+                // the axis has an offset, [factor][offset] are adjacent — the
+                // double 8 bytes earlier is then the factor.
+                for (qsizetype fb = q - 8; fb >= q - 40 && fb >= segStart; --fb) {
+                    const double d1 = peekF64(record, fb);
+                    if (std::isfinite(d1) && d1 != 0.0
+                        && std::abs(d1) > 1e-12 && std::abs(d1) < 1e10) {
+                        const double d0 = peekF64(record, fb - 8);
+                        if (fb - 8 >= segStart && std::isfinite(d0) && d0 != 0.0
+                            && std::abs(d0) > 1e-12 && std::abs(d0) < 1e10) {
+                            ax.factor = d0;
+                            ax.offset = d1;
+                        } else {
+                            ax.factor = d1;
+                            ax.offset = 0.0;
+                        }
+                        ax.hasFactor = true;
+                        break;
+                    }
+                }
+
+                axes.append(ax);
+
+                // Skip past this axis' trailing NUL-terminated id slug so the
+                // next segment's string search starts cleanly after it.
+                qsizetype next = q + 20;
+                for (qsizetype s2 = q + 20;
+                     s2 < qMin(record.size() - 5, q + 120); ++s2) {
+                    qsizetype e = 0;
+                    if (readKpString(record, s2, record.size(), true, nullptr, &e)) {
+                        next = e;
+                        break;
+                    }
+                }
+                segStart = next;
+                q = next;
+                continue;
+            }
+        }
+        ++q;
+    }
+    return axes;
+}
+
 // Schema-750 records store exact dimensions as a [cols][rows] uint32 pair
 // after the address triplet (usually near the end of the record, following
 // the axis sub-records). The product must equal the cell count.
@@ -486,8 +608,10 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
 
         MapInfo m;
         m.name           = name;
+        // Like WinOLS: the user-friendly name is what's displayed, so it is
+        // both the name and the description. The internal id slug at +35
+        // (e.g. "med17.9_dwell-time-map_16L-0_0") is kept as a side property.
         m.description    = name;
-        // Schema-750 records carry a length-prefixed id string at +35
         if (hdr.schema750) {
             const uint32_t idLen = peekU32(record, 35);
             if (idLen >= 1 && idLen <= 200
@@ -496,7 +620,7 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
                 if (isText(idBytes.constData(), idBytes.size())) {
                     const QString idStr = decodeKpText(idBytes);
                     if (!idStr.isEmpty())
-                        m.description = idStr;
+                        m.setSideProp(QStringLiteral("kpIdName"), idStr);
                 }
             }
         }
@@ -521,6 +645,39 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
         m.length         = qMax(1, addr.dataBytes);
         m.linkConfidence = 100;
         m.columnMajor    = true;
+
+        // Schema-750: import the axis sub-blocks (X = columns, then Y = rows)
+        if (hdr.schema750 && hdr.kind != 2) {
+            const QVector<Kp750Axis> axes =
+                parseSchema750Axes(record, addr.off + 12);
+            const uint32_t delta = m.rawAddress - m.address;
+            auto fillAxis = [&](AxisInfo &dst, const Kp750Axis &src, int count) {
+                dst.inputName = src.unit.isEmpty()
+                    ? src.name
+                    : QStringLiteral("%1 [%2]").arg(src.name, src.unit);
+                if (src.hasFactor) {
+                    dst.hasScaling   = true;
+                    dst.scaling.type = CompuMethod::Type::Linear;
+                    dst.scaling.linA = src.factor;
+                    dst.scaling.linB = src.offset;
+                }
+                dst.ptsDataSize = src.dataSize;
+                dst.ptsCount    = count;
+                if (src.rawAddr >= delta) {
+                    const uint32_t fileOff = src.rawAddr - delta;
+                    if (romSize == 0
+                        || uint64_t(fileOff) + uint64_t(count) * src.dataSize
+                               <= romSize) {
+                        dst.ptsAddress    = fileOff;
+                        dst.hasPtsAddress = true;
+                    }
+                }
+            };
+            if (axes.size() >= 1)
+                fillAxis(m.xAxis, axes[0], m.dimensions.x);
+            if (axes.size() >= 2 && m.dimensions.y > 1)
+                fillAxis(m.yAxis, axes[1], m.dimensions.y);
+        }
 
         if (addr.off >= 16) {
             const double scale = peekF64(record, addr.off - 16);
