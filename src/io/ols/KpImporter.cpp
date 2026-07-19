@@ -86,6 +86,7 @@ struct KpHeader {
     uint32_t hintY = 0;
     uint32_t hintX = 0;
     bool legacyLayout = false;
+    bool schema750 = false;
 };
 
 bool readKpHeader(const QByteArray &payload, qsizetype metaOff, KpHeader *out)
@@ -113,6 +114,32 @@ bool readKpHeader(const QByteArray &payload, qsizetype metaOff, KpHeader *out)
             out->legacyLayout = false;
         }
         return true;
+    }
+
+    // OLS 5.x .kp records (schema/format version 750, "OLS 5.0 (Windows)"
+    // creator string): the name's NUL is followed by 11 zero padding bytes
+    // (folder references), then kind at +11, cell size in bytes at +23 and a
+    // constant 0x0A marker at +27. A length-prefixed id string follows at
+    // +35. Dimensions live near the end of the record as a [cols][rows]
+    // uint32 pair, so only kind + data size come from this header.
+    // Cannot collide with the compact gate above: these records always have
+    // v[2] != 0 (kind's low byte lands in v[2]'s top byte).
+    if (v[0] == 0 && peekU32(payload, metaOff + 27) == 0x0A) {
+        const uint32_t kind = peekU32(payload, metaOff + 11);
+        const uint32_t cellBytes = peekU32(payload, metaOff + 23);
+        if (kind >= 1 && kind <= 10
+            && (cellBytes == 1 || cellBytes == 2 || cellBytes == 4)) {
+            if (out) {
+                out->kind = kind;
+                out->cellBits = 10;
+                out->dataSizeBytes = int(cellBytes);
+                out->hintY = 0;
+                out->hintX = 0;
+                out->legacyLayout = false;
+                out->schema750 = true;
+            }
+            return true;
+        }
     }
 
     // Older WinOLS 4.x .kp intern records are length-prefixed, NUL-terminated
@@ -319,6 +346,30 @@ MapDimensions dimensionsFromLegacyRecord(const QByteArray &record,
     return dims;
 }
 
+// Schema-750 records store exact dimensions as a [cols][rows] uint32 pair
+// after the address triplet (usually near the end of the record, following
+// the axis sub-records). The product must equal the cell count.
+MapDimensions dimensionsFromSchema750Record(const QByteArray &record,
+                                            const AddressCandidate &addr,
+                                            int cells)
+{
+    MapDimensions dims;
+    if (cells <= 1 || addr.off < 0)
+        return dims;
+
+    for (qsizetype off = addr.off + 12; off + 8 <= record.size(); ++off) {
+        const uint32_t x = peekU32(record, off);
+        const uint32_t y = peekU32(record, off + 4);
+        if (x >= 2 && x <= 999 && y >= 2 && y <= 999
+            && uint64_t(x) * uint64_t(y) == uint64_t(cells)) {
+            dims.x = int(x);
+            dims.y = int(y);
+            return dims;
+        }
+    }
+    return dims;
+}
+
 MapDimensions dimensionsFromRecord(uint32_t kind, uint32_t hintX,
                                    int cells)
 {
@@ -436,6 +487,19 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
         MapInfo m;
         m.name           = name;
         m.description    = name;
+        // Schema-750 records carry a length-prefixed id string at +35
+        if (hdr.schema750) {
+            const uint32_t idLen = peekU32(record, 35);
+            if (idLen >= 1 && idLen <= 200
+                && 39 + qsizetype(idLen) <= record.size()) {
+                const QByteArray idBytes = record.mid(39, int(idLen));
+                if (isText(idBytes.constData(), idBytes.size())) {
+                    const QString idStr = decodeKpText(idBytes);
+                    if (!idStr.isEmpty())
+                        m.description = idStr;
+                }
+            }
+        }
         m.type           = typeFromKpKind(hdr.kind, 1, 1);
         m.rawAddress     = (baseAddress != 0 && addr.fileOffset == addr.raw)
             ? baseAddress + addr.fileOffset
@@ -445,6 +509,8 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
         m.dataSize       = dataSize;
         if (hdr.legacyLayout && hdr.kind != 2 && hdr.kind != 3)
             m.dimensions = dimensionsFromLegacyRecord(record, addr, cells);
+        if (hdr.schema750 && hdr.kind != 2 && hdr.kind != 3)
+            m.dimensions = dimensionsFromSchema750Record(record, addr, cells);
         if (m.dimensions.x <= 1 && m.dimensions.y <= 1) {
             uint32_t hintX = hdr.hintX;
             if (hintX == 0)
