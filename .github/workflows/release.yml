@@ -79,10 +79,20 @@ jobs:
           host: 'mac'
           target: 'desktop'
           arch: 'clang_64'
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: macos-14-qt6.8.3
+          max-size: 600M
       - name: Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DRX14_PRO_BUILD=OFF
+        run: >
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DRX14_PRO_BUILD=OFF
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      # Bound to the M1 runner's core count so parallel sol2/Lua template
+      # compiles don't thrash memory; ccache makes repeat builds fast. Only
+      # the app target is needed for packaging (tests aren't run in CI).
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --target rx14 --parallel 3
       - name: Deploy
         run: |
           macdeployqt build/rx14.app -dmg
@@ -103,10 +113,20 @@ jobs:
           sudo apt-get install -y \
             qt6-base-dev qt6-tools-dev qt6-tools-dev-tools qt6-l10n-tools \
             libgl-dev libxkbcommon-dev libfuse2 libxcb-cursor0 zlib1g-dev
+      - name: Set up ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: linux-24.04-qt6
+          max-size: 600M
       - name: Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DRX14_PRO_BUILD=OFF -DCMAKE_INSTALL_PREFIX=/usr
+        run: >
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DRX14_PRO_BUILD=OFF -DCMAKE_INSTALL_PREFIX=/usr
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      # Bound parallelism so the memory-heavy sol2/Lua compiles don't trip the
+      # OOM killer (bare --parallel let make launch unlimited jobs); ccache
+      # keeps repeat builds fast. Only the app target is needed for packaging.
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --target rx14 --parallel 2
       - name: Package AppImage
         run: |
           wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
