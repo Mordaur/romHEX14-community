@@ -22,6 +22,9 @@
 #include "map3dwidget.h"
 #include "map3dsimwidget.h"
 
+class WaveformEditor;
+class Project;
+
 struct CellEdit {
     uint32_t offset;
     uint32_t oldRaw;
@@ -43,11 +46,19 @@ public:
     void setDisplayParams(int cellSize, ByteOrder byteOrder, bool heightColors);
     void retranslateUi();
 
+    // Share the owning ProjectView's editor so this dialog's edits land on
+    // the SAME undo stack as the hex / waveform / 3D views (and vice-versa).
+    // Passing nullptr reverts to the dialog-local undo stack (standalone use).
+    void setSharedEditor(WaveformEditor *editor, Project *project);
+
 signals:
     void romPatchReady(uint32_t offset, QByteArray bytes);
     void editBatchDone();
     void addressCorrected(const QString &mapName, uint32_t newAddress);
     void mapInfoChanged(const MapInfo &updated, ByteOrder byteOrder);
+    // Re-emitted from the embedded 3D view's "Edit map" submenu so the host
+    // routes it through the shared edit dispatcher (MainWindow::EditOp code).
+    void editOpRequested(int opCode);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
@@ -55,12 +66,27 @@ protected:
 private slots:
     void buildTable();
     void applyBatchOp(int mode);   // 0=+%  1=+val  2==val
+    void interpolateSelection();   // bilinear fill of the selected rectangle
     void undoEdit();
     void redoEdit();
 
 private:
+    // Grid display mode — plain values, or numeric difference vs the
+    // original ROM (absolute delta or percentage).
+    enum class DisplayMode { Values = 0, DeltaAbs = 1, DeltaPct = 2 };
+
     void autoResize();
     CellEdit writeCell(int row, int col, double newPhys);
+    // Commit a batch of cell edits as ONE undo step — routed to the shared
+    // editor when one is set, otherwise to the dialog-local undo stack.
+    void commitBatch(const EditBatch &batch);
+    // Reload m_data from the shared project after an external edit/undo.
+    void reloadFromProject();
+    // Current physical value of one cell (respects scaling/sign/byte order).
+    double cellPhys(int row, int col) const;
+    // True when the grid is a read-only view (showing original, or a
+    // difference view) and edits must be blocked.
+    bool isReadOnlyView() const;
     void pushUndo(const EditBatch &batch);
     void updateUndoRedoButtons();
     void updateStatusBar();
@@ -92,9 +118,15 @@ private:
     bool       m_showingOriginal = false;
     bool       m_heatEnabled     = true;
     int        m_fontSize        = 9;
+    DisplayMode m_displayMode    = DisplayMode::Values;
 
     QVector<EditBatch> m_undoStack;
     QVector<EditBatch> m_redoStack;
+
+    // Shared-undo wiring (null when running standalone → local stack used)
+    WaveformEditor *m_undoEditor    = nullptr;
+    Project        *m_syncProject   = nullptr;
+    bool            m_committingSelf = false;   // guards reload re-entrancy
 
     // Inline editor state
     bool m_editOpen = false;
@@ -122,7 +154,11 @@ private:
     QToolButton *m_btnAddPct   = nullptr;
     QToolButton *m_btnAddVal   = nullptr;
     QToolButton *m_btnSetVal   = nullptr;
+    QToolButton *m_btnInterp   = nullptr;
     QLabel      *m_opHint      = nullptr;
+
+    // Difference-view selector (Values / Δ vs original / % vs original)
+    QComboBox   *m_diffCombo   = nullptr;
 
     // Toolbar extras (for hiding on small maps)
     QLabel      *m_cellLabel   = nullptr;

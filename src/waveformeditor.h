@@ -69,6 +69,15 @@ public:
                         const QByteArray &before,
                         const QByteArray &after);
 
+    // ── Apply + record a raw byte span ──────────────────────────────────
+    // Writes @p after into the buffer at @p offset, snapshotting the
+    // previous bytes itself, and records the change as ONE undo entry.
+    // Unlike submitExternal (caller pre-mutates the buffer), this performs
+    // the write. Used by MapOverlay so its map-aware cell edits share this
+    // editor's single undo stack. No-op if the span is out of range or the
+    // bytes are unchanged.
+    void applyRawBatch(int offset, const QByteArray &after);
+
     // ── Undo / redo ─────────────────────────────────────────────────────
     bool canUndo() const;
     bool canRedo() const;

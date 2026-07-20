@@ -21,6 +21,8 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QPainter>
+#include <QDoubleSpinBox>
+#include <QSpinBox>
 
 static void applySwatchStyle(QPushButton *btn, const QColor &col)
 {
@@ -43,6 +45,9 @@ static QPushButton *makeSwatchBtn(const QColor &col)
 ConfigDialog::ConfigDialog(QWidget *parent)
     : QDialog(parent)
     , m_working(AppConfig::instance().colors)
+    , m_original(AppConfig::instance().colors)
+    , m_origStyle(AppConfig::instance().waveStyle)
+    , m_origLongNames(AppConfig::instance().showLongMapNames)
 {
     setWindowTitle(tr("Configuration"));
     setMinimumSize(660, 560);
@@ -93,18 +98,30 @@ ConfigDialog::ConfigDialog(QWidget *parent)
         "QPushButton:hover { background:" + AppConfig::instance().colors.uiAccent.lighter(120).name() + "; }");
 
     connect(btnReset, &QPushButton::clicked, this, [this]() {
-        AppConfig::instance().resetToDefaults();
-        AppConfig::instance().save();
+        // Reset the working state and preview it live; Apply persists,
+        // Cancel reverts — same contract as every other control.
+        AppConfig::applyDefaults(m_working);
+        const WaveStyle defStyle;
+        if (m_waveShapeCombo) {
+            QSignalBlocker b1(m_waveShapeCombo), b2(m_waveWidthSpin),
+                           b3(m_waveDotSpin),    b4(m_waveFillCheck);
+            m_waveShapeCombo->setCurrentIndex(static_cast<int>(defStyle.shape));
+            m_waveWidthSpin->setValue(defStyle.lineWidth);
+            m_waveDotSpin->setValue(defStyle.dotSize);
+            m_waveFillCheck->setChecked(defStyle.fillUnderCurve);
+        }
+        refreshSwatches();
+        previewNow();
     });
     connect(btnCancel, &QPushButton::clicked, this, &ConfigDialog::reject);
     connect(btnApply,  &QPushButton::clicked, this, [this]() {
-        AppConfig::instance().colors = m_working;
-        if (m_showLongNamesCheck)
-            AppConfig::instance().showLongMapNames = m_showLongNamesCheck->isChecked();
+        previewNow();                       // AppConfig now holds the working state
         AppConfig::instance().save();
-        AppConfig::instance().colorsChanged();
-        AppConfig::instance().displaySettingsChanged();
         saveAISettings();
+        // The applied state becomes the new revert baseline for Cancel
+        m_original      = m_working;
+        m_origStyle     = AppConfig::instance().waveStyle;
+        m_origLongNames = AppConfig::instance().showLongMapNames;
     });
 
     auto *btnRow = new QHBoxLayout;
@@ -145,6 +162,47 @@ void ConfigDialog::closeEvent(QCloseEvent *event)
     QDialog::closeEvent(event);
 }
 
+// ── Live preview ────────────────────────────────────────────────────────────
+
+void ConfigDialog::previewNow()
+{
+    auto &cfg = AppConfig::instance();
+    cfg.colors = m_working;
+    if (m_waveShapeCombo) {
+        cfg.waveStyle.shape =
+            static_cast<WaveStyle::Shape>(m_waveShapeCombo->currentIndex());
+        cfg.waveStyle.lineWidth      = m_waveWidthSpin->value();
+        cfg.waveStyle.dotSize        = m_waveDotSpin->value();
+        cfg.waveStyle.fillUnderCurve = m_waveFillCheck->isChecked();
+    }
+    if (m_showLongNamesCheck)
+        cfg.showLongMapNames = m_showLongNamesCheck->isChecked();
+    emit cfg.colorsChanged();
+    emit cfg.displaySettingsChanged();
+}
+
+void ConfigDialog::revertPreview()
+{
+    auto &cfg = AppConfig::instance();
+    cfg.colors           = m_original;
+    cfg.waveStyle        = m_origStyle;
+    cfg.showLongMapNames = m_origLongNames;
+    emit cfg.colorsChanged();
+    emit cfg.displaySettingsChanged();
+}
+
+void ConfigDialog::refreshSwatches()
+{
+    for (const auto &sw : m_swatches)
+        applySwatchStyle(sw.first, *sw.second);
+}
+
+void ConfigDialog::reject()
+{
+    revertPreview();
+    QDialog::reject();
+}
+
 QWidget *ConfigDialog::makeColorRow(const QString &label, QColor &colorRef)
 {
     auto *row = new QWidget;
@@ -156,12 +214,25 @@ QWidget *ConfigDialog::makeColorRow(const QString &label, QColor &colorRef)
     lbl->setFixedWidth(180);
 
     auto *btn = makeSwatchBtn(colorRef);
+    m_swatches.append({btn, &colorRef});
     connect(btn, &QPushButton::clicked, this, [this, btn, &colorRef]() {
-        QColor c = QColorDialog::getColor(colorRef, this, tr("Choose Color"));
-        if (c.isValid()) {
+        const QColor before = colorRef;
+        QColorDialog dlg(before, this);
+        dlg.setWindowTitle(tr("Choose Color"));
+        dlg.setOption(QColorDialog::ShowAlphaChannel);
+        // Preview every color the user hovers/drags in the picker
+        connect(&dlg, &QColorDialog::currentColorChanged, this,
+                [this, btn, &colorRef](const QColor &c) {
+            if (!c.isValid()) return;
             colorRef = c;
             applySwatchStyle(btn, c);
-        }
+            previewNow();
+        });
+        const bool accepted = dlg.exec() == QDialog::Accepted
+                              && dlg.selectedColor().isValid();
+        colorRef = accepted ? dlg.selectedColor() : before;
+        applySwatchStyle(btn, colorRef);
+        previewNow();
     });
 
     lay->addWidget(lbl);
@@ -260,10 +331,8 @@ void ConfigDialog::buildColorsPage()
             const auto &themes = ColorThemes::all();
             if (idx - 1 >= themes.size()) return;
             m_working = themes[idx - 1].colors;
-            auto &cfg = AppConfig::instance();
-            cfg.colors = m_working;
-            cfg.save();
-            emit cfg.colorsChanged();
+            refreshSwatches();
+            previewNow();   // live preview — Apply persists, Cancel reverts
             // Force refresh ALL widgets in this dialog with new theme
             setStyleSheet("");  // clear
             setStyleSheet(QString("QDialog { background:%1; color:%2; }"
@@ -361,6 +430,83 @@ void ConfigDialog::buildColorsPage()
     wvLay->addWidget(makeColorRow(tr("Minor grid lines"),          m_working.waveGridMinor));
     wvLay->addWidget(makeColorRow(tr("ROM waveform line"),         m_working.waveLine));
     wvLay->addWidget(makeColorRow(tr("Overview / minimap strip"),  m_working.waveOverviewBg));
+
+    // ── Draw style (shape / thickness / points / fill) ───────────────────
+    const AppConfig &cfg = AppConfig::instance();
+    const QString ctlStyle =
+        "QComboBox, QDoubleSpinBox, QSpinBox {"
+        "  background:" + cfg.colors.buttonBg.name() + "; color:" + cfg.colors.uiText.name() + ";"
+        "  border:1px solid " + cfg.colors.uiBorder.name() + "; border-radius:4px;"
+        "  padding:2px 6px; font-size:9pt; }"
+        "QComboBox:hover, QDoubleSpinBox:hover, QSpinBox:hover {"
+        "  border-color:" + cfg.colors.uiAccent.lighter(140).name() + "; }"
+        "QComboBox QAbstractItemView { background:" + cfg.colors.buttonBg.name() + ";"
+        "  color:" + cfg.colors.uiText.name() + ";"
+        "  selection-background-color:" + cfg.colors.uiAccent.name() + ";"
+        "  border:1px solid " + cfg.colors.uiBorder.name() + "; }";
+
+    auto makeCtlRow = [](const QString &label, QWidget *ctl) -> QWidget * {
+        auto *row = new QWidget;
+        auto *lay = new QHBoxLayout(row);
+        lay->setContentsMargins(4, 2, 4, 2);
+        lay->setSpacing(10);
+        auto *lbl = new QLabel(label);
+        lbl->setFixedWidth(180);
+        lay->addWidget(lbl);
+        lay->addWidget(ctl);
+        lay->addStretch();
+        return row;
+    };
+
+    wvLay->addSpacing(6);
+    wvLay->addWidget(makeSectionNote(
+        tr("Curve draw style — applies to the ROM waveform and map curves.")));
+    wvLay->addSpacing(2);
+
+    m_waveShapeCombo = new QComboBox;
+    m_waveShapeCombo->setStyleSheet(ctlStyle);
+    m_waveShapeCombo->setMinimumWidth(140);
+    m_waveShapeCombo->addItem(tr("Line"));
+    m_waveShapeCombo->addItem(tr("Line + points"));
+    m_waveShapeCombo->addItem(tr("Points only"));
+    m_waveShapeCombo->addItem(tr("Bars"));
+    m_waveShapeCombo->addItem(tr("Filled area"));
+    m_waveShapeCombo->setCurrentIndex(static_cast<int>(cfg.waveStyle.shape));
+    wvLay->addWidget(makeCtlRow(tr("Curve shape"), m_waveShapeCombo));
+
+    m_waveWidthSpin = new QDoubleSpinBox;
+    m_waveWidthSpin->setStyleSheet(ctlStyle);
+    m_waveWidthSpin->setRange(0.5, 6.0);
+    m_waveWidthSpin->setSingleStep(0.5);
+    m_waveWidthSpin->setDecimals(1);
+    m_waveWidthSpin->setSuffix(tr(" px"));
+    m_waveWidthSpin->setValue(cfg.waveStyle.lineWidth);
+    wvLay->addWidget(makeCtlRow(tr("Line thickness"), m_waveWidthSpin));
+
+    m_waveDotSpin = new QSpinBox;
+    m_waveDotSpin->setStyleSheet(ctlStyle);
+    m_waveDotSpin->setRange(0, 8);
+    m_waveDotSpin->setSuffix(tr(" px"));
+    m_waveDotSpin->setSpecialValueText(tr("Auto"));
+    m_waveDotSpin->setValue(cfg.waveStyle.dotSize);
+    wvLay->addWidget(makeCtlRow(tr("Point size"), m_waveDotSpin));
+
+    m_waveFillCheck = new QCheckBox(tr("Fill area under the curve"));
+    m_waveFillCheck->setStyleSheet(
+        "color:" + cfg.colors.uiText.name() + "; font-size:9pt; padding:2px 4px;");
+    m_waveFillCheck->setChecked(cfg.waveStyle.fillUnderCurve);
+    wvLay->addWidget(m_waveFillCheck);
+
+    // Live preview on every style change
+    connect(m_waveShapeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, [this](int) { previewNow(); });
+    connect(m_waveWidthSpin, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this, [this](double) { previewNow(); });
+    connect(m_waveDotSpin, QOverload<int>::of(&QSpinBox::valueChanged),
+            this, [this](int) { previewNow(); });
+    connect(m_waveFillCheck, &QCheckBox::toggled,
+            this, [this](bool) { previewNow(); });
+
     vbox->addWidget(grpWv);
 
     // ── General UI ──────────────────────────────────────────────────────────
@@ -422,6 +568,8 @@ void ConfigDialog::buildDisplayPage()
     m_showLongNamesCheck = new QCheckBox(tr("Show long map names (description)"));
     m_showLongNamesCheck->setStyleSheet("color:" + AppConfig::instance().colors.uiText.name() + "; font-size:9pt;");
     m_showLongNamesCheck->setChecked(AppConfig::instance().showLongMapNames);
+    connect(m_showLongNamesCheck, &QCheckBox::toggled,
+            this, [this](bool) { previewNow(); });
     mapLay->addWidget(m_showLongNamesCheck);
 
     auto *hint = new QLabel(tr("When enabled, shows the full description (e.g. \"Kennfeld Momentenindizierter Motor\") instead of the short identifier (e.g. \"KFMIOP\")."));

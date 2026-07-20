@@ -715,9 +715,11 @@ void WaveformWidget::renderMapCurve(QPainter &p)
 
     // ── Background ───────────────────────────────────────────────────────
     // Slight gradient: darker at bottom (zero), slightly lighter at top
+    const AppColors &cc = AppConfig::instance().colors;
+    const WaveStyle &ws = AppConfig::instance().waveStyle;
     QLinearGradient bgGrad(0, topY, 0, topY + plotH);
-    bgGrad.setColorAt(0.0, QColor(14, 22, 40));
-    bgGrad.setColorAt(1.0, QColor(8,  14, 26));
+    bgGrad.setColorAt(0.0, cc.waveBg.lighter(160));
+    bgGrad.setColorAt(1.0, cc.waveBg);
     p.fillRect(0, topY, w, h, bgGrad);
 
     // ── Grid lines ────────────────────────────────────────────────────────
@@ -726,22 +728,29 @@ void WaveformWidget::renderMapCurve(QPainter &p)
     for (int i = 0; i <= gridY; i++) {
         int gy = topY + plotH - (int)((double)i / gridY * plotH);
         bool major = (i == 0 || i == gridY || i == gridY / 2);
-        p.setPen(QPen(major ? QColor(38, 62, 100) : QColor(22, 38, 62), 1));
+        p.setPen(QPen(major ? cc.waveGridMajor : cc.waveGridMinor, 1));
         p.drawLine(0, gy, plotW, gy);
     }
     // Vertical (column) grid
     int colStep = qMax(1, cols / 8);
     for (int c = 0; c < cols; c += colStep) {
         int gx = (int)colToX(c);
-        p.setPen(QPen(QColor(22, 38, 62), 1));
+        p.setPen(QPen(cc.waveGridMinor, 1));
         p.drawLine(gx, topY, gx, baseline);
     }
 
     // ── Area fills (rendered before lines so lines sit on top) ────────────
     p.setRenderHint(QPainter::Antialiasing, true);
 
+    const bool drawFill = (ws.fillUnderCurve || ws.shape == WaveStyle::Shape::Filled)
+                          && ws.shape != WaveStyle::Shape::Bars;
+    const bool drawLine = ws.shape != WaveStyle::Shape::Dots
+                          && ws.shape != WaveStyle::Shape::Bars;
+    const bool drawDots = ws.shape == WaveStyle::Shape::LineDots
+                          || ws.shape == WaveStyle::Shape::Dots;
+
     // Draw fills in reverse order so row 0 is on top
-    for (int r = showRows - 1; r >= 0; r--) {
+    if (drawFill) for (int r = showRows - 1; r >= 0; r--) {
         QColor lc = waveColor(r);
 
         QPainterPath fillPath;
@@ -761,27 +770,54 @@ void WaveformWidget::renderMapCurve(QPainter &p)
         p.fillPath(fillPath, fillGrad);
     }
 
-    // ── Curves (lines + dots) ─────────────────────────────────────────────
+    // ── Curves (lines / dots / bars per configured shape) ─────────────────
+    // Base thickness comes from settings; scale up slightly when few rows
+    // are shown so a single curve stays prominent (matches old behavior at
+    // the default 1.5 px: 2.4 / 2.0 / 1.5).
+    const double lwBase = ws.lineWidth
+                          * (showRows == 1 ? 1.6 : (showRows <= 4 ? 1.33 : 1.0));
+
     for (int r = 0; r < showRows; r++) {
         QColor lc = waveColor(r);
         lc.setAlpha(showRows > 8 ? 180 : 230);
 
-        // Line
-        double lw = (showRows == 1) ? 2.5 : (showRows <= 4 ? 2.0 : 1.5);
-        p.setPen(QPen(lc, lw, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-        p.setBrush(Qt::NoBrush);
-        QPainterPath path;
-        for (int c = 0; c < cols; c++) {
-            double px = colToX(c), py = valToY(phys[r][c]);
-            if (c == 0) path.moveTo(px, py); else path.lineTo(px, py);
+        // Bars — vertical bars from the baseline, one per column
+        if (ws.shape == WaveStyle::Shape::Bars) {
+            double spacing = (cols > 1) ? (colToX(1) - colToX(0)) : plotW;
+            double bw = qBound(2.0, spacing * 0.55, 24.0);
+            QColor fillC = lc; fillC.setAlpha(showRows == 1 ? 170 : 110);
+            p.setPen(QPen(lc, 1));
+            p.setBrush(fillC);
+            for (int c = 0; c < cols; c++) {
+                double px = colToX(c), py = valToY(phys[r][c]);
+                p.drawRect(QRectF(px - bw / 2, py, bw, baseline - py));
+            }
+            continue;
         }
-        p.drawPath(path);
 
-        // Dot markers
-        int dotR = (cols <= 8) ? 4 : (cols <= 24) ? 3 : (cols <= 64) ? 2 : 0;
+        // Line
+        if (drawLine) {
+            p.setPen(QPen(lc, lwBase, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+            p.setBrush(Qt::NoBrush);
+            QPainterPath path;
+            for (int c = 0; c < cols; c++) {
+                double px = colToX(c), py = valToY(phys[r][c]);
+                if (c == 0) path.moveTo(px, py); else path.lineTo(px, py);
+            }
+            p.drawPath(path);
+        }
+
+        // Dot markers — size from settings (0 = auto by column count)
+        int dotR = 0;
+        if (drawDots) {
+            dotR = ws.dotSize > 0 ? ws.dotSize
+                 : (cols <= 8) ? 4 : (cols <= 24) ? 3 : (cols <= 64) ? 2 : 0;
+            if (ws.shape == WaveStyle::Shape::Dots && dotR == 0)
+                dotR = 2;   // points-only must always show something
+        }
         if (dotR > 0) {
             p.setBrush(lc);
-            p.setPen(QPen(QColor(8, 14, 26), 1));
+            p.setPen(QPen(cc.waveBg, 1));
             for (int c = 0; c < cols; c++)
                 p.drawEllipse(QPointF(colToX(c), valToY(phys[r][c])), dotR, dotR);
         }
@@ -851,7 +887,7 @@ void WaveformWidget::renderMapCurve(QPainter &p)
         // Hollow dot markers
         int dotR = (cols <= 8) ? 4 : (cols <= 24) ? 3 : (cols <= 64) ? 2 : 0;
         if (dotR > 0) {
-            p.setBrush(QColor(14, 22, 40));   // hollow — bg fill
+            p.setBrush(cc.waveBg.lighter(160));   // hollow — bg fill
             p.setPen(QPen(kCmpColor, 1.5));
             for (int c = 0; c < cols; c++)
                 p.drawEllipse(QPointF(colToX(c), valToY(origPhys[c])), dotR + 1, dotR + 1);
@@ -1375,33 +1411,104 @@ void WaveformWidget::renderRomWaveform(QPainter &p)
                     reinterpret_cast<uint32_t*>(waveImg.scanLine(y))[px] = wArgb;
                 if (y + 1 >= 0 && y + 1 < plotH)
                     reinterpret_cast<uint32_t*>(waveImg.scanLine(y + 1))[px] = wArgb;
+
+                // Bars / filled shapes: fill the column down to the baseline
+                const WaveStyle &wsz = AppConfig::instance().waveStyle;
+                const bool colFill = wsz.shape == WaveStyle::Shape::Bars
+                                  || wsz.shape == WaveStyle::Shape::Filled
+                                  || wsz.fillUnderCurve;
+                if (colFill) {
+                    const int a = (wsz.shape == WaveStyle::Shape::Bars) ? 90 : 45;
+                    const uint32_t bArgb = qPremultiply(qRgba(sc.red(), sc.green(), sc.blue(), a));
+                    for (int yy = y + 2; yy < plotH; yy++)
+                        reinterpret_cast<uint32_t*>(waveImg.scanLine(yy))[px] = bArgb;
+                }
             }
         }
         p.drawImage(0, topY, waveImg);
     }
 
-    // Zoomed-in smooth line (colored by comparison when active)
+    // Zoomed-in smooth curve (colored by comparison when active), drawn in
+    // the configured shape: line, line + points, points only, bars, filled.
     if (vpp < 2.0) {
         const bool hasCmp = !m_pixCmpAvg.isEmpty() && m_pixCmpAvg.size() >= plotW;
+        const WaveStyle &ws = AppConfig::instance().waveStyle;
         const QColor defaultColor = AppConfig::instance().colors.waveLine;
 
-        p.setRenderHint(QPainter::Antialiasing, true);
-        for (int px = 1; px < plotW; px++) {
-            const int bs = vpp >= 1 ? startIdx + (int)(px * vpp)
-                                    : startIdx + (int)(px / (1.0 / vpp));
-            if (bs >= tv) break;
-
-            QColor segColor = defaultColor;
+        auto segColorAt = [&](int px) -> QColor {
             if (hasCmp) {
                 double delta = avgV[px] - m_pixCmpAvg[px];
-                if (delta > 0.5)
-                    segColor = QColor(0, 220, 100);    // Green for additions
-                else if (delta < -0.5)
-                    segColor = QColor(240, 60, 60);    // Red for subtractions
+                if (delta > 0.5)  return QColor(0, 220, 100);   // Green for additions
+                if (delta < -0.5) return QColor(240, 60, 60);   // Red for subtractions
             }
-            p.setPen(QPen(segColor, 1.5));
-            p.drawLine(QPointF(px - 1, valToY(avgV[px - 1])),
-                       QPointF(px,     valToY(avgV[px])));
+            return defaultColor;
+        };
+        // last visible pixel column (values beyond the ROM end are not drawn)
+        int lastPx = plotW - 1;
+        for (int px = 0; px < plotW; px++) {
+            const int bs = vpp >= 1 ? startIdx + (int)(px * vpp)
+                                    : startIdx + (int)(px / (1.0 / vpp));
+            if (bs >= tv) { lastPx = px - 1; break; }
+        }
+        p.setRenderHint(QPainter::Antialiasing, true);
+
+        // Filled area under the curve (drawn first so the line sits on top)
+        if (lastPx >= 0 && ws.shape != WaveStyle::Shape::Bars
+            && (ws.shape == WaveStyle::Shape::Filled || ws.fillUnderCurve)) {
+            QPainterPath fillPath;
+            fillPath.moveTo(0, topY + plotH);
+            for (int px = 0; px <= lastPx; px++)
+                fillPath.lineTo(px, valToY(avgV[px]));
+            fillPath.lineTo(lastPx, topY + plotH);
+            fillPath.closeSubpath();
+            QLinearGradient fillGrad(0, topY, 0, topY + plotH);
+            QColor topFill = defaultColor; topFill.setAlpha(60);
+            QColor botFill = defaultColor; botFill.setAlpha(0);
+            fillGrad.setColorAt(0.0, topFill);
+            fillGrad.setColorAt(1.0, botFill);
+            p.fillPath(fillPath, fillGrad);
+        }
+
+        if (lastPx < 0) {
+            // nothing visible — fall through to axes/labels below
+        } else if (ws.shape == WaveStyle::Shape::Bars) {
+            // Vertical bars from the baseline, one per pixel column
+            for (int px = 0; px <= lastPx; px++) {
+                QColor bc = segColorAt(px); bc.setAlpha(160);
+                p.setPen(QPen(bc, 1));
+                p.drawLine(QPointF(px, valToY(avgV[px])),
+                           QPointF(px, topY + plotH));
+            }
+        } else if (ws.shape == WaveStyle::Shape::Dots) {
+            // Point markers only — one per value when spread out, else per px
+            const double pxPerVal = 1.0 / vpp;
+            const int    step = qMax(1, (int)pxPerVal);
+            const double r = ws.dotSize > 0 ? ws.dotSize
+                                            : qMax(1.2, ws.lineWidth);
+            p.setPen(Qt::NoPen);
+            for (int px = 0; px <= lastPx; px += step) {
+                p.setBrush(segColorAt(px));
+                p.drawEllipse(QPointF(px, valToY(avgV[px])), r, r);
+            }
+        } else {
+            // Line / line+points / filled — connected segments
+            for (int px = 1; px <= lastPx; px++) {
+                p.setPen(QPen(segColorAt(px), ws.lineWidth));
+                p.drawLine(QPointF(px - 1, valToY(avgV[px - 1])),
+                           QPointF(px,     valToY(avgV[px])));
+            }
+            // Point markers at value positions, once individual values are
+            // spread far enough apart to be distinguishable.
+            const double pxPerVal = 1.0 / vpp;
+            if (ws.shape == WaveStyle::Shape::LineDots && pxPerVal >= 6.0) {
+                const double r = ws.dotSize > 0 ? ws.dotSize
+                                                : qMin(4.0, pxPerVal / 4.0);
+                p.setPen(QPen(AppConfig::instance().colors.waveBg, 1));
+                for (int px = 0; px <= lastPx; px += qMax(1, (int)pxPerVal)) {
+                    p.setBrush(segColorAt(px));
+                    p.drawEllipse(QPointF(px, valToY(avgV[px])), r, r);
+                }
+            }
         }
         p.setRenderHint(QPainter::Antialiasing, false);
     }

@@ -182,6 +182,10 @@ set(SOURCES
     src/io/TuneReport.cpp
     src/io/XdfIo.cpp
     src/io/vag/FrfCodec.cpp
+    src/io/vag/Aes128.cpp
+    src/io/vag/FrfExtractor.cpp
+    src/frfimportdlg.cpp
+    src/valuesearchdlg.cpp
     src/edit/MapFingerprint.cpp
     src/edit/FindSimilarMapsDlg.cpp
     src/io/winols/WinOlsCatalogReader.cpp

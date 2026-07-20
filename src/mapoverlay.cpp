@@ -5,6 +5,8 @@
  */
 
 #include "mapoverlay.h"
+#include "waveformeditor.h"
+#include "project.h"
 #include "appconfig.h"
 #include "appconstants.h"
 #include "mappropertiesdlg.h"
@@ -366,7 +368,17 @@ MapOverlay::MapOverlay(QWidget *parent)
         "QToolButton:hover{background:#1c2128;color:#e7eefc;border-color:#484f58}"
         "QToolButton:checked{background:rgba(124,58,237,0.3);color:#c084fc;border-color:#7c3aed}");
 
+    // Difference view selector — plain values vs numeric delta / % vs original
+    m_diffCombo = new QComboBox();
+    m_diffCombo->addItem(tr("Values"));
+    m_diffCombo->addItem(tr("Δ Original"));
+    m_diffCombo->addItem(tr("% Original"));
+    m_diffCombo->setFixedWidth(104);
+    m_diffCombo->setToolTip(tr("Show plain values, or the numeric difference from the original ROM"));
+    m_diffCombo->setStyleSheet(m_cellSizeCombo->styleSheet());
+
     toolbar->addWidget(m_btnOri);
+    toolbar->addWidget(m_diffCombo);
     toolbar->addWidget(m_btnHeat);
     toolbar->addWidget(m_btn3D);
     toolbar->addWidget(m_btn3DSim);
@@ -693,9 +705,26 @@ MapOverlay::MapOverlay(QWidget *parent)
         b->setFixedSize(32, 26);
     }
 
+    // Interpolate — bilinear fill of the selected block from its corners
+    m_btnInterp = new QToolButton();
+    m_btnInterp->setText(tr("Interp"));
+    m_btnInterp->setFixedHeight(26);
+    m_btnInterp->setToolTip(
+        tr("Interpolate the selected cells\n"
+           "Fills a block bilinearly from its four corners; a single row or\n"
+           "column is filled linearly between its ends. Select at least 3 cells."));
+    m_btnInterp->setStyleSheet(
+        "QToolButton{background:transparent;color:" + AppConfig::instance().colors.uiTextDim.name() + ";"
+        "border:1px solid " + AppConfig::instance().colors.uiBorder.name() + ";border-radius:4px;"
+        "padding:2px 8px;font-size:8pt;font-weight:bold}"
+        "QToolButton:hover{background:#1c2128;color:" + AppConfig::instance().colors.uiText.name() + ";border-color:#484f58}"
+        "QToolButton:disabled{color:#3a3f47;border-color:#22262c}");
+
     opRow->addWidget(m_btnAddPct);
     opRow->addWidget(m_btnAddVal);
     opRow->addWidget(m_btnSetVal);
+    opRow->addSpacing(6);
+    opRow->addWidget(m_btnInterp);
     opRow->addStretch(1);
 
     m_opHint = new QLabel(
@@ -843,6 +872,11 @@ MapOverlay::MapOverlay(QWidget *parent)
     });
 
     m_map3d = new Map3DWidget();
+    // The embedded 3D "Edit map" submenu was previously inert here — re-emit
+    // its request so the host routes it through the shared edit dispatcher
+    // (same path/undo stack as the main window's 3D view).
+    connect(m_map3d, &Map3DWidget::editOpRequested,
+            this, &MapOverlay::editOpRequested);
 
     m_map3dSim = new Map3DSimWidget();
 
@@ -990,6 +1024,27 @@ MapOverlay::MapOverlay(QWidget *parent)
 
     connect(m_btnOri, &QToolButton::toggled, this, [this](bool on) {
         m_showingOriginal = on;
+        // "Show original" and the difference views are mutually exclusive.
+        if (on && m_displayMode != DisplayMode::Values) {
+            m_displayMode = DisplayMode::Values;
+            m_diffCombo->blockSignals(true);
+            m_diffCombo->setCurrentIndex(0);
+            m_diffCombo->blockSignals(false);
+        }
+        cancelInlineEditor();
+        buildTable();
+    });
+
+    connect(m_diffCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this, [this](int idx) {
+        m_displayMode = static_cast<DisplayMode>(qBound(0, idx, 2));
+        // Leaving plain-values mode turns off the read-only "original" view.
+        if (m_displayMode != DisplayMode::Values && m_showingOriginal) {
+            m_showingOriginal = false;
+            m_btnOri->blockSignals(true);
+            m_btnOri->setChecked(false);
+            m_btnOri->blockSignals(false);
+        }
         cancelInlineEditor();
         buildTable();
     });
@@ -1007,6 +1062,7 @@ MapOverlay::MapOverlay(QWidget *parent)
     connect(m_btnAddPct, &QToolButton::clicked, this, [this]{ applyBatchOp(0); });
     connect(m_btnAddVal, &QToolButton::clicked, this, [this]{ applyBatchOp(1); });
     connect(m_btnSetVal, &QToolButton::clicked, this, [this]{ applyBatchOp(2); });
+    connect(m_btnInterp, &QToolButton::clicked, this, &MapOverlay::interpolateSelection);
 
     // Close inline editor if user scrolls (simple and reliable)
     connect(m_table->horizontalScrollBar(), &QScrollBar::valueChanged,
@@ -1054,6 +1110,10 @@ void MapOverlay::showMap(const QByteArray &romData, const MapInfo &map,
         m_btnOri->blockSignals(true);
         m_btnOri->setChecked(false);
         m_btnOri->blockSignals(false);
+        m_displayMode = DisplayMode::Values;
+        m_diffCombo->blockSignals(true);
+        m_diffCombo->setCurrentIndex(0);
+        m_diffCombo->blockSignals(false);
     }
 
     m_cellSize  = (map.dataSize > 0) ? map.dataSize : 2;
@@ -1163,6 +1223,25 @@ void MapOverlay::retranslateUi()
     m_byteOrderCombo->setCurrentIndex(oi);
     m_byteOrderCombo->blockSignals(false);
 
+    if (m_diffCombo) {
+        const int di = m_diffCombo->currentIndex();
+        m_diffCombo->blockSignals(true);
+        m_diffCombo->clear();
+        m_diffCombo->addItem(tr("Values"));
+        m_diffCombo->addItem(tr("Δ Original"));
+        m_diffCombo->addItem(tr("% Original"));
+        m_diffCombo->setCurrentIndex(di);
+        m_diffCombo->setToolTip(tr("Show plain values, or the numeric difference from the original ROM"));
+        m_diffCombo->blockSignals(false);
+    }
+    if (m_btnInterp) {
+        m_btnInterp->setText(tr("Interp"));
+        m_btnInterp->setToolTip(
+            tr("Interpolate the selected cells\n"
+               "Fills a block bilinearly from its four corners; a single row or\n"
+               "column is filled linearly between its ends. Select at least 3 cells."));
+    }
+
     if (isVisible()) buildTable();
 }
 
@@ -1245,6 +1324,39 @@ void MapOverlay::buildTable()
     const double range = (maxP > minP) ? (maxP - minP) : 1.0;
     const QString unit = (scaled && !cm.unit.isEmpty()) ? cm.unit : QString();
 
+    // ── Difference view: per-cell delta (or %) vs the original ROM ──────────
+    const bool diffMode = (m_displayMode != DisplayMode::Values)
+                          && !m_originalData.isEmpty();
+    QVector<QVector<double>> deltaV;
+    double maxAbsDelta = 0.0;
+    if (diffMode) {
+        deltaV = QVector<QVector<double>>(rows, QVector<double>(cols, 0.0));
+        const auto *oraw = reinterpret_cast<const uint8_t*>(m_originalData.constData());
+        const int   olen = m_originalData.size();
+        const ByteOrder cellBO = cellByteOrder(m_map, m_byteOrder);
+        for (int r = 0; r < rows; ++r) {
+            for (int c = 0; c < cols; ++c) {
+                uint32_t off = m_map.address + m_map.mapDataOffset
+                               + uint32_t(colMaj ? c * rows + r : r * cols + c) * m_cellSize;
+                uint32_t orv = readRomValue(oraw, olen, off, m_cellSize, cellBO);
+                double osv = m_map.dataSigned
+                             ? readRomValueAsDouble(oraw, olen, off, m_cellSize, cellBO, true)
+                             : double(orv);
+                double op  = scaled ? cm.toPhysical(osv) : osv;
+                double d;
+                if (m_displayMode == DisplayMode::DeltaPct)
+                    d = (op != 0.0) ? (physV[r][c] - op) / std::fabs(op) * 100.0
+                                    : (physV[r][c] == op ? 0.0
+                                       : (physV[r][c] > op ? 100.0 : -100.0));
+                else
+                    d = physV[r][c] - op;
+                deltaV[r][c] = d;
+                maxAbsDelta = qMax(maxAbsDelta, std::fabs(d));
+            }
+        }
+        if (maxAbsDelta <= 0.0) maxAbsDelta = 1.0;
+    }
+
     // Stats label
     auto fmtN = [&](double v) { return scaled ? cm.formatValue(v) : QString::number(uint32_t(v)); };
     m_statsLabel->setText(
@@ -1308,9 +1420,6 @@ void MapOverlay::buildTable()
             const double   pv  = physV[r][c];
             const double   pct = qBound(0.0, (pv - minP) / range, 1.0);
             rowPct += pct;
-            const QColor bg = heatColor(pct);
-            const int luma  = bg.red()*299 + bg.green()*587 + bg.blue()*114;
-            const QColor fg = (luma > 100000) ? QColor(0x0d,0x0d,0x0d) : QColor(0xf5,0xf5,0xf5);
 
             bool modified = false;
             if (!m_showingOriginal && !m_originalData.isEmpty()) {
@@ -1321,9 +1430,38 @@ void MapOverlay::buildTable()
                 modified = (origV != rv);
             }
 
-            QString display = scaled ? cm.formatValue(pv) : QString::number(rv);
-            QString fullVal = scaled ? (cm.formatValue(pv) + (unit.isEmpty()?" ":" "+unit))
-                                     : QString::number(rv);
+            QColor bg, fg;
+            QString display, fullVal;
+
+            if (diffMode) {
+                // Cell shows the signed difference from the original ROM;
+                // colored green (increase) / red (decrease), intensity by
+                // magnitude relative to the largest change in the map.
+                const double d = deltaV[r][c];
+                if (m_displayMode == DisplayMode::DeltaPct)
+                    display = QString("%1%2%").arg(d > 0 ? "+" : "").arg(d, 0, 'f', 1);
+                else if (scaled)
+                    display = (d > 0 ? "+" : d < 0 ? "-" : "") + cm.formatValue(std::fabs(d));
+                else
+                    display = (d > 0 ? "+" : "") + QString::number((qlonglong)std::llround(d));
+                fullVal = display;
+
+                const double inten = qBound(0.18, std::fabs(d) / maxAbsDelta, 1.0);
+                if (std::fabs(d) < 1e-9)
+                    bg = QColor(0x16, 0x1a, 0x20);           // unchanged — neutral
+                else if (d > 0)
+                    bg = QColor(int(28 + 34 * inten), int(96 + 120 * inten), int(46 + 44 * inten));
+                else
+                    bg = QColor(int(130 + 110 * inten), int(44 + 28 * inten), int(46 + 26 * inten));
+                fg = QColor(0xf5, 0xf5, 0xf5);
+            } else {
+                bg = heatColor(pct);
+                const int luma = bg.red()*299 + bg.green()*587 + bg.blue()*114;
+                fg = (luma > 100000) ? QColor(0x0d,0x0d,0x0d) : QColor(0xf5,0xf5,0xf5);
+                display = scaled ? cm.formatValue(pv) : QString::number(rv);
+                fullVal = scaled ? (cm.formatValue(pv) + (unit.isEmpty()?" ":" "+unit))
+                                 : QString::number(rv);
+            }
 
             auto *item = new QTableWidgetItem(display);
             item->setBackground(bg);
@@ -1359,6 +1497,13 @@ void MapOverlay::buildTable()
     m_table->horizontalHeader()->setSectionResizeMode(cols, QHeaderView::Fixed);
     m_table->setItemDelegateForColumn(cols, new RowBarDelegate(m_table));
     m_table->verticalHeader()->setMinimumWidth(m_map.yAxis.hasValues() ? 64 : 36);
+
+    // In a difference view the per-cell sign tints live in BackgroundRole,
+    // which the delegate only paints when heat coloring is on — so force it
+    // on and lock the Heat toggle while the diff view is active.
+    if (auto *d = static_cast<MapCellDelegate*>(m_table->itemDelegate()))
+        d->heatEnabled = m_heatEnabled || diffMode;
+    if (m_btnHeat) m_btnHeat->setEnabled(!diffMode);
 
     m_table->setUpdatesEnabled(true);
 
@@ -1404,12 +1549,73 @@ CellEdit MapOverlay::writeCell(int row, int col, double newPhys)
     auto *dst = reinterpret_cast<uint8_t*>(m_data.data());
     writeRomValue(dst, m_data.size(), offset, m_cellSize, cellBO, newRaw);
 
-    QByteArray patch(m_cellSize, '\0');
-    writeRomValue(reinterpret_cast<uint8_t*>(patch.data()), m_cellSize,
-                  0, m_cellSize, cellBO, newRaw);
-    emit romPatchReady(offset, patch);
+    // In shared-editor mode the project buffer is synced by commitBatch()
+    // via the editor; only patch directly in standalone mode.
+    if (!m_undoEditor) {
+        QByteArray patch(m_cellSize, '\0');
+        writeRomValue(reinterpret_cast<uint8_t*>(patch.data()), m_cellSize,
+                      0, m_cellSize, cellBO, newRaw);
+        emit romPatchReady(offset, patch);
+    }
 
     return {offset, oldRaw, newRaw};
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Shared-undo wiring
+// ═══════════════════════════════════════════════════════════════════════════════
+void MapOverlay::setSharedEditor(WaveformEditor *editor, Project *project)
+{
+    m_undoEditor  = editor;
+    m_syncProject = project;
+    if (m_undoEditor) {
+        // Refresh when the ROM changes elsewhere (hex/waveform edit, or an
+        // undo/redo on the shared stack). Ignore our own commits.
+        connect(m_undoEditor, &WaveformEditor::dataModified,
+                this, [this]{ reloadFromProject(); });
+        connect(m_undoEditor, &WaveformEditor::undoStateChanged,
+                this, &MapOverlay::updateUndoRedoButtons);
+        // If the owning view/editor is torn down, fall back to standalone.
+        connect(m_undoEditor, &QObject::destroyed, this, [this]{
+            m_undoEditor = nullptr; m_syncProject = nullptr;
+            updateUndoRedoButtons();
+        });
+    }
+    updateUndoRedoButtons();
+}
+
+void MapOverlay::commitBatch(const EditBatch &batch)
+{
+    if (batch.isEmpty()) return;
+
+    if (m_undoEditor) {
+        // Route through the shared editor as ONE undo step spanning the
+        // edited cells. writeCell() has already mutated m_data, so the
+        // covering span holds the new bytes; the editor snapshots the old
+        // bytes from its own (still-unmodified) buffer.
+        uint32_t lo = UINT32_MAX, hi = 0;
+        for (const auto &e : batch) {
+            lo = qMin(lo, e.offset);
+            hi = qMax(hi, e.offset + uint32_t(m_cellSize));
+        }
+        if (hi <= lo || int(hi) > m_data.size()) return;
+        const QByteArray after = m_data.mid(int(lo), int(hi - lo));
+        m_committingSelf = true;
+        m_undoEditor->applyRawBatch(int(lo), after);
+        m_committingSelf = false;
+    } else {
+        pushUndo(batch);
+    }
+}
+
+void MapOverlay::reloadFromProject()
+{
+    if (m_committingSelf || !m_syncProject) return;
+    if (m_syncProject->currentData.isEmpty()) return;
+    m_data = m_syncProject->currentData;
+    cancelInlineEditor();
+    buildTable();
+    updateUndoRedoButtons();
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -1417,7 +1623,7 @@ CellEdit MapOverlay::writeCell(int row, int col, double newPhys)
 // ═══════════════════════════════════════════════════════════════════════════════
 void MapOverlay::applyBatchOp(int mode)
 {
-    if (m_showingOriginal) return;
+    if (isReadOnlyView()) return;
     cancelInlineEditor();
 
     bool ok;
@@ -1459,7 +1665,87 @@ void MapOverlay::applyBatchOp(int mode)
         batch.append(writeCell(s.row, s.col, newPhys));
     }
 
-    pushUndo(batch);
+    commitBatch(batch);
+    buildTable();
+    emit editBatchDone();
+}
+
+bool MapOverlay::isReadOnlyView() const
+{
+    return m_showingOriginal || m_displayMode != DisplayMode::Values;
+}
+
+double MapOverlay::cellPhys(int row, int col) const
+{
+    const int cols = qMax(1, m_map.dimensions.x);
+    const int rows = qMax(1, m_map.dimensions.y);
+    const uint32_t off = m_map.address + m_map.mapDataOffset
+                         + uint32_t(m_map.columnMajor ? col * rows + row
+                                                      : row * cols + col) * m_cellSize;
+    const auto *raw = reinterpret_cast<const uint8_t*>(m_data.constData());
+    const ByteOrder cellBO = cellByteOrder(m_map, m_byteOrder);
+    uint32_t rv = readRomValue(raw, m_data.size(), off, m_cellSize, cellBO);
+    double sv = m_map.dataSigned
+                ? readRomValueAsDouble(raw, m_data.size(), off, m_cellSize, cellBO, true)
+                : double(rv);
+    const bool scaled = m_map.hasScaling
+                        && m_map.scaling.type != CompuMethod::Type::Identical;
+    return scaled ? m_map.scaling.toPhysical(sv) : sv;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// interpolateSelection — bilinear fill of the selected rectangle from its corners
+//   • block (≥3 along one axis): bilinear from the four corners
+//   • single row / column:       linear between the two ends
+// The corner (anchor) cells are preserved; everything between is recomputed.
+// ═══════════════════════════════════════════════════════════════════════════════
+void MapOverlay::interpolateSelection()
+{
+    if (isReadOnlyView()) return;
+    cancelInlineEditor();
+
+    const int cols = qMax(1, m_map.dimensions.x);
+
+    // Bounding rectangle of the current selection (data cells only)
+    int r0 = -1, r1 = -1, c0 = -1, c1 = -1;
+    for (auto *it : m_table->selectedItems()) {
+        if (it->column() >= cols) continue;   // skip the heat-bar column
+        const int r = it->row(), c = it->column();
+        if (r0 < 0) { r0 = r1 = r; c0 = c1 = c; }
+        else { r0 = qMin(r0, r); r1 = qMax(r1, r); c0 = qMin(c0, c); c1 = qMax(c1, c); }
+    }
+    if (r0 < 0) return;   // nothing selected
+
+    const int nr = r1 - r0 + 1;
+    const int nc = c1 - c0 + 1;
+    if (nr < 3 && nc < 3) {
+        // A 2×2 (or smaller) block is all corners — nothing to fill.
+        m_statusBar->setText(
+            tr("Interpolate needs at least 3 cells across a row, column, or block."));
+        return;
+    }
+
+    const double v00 = cellPhys(r0, c0);   // top-left
+    const double v01 = cellPhys(r0, c1);   // top-right
+    const double v10 = cellPhys(r1, c0);   // bottom-left
+    const double v11 = cellPhys(r1, c1);   // bottom-right
+
+    EditBatch batch;
+    for (int r = r0; r <= r1; ++r) {
+        const double t = (nr > 1) ? double(r - r0) / (nr - 1) : 0.0;
+        for (int c = c0; c <= c1; ++c) {
+            // Keep the four corner anchors exactly as they are.
+            if ((r == r0 || r == r1) && (c == c0 || c == c1)) continue;
+            const double u = (nc > 1) ? double(c - c0) / (nc - 1) : 0.0;
+            const double top = v00 + (v01 - v00) * u;
+            const double bot = v10 + (v11 - v10) * u;
+            const double val = top + (bot - top) * t;
+            batch.append(writeCell(r, c, val));
+        }
+    }
+    if (batch.isEmpty()) return;
+
+    commitBatch(batch);
     buildTable();
     emit editBatchDone();
 }
@@ -1469,7 +1755,7 @@ void MapOverlay::applyBatchOp(int mode)
 // ═══════════════════════════════════════════════════════════════════════════════
 void MapOverlay::openInlineEditor(const QString &prefill)
 {
-    if (m_showingOriginal || m_btn3D->isChecked()) return;
+    if (isReadOnlyView() || m_btn3D->isChecked()) return;
 
     QTableWidgetItem *cur = m_table->currentItem();
     if (!cur) return;
@@ -1565,7 +1851,7 @@ void MapOverlay::commitInlineEditor(int dCol, int dRow)
     for (auto *it : targets)
         batch.append(writeCell(it->row(), it->column(), newPhys));
 
-    pushUndo(batch);
+    commitBatch(batch);
     buildTable();   // clears pending flags too (items recreated)
     emit editBatchDone();
 
@@ -1632,7 +1918,7 @@ void MapOverlay::navigateCell(int dRow, int dCol, bool extend)
 
 void MapOverlay::incrementSelectedCells(int delta)
 {
-    if (m_showingOriginal) return;
+    if (isReadOnlyView()) return;
 
     const int cols = qMax(1, m_map.dimensions.x);
     const int rows = qMax(1, m_map.dimensions.y);
@@ -1659,14 +1945,14 @@ void MapOverlay::incrementSelectedCells(int delta)
         batch.append(writeCell(s.row, s.col, newPhys));
     }
 
-    pushUndo(batch);
+    commitBatch(batch);
     buildTable();
     emit editBatchDone();
 }
 
 void MapOverlay::deleteSelectedCells()
 {
-    if (m_showingOriginal) return;
+    if (isReadOnlyView()) return;
 
     const int cols = qMax(1, m_map.dimensions.x);
     struct Sel { int row, col; };
@@ -1679,7 +1965,7 @@ void MapOverlay::deleteSelectedCells()
     for (const auto &s : sel)
         batch.append(writeCell(s.row, s.col, 0.0));
 
-    pushUndo(batch);
+    commitBatch(batch);
     buildTable();
     emit editBatchDone();
 }
@@ -1705,7 +1991,7 @@ void MapOverlay::copySelectionToClipboard()
 
 void MapOverlay::pasteFromClipboard()
 {
-    if (m_showingOriginal) return;
+    if (isReadOnlyView()) return;
 
     const QString text = QApplication::clipboard()->text().trimmed();
     if (text.isEmpty()) return;
@@ -1737,7 +2023,7 @@ void MapOverlay::pasteFromClipboard()
     }
 
     if (!batch.isEmpty()) {
-        pushUndo(batch);
+        commitBatch(batch);
         buildTable();
         emit editBatchDone();
     }
@@ -1923,6 +2209,12 @@ bool MapOverlay::eventFilter(QObject *obj, QEvent *ev)
 // ═══════════════════════════════════════════════════════════════════════════════
 void MapOverlay::undoEdit()
 {
+    if (m_undoEditor) {
+        // Shared stack: the editor's dataModified drives reloadFromProject().
+        cancelInlineEditor();
+        m_undoEditor->undo();
+        return;
+    }
     if (m_undoStack.isEmpty()) return;
     cancelInlineEditor();
     EditBatch batch = m_undoStack.takeLast();
@@ -1943,6 +2235,11 @@ void MapOverlay::undoEdit()
 
 void MapOverlay::redoEdit()
 {
+    if (m_undoEditor) {
+        cancelInlineEditor();
+        m_undoEditor->redo();
+        return;
+    }
     if (m_redoStack.isEmpty()) return;
     cancelInlineEditor();
     EditBatch batch = m_redoStack.takeLast();
@@ -1971,6 +2268,17 @@ void MapOverlay::pushUndo(const EditBatch &batch)
 
 void MapOverlay::updateUndoRedoButtons()
 {
+    if (m_undoEditor) {
+        // Shared stack — the step count is owned by the editor, so just
+        // reflect availability (undo/redo also cover edits made elsewhere).
+        m_btnUndo->setEnabled(m_undoEditor->canUndo());
+        m_btnRedo->setEnabled(m_undoEditor->canRedo());
+        m_btnUndo->setToolTip(m_undoEditor->canUndo()
+            ? tr("Undo  Ctrl+Z") : tr("Nothing to undo"));
+        m_btnRedo->setToolTip(m_undoEditor->canRedo()
+            ? tr("Redo  Ctrl+Y") : tr("Nothing to redo"));
+        return;
+    }
     m_btnUndo->setEnabled(!m_undoStack.isEmpty());
     m_btnRedo->setEnabled(!m_redoStack.isEmpty());
     m_btnUndo->setToolTip(m_undoStack.isEmpty()

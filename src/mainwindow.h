@@ -157,6 +157,11 @@ private slots:
     void actVerifyChecksum();
     void actCorrectChecksum();
 
+    // Export-time checksum guard. Verifies the bytes about to be written and,
+    // on a mismatch, prompts the user to correct them (correcting `data` in
+    // place) or export anyway. Returns false only if the user cancels.
+    bool confirmChecksumBeforeExport(class Project *proj, QByteArray &data);
+
     // View / Window
     void actGoHome();       // close all projects (save prompt) → welcome page
     void actTileWindows();
@@ -374,6 +379,7 @@ private:
     QAction *m_actImportA2L  = nullptr;
     QAction *m_actImportKP     = nullptr;
     QAction *m_actImportXDF     = nullptr;
+    QAction *m_actImportFRF     = nullptr;
     // Single OLS-import action — toolbar OLS button + Project menu
     // "Import OLS…" entry both reference this. Replaces the previous
     // m_actImportOLS / m_actImportOLS pair which routed to the same
@@ -514,6 +520,11 @@ private:
     void exportMapListJson();
     void exportTuningReport();
     void actImportXdf();
+    void actImportFrf();
+    // Open a decoded VAG flash block (raw bytes) as a fresh project.
+    void openExtractedRom(const QByteArray &romBytes, const QString &suggestedName);
+    // WinOLS-style numeric value search across the active ROM.
+    void actFindValue();
     void actExportXdf();
     void actExportKp();
     void runBulkEdit(const QVector<MapInfo> &maps);

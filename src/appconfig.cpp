@@ -551,6 +551,14 @@ void AppConfig::load()
     colors.inputBorder   = rd("colors/inputBorder",   def.inputBorder);
     showLongMapNames = s.value("display/showLongMapNames", true).toBool();
 
+    int sh = s.value("wave2d/shape",
+                     static_cast<int>(WaveStyle::Shape::LineDots)).toInt();
+    if (sh < 0 || sh > 4) sh = static_cast<int>(WaveStyle::Shape::LineDots);
+    waveStyle.shape        = static_cast<WaveStyle::Shape>(sh);
+    waveStyle.lineWidth    = qBound(0.5, s.value("wave2d/lineWidth", 1.5).toDouble(), 6.0);
+    waveStyle.dotSize      = qBound(0,   s.value("wave2d/dotSize", 0).toInt(), 8);
+    waveStyle.fillUnderCurve = s.value("wave2d/fillUnderCurve", false).toBool();
+
     int pm = s.value("aiassistant/permissionMode",
                      static_cast<int>(PermissionMode::Ask)).toInt();
     if (pm < 0 || pm > 2) pm = static_cast<int>(PermissionMode::Ask);
@@ -607,6 +615,12 @@ void AppConfig::save()
     wr("colors/inputBg",       colors.inputBg);
     wr("colors/inputBorder",   colors.inputBorder);
     s.setValue("display/showLongMapNames", showLongMapNames);
+
+    s.setValue("wave2d/shape",        static_cast<int>(waveStyle.shape));
+    s.setValue("wave2d/lineWidth",    waveStyle.lineWidth);
+    s.setValue("wave2d/dotSize",      waveStyle.dotSize);
+    s.setValue("wave2d/fillUnderCurve", waveStyle.fillUnderCurve);
+
     s.setValue("aiassistant/permissionMode", static_cast<int>(aiPermissionMode));
 
     s.sync();
@@ -615,5 +629,6 @@ void AppConfig::save()
 void AppConfig::resetToDefaults()
 {
     applyDefaults(colors);
+    waveStyle = WaveStyle();
     emit colorsChanged();
 }

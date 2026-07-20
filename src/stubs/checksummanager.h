@@ -13,6 +13,9 @@ class ChecksumManager : public QObject {
 public:
     explicit ChecksumManager(QObject *p = nullptr) : QObject(p) {}
     static ChecksumManager *instance() { static ChecksumManager m; return &m; }
+    // Community build ships no checksum algorithms — auto-detect finds nothing
+    // (devNum 0), so the export-time checksum guard is a clean no-op here.
+    ChecksumDllInfo autoDetect(const QByteArray &, const QString &) const { return {}; }
     ChecksumResult verify(const QByteArray &, const ChecksumDllInfo &, QString &) { return ChecksumResult::Unsupported; }
     ChecksumResult correct(QByteArray &, const ChecksumDllInfo &, QString &) { return ChecksumResult::Unsupported; }
 signals:

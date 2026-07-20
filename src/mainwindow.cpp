@@ -36,6 +36,9 @@
 #include "olsparser.h"
 #include "kpparser.h"
 #include "kpimportdlg.h"
+#include "frfimportdlg.h"
+#include "valuesearchdlg.h"
+#include "createmapdlg.h"
 #include "io/ols/OlsImporter.h"
 #include "io/ols/OlsProjectBuilder.h"
 #include "io/ols/OlsExporter.h"
@@ -1988,6 +1991,8 @@ void MainWindow::buildActions()
     m_actImportKP->setToolTip(tr("Import a .kp map pack and apply map labels to the current project"));
     m_actImportXDF  = new QAction(tr("Import XDF…"),            this);
     m_actImportXDF->setToolTip(tr("Import a TunerPro .xdf definition and apply its maps to the current project"));
+    m_actImportFRF  = new QAction(tr("Import FRF / ODX…"),      this);
+    m_actImportFRF->setToolTip(tr("Extract a VAG .frf / .sgo / .odx flash container to a ROM binary"));
     // Single OLS-import action — replaces the previous Import OLS / Import
     // WinOLS Project pair (both routed to the same actImportOlsProject
     // slot anyway). Toolbar OLS button + Project menu both point here.
@@ -2270,6 +2275,7 @@ void MainWindow::buildActions()
     connect(m_actImportA2L,  &QAction::triggered, this, &MainWindow::actImportA2L);
     connect(m_actImportKP,      &QAction::triggered, this, &MainWindow::actImportKP);
     connect(m_actImportXDF,     &QAction::triggered, this, &MainWindow::actImportXdf);
+    connect(m_actImportFRF,     &QAction::triggered, this, &MainWindow::actImportFrf);
     connect(m_actImportOLS, &QAction::triggered, this, &MainWindow::actImportOlsProject);
     connect(m_actAddVersion,   &QAction::triggered, this, &MainWindow::actAddVersion);
     connect(m_actExport,     &QAction::triggered, this, &MainWindow::actExportROM);
@@ -2445,6 +2451,7 @@ void MainWindow::retranslateUi()
     m_actImportA2L->setText(tr("Import A2L…"));
     m_actImportKP->setText(tr("Import KP…"));
     m_actImportXDF->setText(tr("Import XDF…"));
+    if (m_actImportFRF) m_actImportFRF->setText(tr("Import FRF / ODX…"));
     m_actImportOLS->setText(tr("Import OLS…"));
     m_actAddVersion->setText(tr("Save Version Snapshot…"));
     m_actExport->setText(tr("Export ROM…"));
@@ -2543,6 +2550,7 @@ void MainWindow::retranslateUi()
     m_menuProject->addAction(m_actImportOLS);   // "Import OLS…"
     m_menuProject->addAction(m_actImportKP);
     m_menuProject->addAction(m_actImportXDF);
+    m_menuProject->addAction(m_actImportFRF);
     m_menuProject->addAction(m_actExport);
     m_menuProject->addAction(m_actExportOLS);
     m_menuProject->addSeparator();
@@ -2698,6 +2706,7 @@ void MainWindow::retranslateUi()
                         ? s.toUInt(nullptr, 16) : s.toUInt(nullptr, 0);
         v->goToAddress(addr);
     });
+    m_menuFind->addAction(tr("Find &Value…"), this, &MainWindow::actFindValue);
 
     // Sprint C — annotations / markers
     m_menuFind->addSeparator();
@@ -6348,6 +6357,23 @@ void MainWindow::actExportROM()
         selectedIdx = combo->currentIndex() - 1;
     }
 
+    // --- Resolve the data to export -------------------------------------------
+    QByteArray data;
+    if (selectedIdx >= 0) {
+        data = proj->versions[selectedIdx].data;
+    } else {
+        auto *view = activeView();
+        data = (view && view->findChild<HexWidget *>())
+            ? view->findChild<HexWidget *>()->exportBinary()
+            : proj->currentData;
+    }
+
+    // --- Checksum guard: verify (and optionally correct) before writing -------
+    // A ROM with a stale checksum can be rejected by the ECU on flash, so we
+    // never write one silently. This may correct `data` in place.
+    if (!confirmChecksumBeforeExport(proj, data))
+        return;
+
     // --- Build the default file name ------------------------------------------
     QString baseName = proj->romPath.isEmpty()
         ? proj->displayName()
@@ -6362,17 +6388,6 @@ void MainWindow::actExportROM()
     QString path = QFileDialog::getSaveFileName(this, tr("Export ROM"), defaultName,
         tr("ROM Files (*.bin *.rom);;All Files (*)"));
     if (path.isEmpty()) return;
-
-    // --- Resolve the data to export -------------------------------------------
-    QByteArray data;
-    if (selectedIdx >= 0) {
-        data = proj->versions[selectedIdx].data;
-    } else {
-        auto *view = activeView();
-        data = (view && view->findChild<HexWidget *>())
-            ? view->findChild<HexWidget *>()->exportBinary()
-            : proj->currentData;
-    }
 
     QFile f(path);
     if (f.open(QIODevice::WriteOnly)) {
@@ -6984,6 +6999,21 @@ void MainWindow::showMapOverlay(const QByteArray &romData, const MapInfo &map,
                 }
                 refreshProjectTree();
             });
+
+            // Share this project's view editor so overlay edits land on the
+            // same undo stack as the hex / waveform / 3D views, and route the
+            // overlay's embedded 3D "Edit map" menu through the shared path.
+            WaveformEditor *sharedEd = nullptr;
+            for (auto *sub : m_mdi->subWindowList()) {
+                auto *pv = qobject_cast<ProjectView *>(sub->widget());
+                if (pv && pv->project() == project && pv->waveformWidget()) {
+                    sharedEd = pv->waveformWidget()->editor();
+                    break;
+                }
+            }
+            ov->setSharedEditor(sharedEd, project);
+            connect(ov, &MapOverlay::editOpRequested,
+                    this, &MainWindow::onEditOpRequestedFromView);
         }
     }
     // Apply AI translation to map description if available
@@ -8682,6 +8712,67 @@ void MainWindow::actCorrectChecksum()
     }
 }
 
+bool MainWindow::confirmChecksumBeforeExport(Project *proj, QByteArray &data)
+{
+    if (!proj || data.isEmpty())
+        return true;
+
+    // Detect the algorithm from the bytes actually being exported.
+    ChecksumManager *cm = ChecksumManager::instance();
+    const ChecksumDllInfo dll = cm->autoDetect(data, proj->ecuType);
+    if (dll.devNum == 0)
+        return true;   // no algorithm known for this ROM — nothing to check
+
+    QString err;
+    const ChecksumResult vr = cm->verify(data, dll, err);
+
+    // Only a confirmed mismatch is worth interrupting the export for.
+    // OK → checksum already valid; Unsupported → cannot verify on this
+    // platform (e.g. DLL-only ECU on macOS/Linux); Error → verification
+    // failed. In all three cases we let the export proceed rather than nag.
+    if (vr != ChecksumResult::Mismatch) {
+        if (vr == ChecksumResult::Error)
+            qWarning() << "Export checksum verify error" << dll.description << err;
+        return true;
+    }
+
+    const QString ecuName = proj->ecuType.isEmpty() ? tr("Unknown") : proj->ecuType;
+
+    QMessageBox box(this);
+    box.setIcon(QMessageBox::Warning);
+    box.setWindowTitle(tr("Checksum"));
+    box.setText(tr("This ROM has an invalid checksum."));
+    box.setInformativeText(
+        tr("ECU: %1\nAlgorithm: %2\n\n"
+           "Correct the checksum before exporting? Flashing a ROM with an "
+           "invalid checksum can be rejected by the ECU.").arg(ecuName, dll.description));
+    QPushButton *correctBtn = box.addButton(tr("Correct && Export"), QMessageBox::AcceptRole);
+    QPushButton *anywayBtn  = box.addButton(tr("Export Anyway"),     QMessageBox::DestructiveRole);
+    box.addButton(QMessageBox::Cancel);
+    box.setDefaultButton(correctBtn);
+    box.exec();
+
+    QAbstractButton *clicked = box.clickedButton();
+    if (clicked == anywayBtn)
+        return true;                 // user accepts the risk
+    if (clicked != correctBtn)
+        return false;                // Cancel / dialog closed → abort export
+
+    // Correct & Export — fix the bytes we're about to write.
+    QString cerr;
+    const ChecksumResult cr = cm->correct(data, dll, cerr);
+    if (cr == ChecksumResult::OK) {
+        statusBar()->showMessage(
+            tr("Checksum corrected — %1 (%2)").arg(ecuName, dll.description), 5000);
+        return true;
+    }
+
+    QMessageBox::critical(this, tr("Checksum"),
+        tr("Checksum correction failed: %1\n\nExport cancelled.")
+            .arg(cerr.isEmpty() ? tr("unknown error") : cerr));
+    return false;
+}
+
 // ── Command palette (Cmd/Ctrl+K) ──────────────────────────────────────────────
 //
 // Builds a fresh PaletteEntry list every invocation so the palette never
@@ -9158,6 +9249,82 @@ void MainWindow::exportTuningReport()
             == QMessageBox::Yes) {
         QDesktopServices::openUrl(QUrl::fromLocalFile(path));
     }
+}
+
+void MainWindow::actFindValue()
+{
+    auto *proj = activeProject();
+    if (!proj || proj->currentData.isEmpty()) {
+        QMessageBox::information(this, tr("Find Value"),
+            tr("Open a project with ROM data first."));
+        return;
+    }
+    auto *dlg = new ValueSearchDlg(proj->currentData, proj->byteOrder, this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    connect(dlg, &ValueSearchDlg::goToAddressRequested, this, [this](uint32_t a) {
+        if (auto *v = activeView()) v->goToAddress(a);
+    });
+    connect(dlg, &ValueSearchDlg::createMapRequested, this, [this](uint32_t addr, int cellSize) {
+        auto *pv = activeView();
+        if (!pv || !pv->project()) return;
+        CreateMapDlg d(addr, cellSize, cellSize, this);
+        if (d.exec() != QDialog::Accepted) return;
+        MapInfo m = d.resultMap();
+        pv->project()->maps.append(m);
+        pv->project()->modified = true;
+        emit pv->project()->dataChanged();
+        pv->goToMap(m);
+    });
+    dlg->show();
+}
+
+void MainWindow::actImportFrf()
+{
+    const QString path = QFileDialog::getOpenFileName(this,
+        tr("Import VAG FRF / ODX"), {},
+        tr("VAG flash containers (*.frf *.sgo *.odx *.zip);;All files (*)"));
+    if (path.isEmpty()) return;
+
+    auto *dlg = new FrfImportDlg(path, this);
+    dlg->setAttribute(Qt::WA_DeleteOnClose);
+    connect(dlg, &FrfImportDlg::openRomRequested,
+            this, &MainWindow::openExtractedRom);
+    dlg->show();
+}
+
+void MainWindow::openExtractedRom(const QByteArray &romBytes, const QString &suggestedName)
+{
+    if (romBytes.isEmpty()) return;
+
+    // Stage the extracted block to a temp .bin so the normal ROM-load path
+    // (format parse, ECU detect, auto-scan) runs unchanged.
+    QString safe = suggestedName;
+    safe.replace(QRegularExpression(QStringLiteral("[^A-Za-z0-9_.-]")), QStringLiteral("_"));
+    if (safe.isEmpty()) safe = QStringLiteral("frf_block");
+    const QString tmp = QDir(QDir::tempPath()).filePath(safe + ".bin");
+    QFile f(tmp);
+    if (!f.open(QIODevice::WriteOnly)) {
+        QMessageBox::critical(this, tr("Import FRF / ODX"),
+            tr("Could not stage the extracted ROM to a temporary file."));
+        return;
+    }
+    f.write(romBytes);
+    f.close();
+
+    auto *project = new Project(this);
+    project->createdAt = QDateTime::currentDateTime();
+    project->createdBy = qEnvironmentVariable("USERNAME",
+                             qEnvironmentVariable("USER", "Unknown"));
+    loadROMIntoProject(project, tmp);
+    if (project->currentData.isEmpty()) { delete project; return; }
+
+    project->name = suggestedName;
+    project->romPath.clear();   // temp file — force an explicit Save As later
+    openProject(project);
+    broadcastAvailableProjects();
+    refreshProjectTree();
+    statusBar()->showMessage(
+        tr("Opened extracted ROM: %1 (%2 bytes)").arg(suggestedName).arg(romBytes.size()), 5000);
 }
 
 void MainWindow::actImportXdf()

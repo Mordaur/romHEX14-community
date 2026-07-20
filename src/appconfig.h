@@ -63,6 +63,23 @@ struct AppColors {
     QColor inputBorder;  // text input border
 };
 
+// ── 2D waveform draw style ───────────────────────────────────────────────────
+// OLS-style display options for the 2D view: how the curve is drawn, how
+// thick, whether points are marked, and whether the area below is filled.
+struct WaveStyle {
+    enum class Shape {
+        Line     = 0,   ///< plain connected line
+        LineDots = 1,   ///< line with point markers (default)
+        Dots     = 2,   ///< point markers only
+        Bars     = 3,   ///< vertical bars from the baseline
+        Filled   = 4,   ///< line with gradient fill underneath
+    };
+    Shape  shape          = Shape::LineDots;
+    double lineWidth      = 1.5;    ///< curve pen width in px (0.5 – 6.0)
+    int    dotSize        = 0;      ///< point marker radius in px; 0 = automatic
+    bool   fillUnderCurve = false;  ///< gradient fill below the curve (any shape)
+};
+
 struct ColorTheme {
     const char *id;
     const char *nameKey;
@@ -88,6 +105,7 @@ public:
     };
 
     AppColors      colors;
+    WaveStyle      waveStyle;                               ///< 2D waveform draw style
     bool           showLongMapNames = true;                 ///< Show map description instead of short name
     PermissionMode aiPermissionMode = PermissionMode::Ask;  ///< AI assistant write-tool gate
 

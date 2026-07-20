@@ -481,3 +481,14 @@ void WaveformEditor::submitExternal(int offset,
     pushUndo(offset, before, after);
     emitModified(offset, offset + after.size());
 }
+
+void WaveformEditor::applyRawBatch(int offset, const QByteArray &after)
+{
+    if (!m_data || after.isEmpty())                          return;
+    if (offset < 0 || offset + after.size() > m_data->size()) return;
+    QByteArray before = snapshot(offset, after.size());
+    if (before == after) return;          // nothing actually changed
+    restore(offset, after);               // write the new bytes into the buffer
+    pushUndo(offset, before, after);
+    emitModified(offset, offset + after.size());
+}
