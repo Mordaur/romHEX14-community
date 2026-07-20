@@ -4581,8 +4581,10 @@ void MainWindow::buildWelcomePage()
 
     topLay->addStretch(1);
 
+#ifdef RX14_PRO_BUILD
     // Account chip / Sign-in button. When signed in, give the chip a subtle
     // green gradient + 1px success border so the bar feels alive.
+    // Pro-only: the community edition has no account system, so no sign-in UI.
     {
         auto &api = ApiClient::instance();
         if (api.isLoggedIn()) {
@@ -4652,6 +4654,7 @@ void MainWindow::buildWelcomePage()
             topLay->addWidget(signInBtn);
         }
     }
+#endif // RX14_PRO_BUILD
 
     // Top-bar icon buttons: small inline pushbuttons. We do NOT use
     // makeFlatButton here because its #flat QSS adds 6×14px padding, which
