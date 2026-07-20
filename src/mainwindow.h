@@ -373,6 +373,7 @@ private:
     QAction *m_actHome       = nullptr;
     QAction *m_actImportA2L  = nullptr;
     QAction *m_actImportKP     = nullptr;
+    QAction *m_actImportXDF     = nullptr;
     // Single OLS-import action — toolbar OLS button + Project menu
     // "Import OLS…" entry both reference this. Replaces the previous
     // m_actImportOLS / m_actImportOLS pair which routed to the same

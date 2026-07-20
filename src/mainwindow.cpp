@@ -1986,6 +1986,8 @@ void MainWindow::buildActions()
     m_actImportA2L  = new QAction(tr("Import A2L…"),            this);
     m_actImportKP   = new QAction(tr("Import KP…"),             this);
     m_actImportKP->setToolTip(tr("Import a .kp map pack and apply map labels to the current project"));
+    m_actImportXDF  = new QAction(tr("Import XDF…"),            this);
+    m_actImportXDF->setToolTip(tr("Import a TunerPro .xdf definition and apply its maps to the current project"));
     // Single OLS-import action — replaces the previous Import OLS / Import
     // WinOLS Project pair (both routed to the same actImportOlsProject
     // slot anyway). Toolbar OLS button + Project menu both point here.
@@ -2267,6 +2269,7 @@ void MainWindow::buildActions()
     connect(m_actHome,       &QAction::triggered, this, &MainWindow::actGoHome);
     connect(m_actImportA2L,  &QAction::triggered, this, &MainWindow::actImportA2L);
     connect(m_actImportKP,      &QAction::triggered, this, &MainWindow::actImportKP);
+    connect(m_actImportXDF,     &QAction::triggered, this, &MainWindow::actImportXdf);
     connect(m_actImportOLS, &QAction::triggered, this, &MainWindow::actImportOlsProject);
     connect(m_actAddVersion,   &QAction::triggered, this, &MainWindow::actAddVersion);
     connect(m_actExport,     &QAction::triggered, this, &MainWindow::actExportROM);
@@ -2441,6 +2444,7 @@ void MainWindow::retranslateUi()
     m_actHome->setText(tr("Home"));
     m_actImportA2L->setText(tr("Import A2L…"));
     m_actImportKP->setText(tr("Import KP…"));
+    m_actImportXDF->setText(tr("Import XDF…"));
     m_actImportOLS->setText(tr("Import OLS…"));
     m_actAddVersion->setText(tr("Save Version Snapshot…"));
     m_actExport->setText(tr("Export ROM…"));
@@ -2538,8 +2542,7 @@ void MainWindow::retranslateUi()
     m_menuProject->addAction(m_actImportA2L);
     m_menuProject->addAction(m_actImportOLS);   // "Import OLS…"
     m_menuProject->addAction(m_actImportKP);
-    m_menuProject->addAction(tr("Import &XDF…"),
-                             this, [this]() { actImportXdf(); });
+    m_menuProject->addAction(m_actImportXDF);
     m_menuProject->addAction(m_actExport);
     m_menuProject->addAction(m_actExportOLS);
     m_menuProject->addSeparator();
@@ -3023,6 +3026,7 @@ void MainWindow::buildToolBars()
     m_actImportA2L->setIcon(makeIcon("A2L", cNav));
     m_actImportOLS->setIcon(makeIcon("OLS", cNav));   // toolbar OLS button
     m_actImportKP->setIcon(makeIcon("KP", cNav));
+    m_actImportXDF->setIcon(makeIcon("XDF", cNav));
     m_actImportCsvList->setIcon(makeIcon("CSV", cNav));
     m_actAddVersion->setIcon(makeIcon("V+", cNav));
     m_actExport->setIcon(makeIcon("EXP", cFile));
@@ -3070,6 +3074,7 @@ void MainWindow::buildToolBars()
     tb1->addAction(m_actImportA2L);
     tb1->addAction(m_actImportOLS);   // toolbar OLS button → unified import
     tb1->addAction(m_actImportKP);
+    tb1->addAction(m_actImportXDF);
     tb1->addAction(m_actImportCsvList);
     tb1->addAction(m_actAddVersion);
     tb1->addSeparator();
