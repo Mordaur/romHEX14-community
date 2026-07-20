@@ -6,6 +6,7 @@
 
 #include "a2lparser.h"
 #include <QRegularExpression>
+#include <functional>
 
 A2LParser::A2LParser(QObject *parent)
     : QObject(parent)
@@ -580,6 +581,40 @@ static AxisInfo buildAxisInfo(const A2LAxisDesc &ad,
 
 QVector<MapInfo> A2LParser::getMapList() const
 {
+    // Build characteristic-name -> folder-path map from the GROUP hierarchy so
+    // imported maps land in the same tree the A2L author intended. Root groups
+    // are those never referenced as a SUB_GROUP; each characteristic is placed
+    // under the first group that contains it (matching the import dialog).
+    QHash<QString, QString> charFolder;
+    if (!m_groups.isEmpty()) {
+        QHash<QString, int> groupIdx;
+        for (int i = 0; i < m_groups.size(); i++)
+            groupIdx.insert(m_groups[i].name, i);
+        QSet<QString> referencedAsSub;
+        for (const auto &g : m_groups)
+            for (const auto &s : g.subGroups)
+                referencedAsSub.insert(s);
+
+        QSet<QString> visited;
+        std::function<void(const QString &, const QString &)> walk =
+            [&](const QString &groupName, const QString &parentPath) {
+            if (!groupIdx.contains(groupName)) return;
+            if (visited.contains(groupName)) return;   // guard against cycles
+            visited.insert(groupName);
+            const A2LGroup &g = m_groups[groupIdx[groupName]];
+            const QString path = parentPath.isEmpty()
+                ? g.name : parentPath + QLatin1Char('/') + g.name;
+            for (const auto &sub : g.subGroups)
+                walk(sub, path);
+            for (const auto &cn : g.characteristics)
+                if (!charFolder.contains(cn))
+                    charFolder.insert(cn, path);
+        };
+        for (const auto &g : m_groups)
+            if (!referencedAsSub.contains(g.name))
+                walk(g.name, QString());
+    }
+
     QVector<MapInfo> result;
     for (const auto &c : m_characteristics) {
         if (c.type != "MAP" && c.type != "CURVE" && c.type != "VAL_BLK" && c.type != "VALUE")
@@ -649,6 +684,8 @@ QVector<MapInfo> A2LParser::getMapList() const
                 m.mapDataOffset = (uint32_t)(headerSz + nx * axXSz + ny * axYSz);
             }
         }
+
+        m.folderPath = charFolder.value(c.name);
 
         result.append(m);
     }

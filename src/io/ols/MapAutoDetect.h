@@ -35,6 +35,14 @@ struct MapAutoDetectOptions {
     int  maxCandidatesPerRegion  = 20000;
     int  maxAxesPerRegion        = 2048;   ///< cap axis-search work per cell-type
     int  topN                    = 0;      ///< keep only the N best-scoring candidates (0 = unlimited)
+
+    // Cell-size priors. Defaults are tuned to a Bosch-heavy corpus where 2-byte
+    // cells dominate; other vendors legitimately use other widths (e.g. Denso
+    // Mazda SKYACTIV-D / Toyota carry real 4-byte maps), so these are tunable
+    // per vendor profile without recompiling. See community #29.
+    double cellPrior2B           = 3.0;    ///< bonus for 2-byte data cells
+    double cellPrior1B           = -5.0;   ///< penalty for 1-byte data cells
+    double cellPrior4B           = -12.0;  ///< penalty for 4-byte data cells (soften for Denso/float)
 };
 
 class MapAutoDetect {

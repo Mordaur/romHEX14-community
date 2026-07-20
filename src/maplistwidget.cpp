@@ -15,6 +15,7 @@
 #include <QStyledItemDelegate>
 #include <QApplication>
 #include <QMenu>
+#include <functional>
 
 // ── Inline delegate: dim address + description in a single column ─────────────
 static const int kAddrRole = Qt::UserRole + 1;
@@ -225,7 +226,12 @@ void MapListWidget::setProgressMessage(const QString &msg, int pct)
 void MapListWidget::onItemClicked(QTreeWidgetItem *item, int /*column*/)
 {
     if (!item) return;
-    int idx = item->data(0, Qt::UserRole).toInt();
+    bool ok = false;
+    const int idx = item->data(0, Qt::UserRole).toInt(&ok);
+    if (!ok) {           // folder node — toggle expansion instead of selecting
+        item->setExpanded(!item->isExpanded());
+        return;
+    }
     if (idx >= 0 && idx < m_allMaps.size())
         emit mapSelected(m_allMaps[idx]);
 }
@@ -235,38 +241,112 @@ void MapListWidget::onSearchChanged()
     filterMaps();
 }
 
+// Create the leaf item for map index i under the given parent (folder node or
+// the tree itself). UserRole holds the map index; folder nodes leave it unset.
+void MapListWidget::addMapLeaf(QTreeWidgetItem *parent, int i)
+{
+    static const QFont addrFont = []{
+        QFont f("Consolas", 8); f.setStyleHint(QFont::Monospace); return f;
+    }();
+    const auto &m = m_allMaps[i];
+    auto *item = parent ? new QTreeWidgetItem(parent)
+                        : new QTreeWidgetItem(m_tree);
+
+    const bool showLong = AppConfig::instance().showLongMapNames;
+    QString label = showLong
+        ? (m.description.isEmpty() ? m.name : m.description)
+        : (m.name.isEmpty() ? m.description : m.name);
+    const QString addrStr = QString("0x%1").arg(m.address, 8, 16, QChar('0')).toUpper();
+    item->setText(0, label);
+    item->setData(0, kAddrRole, addrStr);
+    item->setToolTip(0, m.name + (m.description.isEmpty() ? "" : "\n" + m.description));
+    item->setText(1, m.type);
+    item->setText(2, addrStr);
+    QString dims = (m.dimensions.y > 1)
+        ? QString("%1×%2").arg(m.dimensions.x).arg(m.dimensions.y)
+        : QString::number(m.dimensions.x);
+    item->setText(3, dims);
+    item->setFont(2, addrFont);
+    item->setData(0, Qt::UserRole, i);
+    item->setTextAlignment(2, Qt::AlignRight | Qt::AlignVCenter);
+    item->setTextAlignment(3, Qt::AlignRight | Qt::AlignVCenter);
+}
+
 void MapListWidget::populateTree()
 {
     m_tree->clear();
-    QFont addrFont("Consolas", 8);
-    addrFont.setStyleHint(QFont::Monospace);
 
-    for (int i = 0; i < m_allMaps.size(); i++) {
-        const auto &m = m_allMaps[i];
-        auto *item = new QTreeWidgetItem(m_tree);
+    // Folder mode kicks in only when the data actually carries folder paths,
+    // so A2L/OLS imports without groups keep the flat, sortable list.
+    m_hasFolders = false;
+    for (const auto &m : m_allMaps)
+        if (!m.folderPath.isEmpty()) { m_hasFolders = true; break; }
 
-        const bool showLong = AppConfig::instance().showLongMapNames;
-        // Primary label: description when showLong (or no name), else short name
-        QString label = showLong
-            ? (m.description.isEmpty() ? m.name : m.description)
-            : (m.name.isEmpty() ? m.description : m.name);
-        const QString addrStr = QString("0x%1").arg(m.address, 8, 16, QChar('0')).toUpper();
-        item->setText(0, label);
-        item->setData(0, kAddrRole, addrStr);          // for the inline delegate
-        item->setToolTip(0, m.name + (m.description.isEmpty() ? "" : "\n" + m.description));
-        item->setText(1, m.type);
-        item->setText(2, addrStr);  // kept in model for sort/search; column is hidden
-        QString dims = (m.dimensions.y > 1)
-            ? QString("%1×%2").arg(m.dimensions.x).arg(m.dimensions.y)
-            : QString::number(m.dimensions.x);
-        item->setText(3, dims);
-        item->setFont(2, addrFont);
-        item->setData(0, Qt::UserRole, i);
-        item->setTextAlignment(2, Qt::AlignRight | Qt::AlignVCenter);
-        item->setTextAlignment(3, Qt::AlignRight | Qt::AlignVCenter);
+    if (!m_hasFolders) {
+        m_tree->setRootIsDecorated(false);
+        m_tree->setSortingEnabled(true);
+        for (int i = 0; i < m_allMaps.size(); i++)
+            addMapLeaf(nullptr, i);
+        m_tree->sortByColumn(m_tree->header()->sortIndicatorSection(),
+                             m_tree->header()->sortIndicatorOrder());
+        return;
     }
-    m_tree->sortByColumn(m_tree->header()->sortIndicatorSection(),
-                         m_tree->header()->sortIndicatorOrder());
+
+    // Hierarchical build. Sorting stays off so folders and leaves keep the
+    // insertion order (folders first, alphabetical; leaves by address).
+    m_tree->setSortingEnabled(false);
+    m_tree->setRootIsDecorated(true);
+
+    QHash<QString, QTreeWidgetItem *> folderNodes;   // full path -> node
+    std::function<QTreeWidgetItem *(const QString &)> folderFor =
+        [&](const QString &path) -> QTreeWidgetItem * {
+        if (path.isEmpty()) return nullptr;
+        auto it = folderNodes.constFind(path);
+        if (it != folderNodes.constEnd()) return it.value();
+        // Create the node and any missing ancestors.
+        const int slash = path.lastIndexOf(QLatin1Char('/'));
+        const QString parentPath = slash < 0 ? QString() : path.left(slash);
+        const QString leafName    = slash < 0 ? path : path.mid(slash + 1);
+        QTreeWidgetItem *parent = folderFor(parentPath);
+        auto *node = parent ? new QTreeWidgetItem(parent)
+                            : new QTreeWidgetItem(m_tree);
+        node->setText(0, leafName);
+        node->setFirstColumnSpanned(true);
+        node->setFlags(node->flags() & ~Qt::ItemIsSelectable);
+        QFont bold = node->font(0);
+        bold.setBold(true);
+        node->setFont(0, bold);
+        node->setExpanded(true);
+        folderNodes.insert(path, node);
+        return node;
+    };
+
+    // Deterministic order: sort indices by (folderPath, address).
+    QVector<int> order(m_allMaps.size());
+    for (int i = 0; i < m_allMaps.size(); i++) order[i] = i;
+    std::sort(order.begin(), order.end(), [this](int a, int b) {
+        const auto &ma = m_allMaps[a], &mb = m_allMaps[b];
+        if (ma.folderPath != mb.folderPath)
+            return ma.folderPath < mb.folderPath;
+        return ma.address < mb.address;
+    });
+    for (int i : order)
+        addMapLeaf(folderFor(m_allMaps[i].folderPath), i);
+
+    // Append the map count to each folder label.
+    for (auto it = folderNodes.cbegin(); it != folderNodes.cend(); ++it) {
+        QTreeWidgetItem *node = it.value();
+        int leaves = 0;
+        std::function<void(QTreeWidgetItem *)> countLeaves = [&](QTreeWidgetItem *n) {
+            for (int c = 0; c < n->childCount(); c++) {
+                QTreeWidgetItem *ch = n->child(c);
+                if (ch->childCount() > 0) countLeaves(ch);
+                else                       leaves++;
+            }
+        };
+        countLeaves(node);
+        node->setText(0, QString("%1  (%2)").arg(node->text(0)).arg(leaves));
+    }
 }
 
 void MapListWidget::retranslateUi()
@@ -380,6 +460,45 @@ static int scoreMap(const QStringList &tokens, const QStringList &normTokens,
 void MapListWidget::filterMaps()
 {
     QString query = m_searchBox->text().trimmed().toLower();
+
+    QStringList tokens = query.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+    QStringList normTokens;
+    for (const auto &t : tokens)
+        normTokens.append(stripSeparators(t));
+
+    // Folder mode: hide/show leaves in place and collapse empty folders.
+    // Reordering across parents isn't meaningful in a tree, so only the flat
+    // path re-ranks by score below.
+    if (m_hasFolders) {
+        int visible = 0;
+        std::function<bool(QTreeWidgetItem *)> apply = [&](QTreeWidgetItem *node) -> bool {
+            bool ok = false;
+            const int idx = node->data(0, Qt::UserRole).toInt(&ok);
+            if (ok) {                       // leaf
+                const auto &m = m_allMaps[idx];
+                const QString addr = QString("0x%1").arg(m.address, 0, 16);
+                const bool show = query.isEmpty()
+                    || scoreMap(tokens, normTokens, m.name, m.description, m.type, addr) > 0;
+                node->setHidden(!show);
+                if (show) visible++;
+                return show;
+            }
+            bool anyChild = false;          // folder: visible if any child is
+            for (int c = 0; c < node->childCount(); c++)
+                anyChild = apply(node->child(c)) || anyChild;
+            node->setHidden(!anyChild);
+            if (anyChild && !query.isEmpty()) node->setExpanded(true);
+            return anyChild;
+        };
+        for (int i = 0; i < m_tree->topLevelItemCount(); i++)
+            apply(m_tree->topLevelItem(i));
+        m_statusLabel->setText(query.isEmpty()
+            ? tr("%1 maps  |  Base: 0x%2").arg(m_allMaps.size())
+                  .arg(m_baseAddress, 0, 16).toUpper()
+            : tr("%1 of %2 maps shown").arg(visible).arg(m_allMaps.size()));
+        return;
+    }
+
     if (query.isEmpty()) {
         // Reset to natural order — re-sort by current column
         for (int i = 0; i < m_tree->topLevelItemCount(); i++)
@@ -391,11 +510,6 @@ void MapListWidget::filterMaps()
             .arg(m_baseAddress, 0, 16).toUpper());
         return;
     }
-
-    QStringList tokens = query.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
-    QStringList normTokens;
-    for (const auto &t : tokens)
-        normTokens.append(stripSeparators(t));
 
     // Score all items
     struct ScoredItem { QTreeWidgetItem *item; int score; };

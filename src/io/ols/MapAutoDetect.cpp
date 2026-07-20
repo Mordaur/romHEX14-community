@@ -301,12 +301,13 @@ static double scoreShapePrior1D(int n)
     return s;
 }
 
-static double scoreCellPrior(int dataCellBytes, int axisCellBytes)
+static double scoreCellPrior(int dataCellBytes, int axisCellBytes,
+                             const MapAutoDetectOptions &opts)
 {
     double s = 0.0;
-    if (dataCellBytes == 2) s += 3.0;
-    else if (dataCellBytes == 1) s -= 5.0;
-    else if (dataCellBytes == 4) s -= 12.0;
+    if (dataCellBytes == 2) s += opts.cellPrior2B;
+    else if (dataCellBytes == 1) s += opts.cellPrior1B;
+    else if (dataCellBytes == 4) s += opts.cellPrior4B;
     if (dataCellBytes == axisCellBytes) s += 1.0;
     return s;
 }
@@ -373,7 +374,7 @@ QVector<MapCandidate> MapAutoDetect::scan(const QByteArray &rom,
         const int cellPen = (dataCellBytes == ax.cellBytes) ? 0 : 5;
         const double baseScore = scoreCombined(axMean, smooth, cellPen);
         const double prior = scoreShapePrior2D(N, M)
-            + scoreCellPrior(dataCellBytes, ax.cellBytes);
+            + scoreCellPrior(dataCellBytes, ax.cellBytes, opts);
         const double total = scoreWithPriors(
             baseScore, prior);
         if (total < opts.minScore2D) return;
@@ -411,7 +412,7 @@ QVector<MapCandidate> MapAutoDetect::scan(const QByteArray &rom,
         const int cellPen = (dataCellBytes == ax.cellBytes) ? 0 : 5;
         const double baseScore = scoreCombined(ax.score, smooth, cellPen);
         const double prior = scoreShapePrior1D(N)
-            + scoreCellPrior(dataCellBytes, ax.cellBytes);
+            + scoreCellPrior(dataCellBytes, ax.cellBytes, opts);
         const double total = scoreWithPriors(
             baseScore, prior);
         if (total < opts.minScore1D) return;

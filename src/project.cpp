@@ -189,7 +189,7 @@ static void cborWriteAxisInfoFull(QCborStreamWriter &w, const AxisInfo &ax)
 
 static void cborWriteMapInfo(QCborStreamWriter &w, const MapInfo &m)
 {
-    w.startMap(18);
+    w.startMap(19);
     w.append(QLatin1String("name"));        w.append(m.name);
     w.append(QLatin1String("desc"));        w.append(m.description);
     w.append(QLatin1String("type"));        w.append(m.type);
@@ -208,6 +208,7 @@ static void cborWriteMapInfo(QCborStreamWriter &w, const MapInfo &m)
     w.append(QLatin1String("linkConf"));    w.append(m.linkConfidence);
     w.append(QLatin1String("colMajor"));    w.append(m.columnMajor);
     w.append(QLatin1String("userNotes"));   w.append(m.userNotes);
+    w.append(QLatin1String("folder"));      w.append(m.folderPath);
     w.endMap();
 }
 
@@ -750,6 +751,7 @@ static MapInfo decodeMapInfo(const QCborMap &m)
     mi.linkConfidence = static_cast<int>(m[QLatin1String("linkConf")].toInteger());
     mi.columnMajor    = m[QLatin1String("colMajor")].toBool();
     mi.userNotes      = m[QLatin1String("userNotes")].toString();
+    mi.folderPath     = m[QLatin1String("folder")].toString();
     return mi;
 }
 
@@ -1158,6 +1160,8 @@ static QJsonObject saveMapInfo(const MapInfo &m)
         o["linkConf"] = m.linkConfidence;
     if (m.columnMajor)
         o["colMajor"] = true;
+    if (!m.folderPath.isEmpty())
+        o["folder"] = m.folderPath;
     return o;
 }
 
@@ -1180,6 +1184,7 @@ static MapInfo loadMapInfo(const QJsonObject &o)
     m.userNotes      = o["userNotes"].toString();
     m.linkConfidence = o["linkConf"].toInt(0);
     m.columnMajor    = o["colMajor"].toBool(false);
+    m.folderPath     = o["folder"].toString();
     return m;
 }
 

@@ -157,6 +157,9 @@ struct MapInfo {
     int  linkConfidence = 0;    // 0 = original (no link), 40/60/80/95/100 = linked
     bool columnMajor = false;  // true = COLUMN_DIR (x fastest), false = ROW_DIR (y fastest, Bosch default)
     QString userNotes;          // user-written comments, persisted in project file
+    QString folderPath;         // "/"-delimited group path for the project tree
+                                // (e.g. "Boost/Limits"); empty = project root.
+                                // Populated from A2L GROUPs / OLS folders on import.
 
     // OLS format: virtual base address used by newer file versions to remap
     // rom_addr -> file offset via file_pos = file_size - (base - rom_addr).

@@ -6,6 +6,9 @@
 #include "savepoints/SavepointManager.h"
 #include "annotations/AnnotationStore.h"
 #include "io/MapListExporter.h"
+#include "io/TuneReport.h"
+#include "io/XdfIo.h"
+#include "io/ols/KpExporter.h"
 #include "edit/FindSimilarMapsDlg.h"
 #include "edit/MapFingerprint.h"
 #include "io/winols/SimilarFilesDlg.h"
@@ -2535,6 +2538,8 @@ void MainWindow::retranslateUi()
     m_menuProject->addAction(m_actImportA2L);
     m_menuProject->addAction(m_actImportOLS);   // "Import OLS…"
     m_menuProject->addAction(m_actImportKP);
+    m_menuProject->addAction(tr("Import &XDF…"),
+                             this, [this]() { actImportXdf(); });
     m_menuProject->addAction(m_actExport);
     m_menuProject->addAction(m_actExportOLS);
     m_menuProject->addSeparator();
@@ -2599,6 +2604,12 @@ void MainWindow::retranslateUi()
                              this, [this]() { exportMapListCsv(); });
     m_menuProject->addAction(tr("Export map list as &JSON…"),
                              this, [this]() { exportMapListJson(); });
+    m_menuProject->addAction(tr("Export XD&F (TunerPro)…"),
+                             this, [this]() { actExportXdf(); });
+    m_menuProject->addAction(tr("Export &KP map pack…"),
+                             this, [this]() { actExportKp(); });
+    m_menuProject->addAction(tr("Export &Tuning Report…"),
+                             this, [this]() { exportTuningReport(); });
     m_menuProject->addSeparator();
     m_menuProject->addAction(m_actClose);
     m_menuProject->addSeparator();
@@ -3682,6 +3693,31 @@ void MainWindow::loadA2LIntoProject(Project *project, const QString &a2lPath)
     }
     QByteArray rawA2l = f.readAll();
     f.close();
+
+    // DAMOS files that are actually ASAP2/A2L text parse fine here. The Bosch
+    // *binary* DAMOS container has no public parser, and the industry path is
+    // to convert it to A2L first — so if the file has no ASAP2 markers and
+    // looks binary, guide the user instead of silently importing nothing.
+    {
+        const bool hasA2lMarkers = rawA2l.contains("CHARACTERISTIC")
+            || rawA2l.contains("ASAP2_VERSION") || rawA2l.contains("/begin");
+        int nonText = 0;
+        const int probe = qMin(4096, rawA2l.size());
+        for (int i = 0; i < probe; ++i) {
+            const auto c = static_cast<unsigned char>(rawA2l.at(i));
+            if (c == 0 || (c < 0x09) || (c > 0x0D && c < 0x20 && c != 0x1B)) ++nonText;
+        }
+        const bool looksBinary = probe > 0 && nonText * 20 > probe;   // >5% control bytes
+        if (!hasA2lMarkers && looksBinary) {
+            QMessageBox::information(this, tr("Binary DAMOS not supported"),
+                tr("This looks like a binary DAMOS file, which has no open format and "
+                   "cannot be read directly.\n\nConvert it to A2L (ASAP2) first — e.g. with "
+                   "your OLS/DAMOS toolchain's \"DAMOS/ASAP2 export\" — then import the "
+                   ".a2l here. Text-based DAMOS/A2L files import directly."));
+            return;
+        }
+    }
+
     QString text = QString::fromUtf8(rawA2l);
 
     // Any in-flight map auto-scan would produce results AFTER real A2L maps
@@ -6258,8 +6294,8 @@ void MainWindow::actImportA2L()
             tr("Open or create a project first."));
         return;
     }
-    QString path = QFileDialog::getOpenFileName(this, tr("Import A2L File"), {},
-        tr("A2L Files (*.a2l);;All Files (*)"));
+    QString path = QFileDialog::getOpenFileName(this, tr("Import A2L / DAMOS File"), {},
+        tr("A2L / DAMOS (*.a2l *.dam *.damos);;A2L Files (*.a2l);;All Files (*)"));
     if (!path.isEmpty())
         loadA2LIntoProject(proj, path);
 }
@@ -9033,6 +9069,205 @@ void MainWindow::exportMapListJson()
     }
     statusBar()->showMessage(tr("Wrote %1 maps to %2")
                                  .arg(p->maps.size()).arg(path), 6000);
+}
+
+void MainWindow::exportTuningReport()
+{
+    auto *p = activeProject();
+    if (!p || p->maps.isEmpty()) {
+        QMessageBox::information(this, tr("Tuning Report"),
+            tr("Open a project with at least one map first. The report "
+               "compares the current ROM against its original snapshot."));
+        return;
+    }
+
+    const QByteArray tuned = p->currentData;
+    // Prefer the project's original snapshot; if it's missing or a different
+    // size, ask the user to point at the baseline ROM to diff against.
+    QByteArray stock = p->originalData;
+    if (stock.isEmpty() || stock.size() != tuned.size()) {
+        const QString basePath = QFileDialog::getOpenFileName(this,
+            tr("Select the original (baseline) ROM to compare against"),
+            QDir::homePath(), tr("ROM files (*.bin *.rom *.ori *.hex);;All files (*)"));
+        if (basePath.isEmpty()) return;
+        QFile bf(basePath);
+        if (!bf.open(QIODevice::ReadOnly)) {
+            QMessageBox::warning(this, tr("Tuning Report"),
+                tr("Could not open %1").arg(basePath));
+            return;
+        }
+        stock = bf.readAll();
+        bf.close();
+        if (stock.size() != tuned.size()) {
+            QMessageBox::warning(this, tr("Tuning Report"),
+                tr("The baseline ROM (%1 bytes) is a different size from the "
+                   "current ROM (%2 bytes); they must match to compare maps.")
+                   .arg(stock.size()).arg(tuned.size()));
+            return;
+        }
+    }
+
+    tunereport::Options opt;
+    opt.projectName = p->displayName();
+    opt.vehicle = QStringList{ p->brand, p->model, p->vehicleModel }
+                      .join(QLatin1Char(' ')).simplified();
+    opt.ecuName = QStringList{ p->ecuProducer, p->ecuType }
+                      .join(QLatin1Char(' ')).simplified();
+    opt.softwareVersion = p->ecuSwVersion.isEmpty() ? p->ecuNrProd : p->ecuSwVersion;
+    opt.author = p->clientName;
+    opt.generatedAt = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd HH:mm"));
+
+    const auto changes = tunereport::analyze(p->maps, stock, tuned);
+    int changedMaps = 0;
+    for (const auto &c : changes) if (c.changed) changedMaps++;
+    if (changedMaps == 0) {
+        QMessageBox::information(this, tr("Tuning Report"),
+            tr("No differences found between the current ROM and the baseline — "
+               "nothing to report."));
+        return;
+    }
+
+    const QString html = tunereport::renderHtml(changes, opt);
+    const QString suggested = QDir::homePath() + "/" + p->displayName()
+                              + tr("-tuning-report") + ".html";
+    const QString path = QFileDialog::getSaveFileName(this,
+        tr("Save Tuning Report"), suggested, tr("HTML report (*.html)"));
+    if (path.isEmpty()) return;
+
+    QFile out(path);
+    if (!out.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, tr("Tuning Report"),
+            tr("Could not write %1").arg(path));
+        return;
+    }
+    out.write(html.toUtf8());
+    out.close();
+
+    statusBar()->showMessage(
+        tr("Tuning report: %1 changed maps written to %2").arg(changedMaps).arg(path), 8000);
+    if (QMessageBox::question(this, tr("Tuning Report"),
+            tr("Report saved with %1 changed maps.\n\nOpen it now?").arg(changedMaps))
+            == QMessageBox::Yes) {
+        QDesktopServices::openUrl(QUrl::fromLocalFile(path));
+    }
+}
+
+void MainWindow::actImportXdf()
+{
+    auto *proj = activeProject();
+    if (!proj || proj->currentData.isEmpty()) {
+        QMessageBox::information(this, tr("Import XDF"),
+            tr("Open a project with ROM data first. XDF definitions are added "
+               "on top of an existing ROM (the same way A2L files are)."));
+        return;
+    }
+    const QString path = QFileDialog::getOpenFileName(this,
+        tr("Import XDF definition"), {}, tr("TunerPro XDF (*.xdf);;All files (*)"));
+    if (path.isEmpty()) return;
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly)) {
+        QMessageBox::critical(this, tr("Error"), tr("Cannot open file: %1").arg(path));
+        return;
+    }
+    const QByteArray data = f.readAll();
+    f.close();
+
+    auto res = xdf::importFromXml(data);
+    if (!res.error.isEmpty()) {
+        QMessageBox::critical(this, tr("Import XDF"), res.error);
+        return;
+    }
+    if (res.maps.isEmpty()) {
+        QMessageBox::information(this, tr("Import XDF"),
+            tr("No maps with addresses were found in this XDF."));
+        return;
+    }
+
+    // De-dupe against existing maps by (name + address), then apply. XDF carries
+    // its own folder (CATEGORY) per map, so the tree groups itself.
+    QSet<QPair<QString, uint32_t>> existing;
+    for (const auto &m : proj->maps)
+        existing.insert({m.name, m.address});
+    const int romSize = proj->currentData.size();
+    int added = 0, skipped = 0, outOfBounds = 0;
+    for (auto &m : res.maps) {
+        if (m.address >= (uint32_t)romSize
+            || m.address + (uint32_t)m.length > (uint32_t)romSize) { ++outOfBounds; continue; }
+        if (existing.contains({m.name, m.address})) { ++skipped; continue; }
+        proj->maps.append(m);
+        existing.insert({m.name, m.address});
+        ++added;
+    }
+
+    if (added == 0) {
+        QMessageBox::information(this, tr("Import XDF"),
+            tr("No new maps were added (%1 already present, %2 outside the ROM).")
+                .arg(skipped).arg(outOfBounds));
+        return;
+    }
+    proj->modified = true;
+    emit proj->dataChanged();   // tree refresh + autosave
+    QString msg = tr("Imported %1 maps from XDF").arg(added);
+    if (skipped)     msg += tr(", %1 already present").arg(skipped);
+    if (outOfBounds) msg += tr(", %1 outside ROM").arg(outOfBounds);
+    statusBar()->showMessage(msg, 8000);
+}
+
+void MainWindow::actExportXdf()
+{
+    auto *p = activeProject();
+    if (!p || p->maps.isEmpty()) {
+        QMessageBox::information(this, tr("Export XDF"),
+            tr("Open a project with at least one map first."));
+        return;
+    }
+    const QString suggested = QDir::homePath() + "/" + p->displayName() + ".xdf";
+    const QString path = QFileDialog::getSaveFileName(this,
+        tr("Export XDF (TunerPro)"), suggested, tr("TunerPro XDF (*.xdf)"));
+    if (path.isEmpty()) return;
+
+    xdf::ExportOptions opt;
+    opt.romSize = static_cast<uint32_t>(qMax(0, p->currentData.size()));
+    opt.description = p->displayName();
+    const QByteArray xml = xdf::exportToXml(p->maps, opt);
+
+    QFile out(path);
+    if (!out.open(QIODevice::WriteOnly)) {
+        QMessageBox::warning(this, tr("Export XDF"), tr("Could not write %1").arg(path));
+        return;
+    }
+    out.write(xml);
+    out.close();
+    statusBar()->showMessage(tr("Exported %1 maps to %2").arg(p->maps.size()).arg(path), 6000);
+}
+
+void MainWindow::actExportKp()
+{
+    auto *p = activeProject();
+    if (!p || p->maps.isEmpty()) {
+        QMessageBox::information(this, tr("Export KP"),
+            tr("Open a project with at least one map first."));
+        return;
+    }
+    const QString suggested = QDir::homePath() + "/" + p->displayName() + ".kp";
+    const QString path = QFileDialog::getSaveFileName(this,
+        tr("Export KP map pack"), suggested, tr("KP map pack (*.kp)"));
+    if (path.isEmpty()) return;
+
+    const uint32_t romSize = static_cast<uint32_t>(qMax(0, p->currentData.size()));
+    auto res = ols::KpExporter::exportToBytes(p->maps, romSize);
+    if (!res.error.isEmpty()) {
+        QMessageBox::warning(this, tr("Export KP"), res.error);
+        return;
+    }
+    QFile out(path);
+    if (!out.open(QIODevice::WriteOnly)) {
+        QMessageBox::warning(this, tr("Export KP"), tr("Could not write %1").arg(path));
+        return;
+    }
+    out.write(res.data);
+    out.close();
+    statusBar()->showMessage(tr("Exported %1 maps to %2").arg(res.mapCount).arg(path), 6000);
 }
 
 void MainWindow::onJumpMarker(bool forward)

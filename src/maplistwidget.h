@@ -43,6 +43,7 @@ private slots:
 private:
     void filterMaps();
     void populateTree();
+    void addMapLeaf(QTreeWidgetItem *parent, int mapIndex);
 
     QLabel       *m_searchLabel  = nullptr;
     QLineEdit    *m_searchBox    = nullptr;
@@ -52,5 +53,6 @@ private:
 
     QVector<MapInfo> m_allMaps;
     uint32_t m_baseAddress = 0;
+    bool m_hasFolders = false;   // true once any map carries a folderPath
     QTimer m_searchTimer;
 };

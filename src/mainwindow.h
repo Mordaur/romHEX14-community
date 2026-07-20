@@ -511,6 +511,10 @@ private:
     void onJumpMarker(bool forward);
     void exportMapListCsv();
     void exportMapListJson();
+    void exportTuningReport();
+    void actImportXdf();
+    void actExportXdf();
+    void actExportKp();
     void runBulkEdit(const QVector<MapInfo> &maps);
     void runFindSimilar(const MapInfo &reference);
     struct AnnoCtx {

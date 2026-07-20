@@ -163,6 +163,7 @@ set(SOURCES
     src/io/ols/OlsKennfeldParser.cpp
     src/io/ols/OlsImporter.cpp
     src/io/ols/KpImporter.cpp
+    src/io/ols/KpExporter.cpp
     src/io/ols/OlsProjectBuilder.cpp
     src/io/ols/MapAutoDetect.cpp
     src/io/ols/EcuAutoDetect.cpp
@@ -178,6 +179,9 @@ set(SOURCES
     src/edit/SliderEditDlg.cpp
     src/annotations/AnnotationStore.cpp
     src/io/MapListExporter.cpp
+    src/io/TuneReport.cpp
+    src/io/XdfIo.cpp
+    src/io/vag/FrfCodec.cpp
     src/edit/MapFingerprint.cpp
     src/edit/FindSimilarMapsDlg.cpp
     src/io/winols/WinOlsCatalogReader.cpp
