@@ -33,7 +33,7 @@ public:
     // preferCsv preselects the CSV map list filter in the file dialog
     // (used by the toolbar CSV button).
     static void importPack(Project *project, QWidget *parent = nullptr,
-                           bool preferCsv = false);
+                           bool preferCsv = false, const QString &droppedPath = {});
 
     // Internal constructor (use the static factory methods above).
     explicit MapPackDlg(QWidget *parent = nullptr);

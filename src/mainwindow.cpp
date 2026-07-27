@@ -2293,9 +2293,9 @@ void MainWindow::buildActions()
     connect(m_actSaveAs,     &QAction::triggered, this, &MainWindow::actSaveProjectAs);
     connect(m_actClose,      &QAction::triggered, this, &MainWindow::actCloseProject);
     connect(m_actHome,       &QAction::triggered, this, &MainWindow::actGoHome);
-    connect(m_actImportA2L,  &QAction::triggered, this, &MainWindow::actImportA2L);
-    connect(m_actImportKP,      &QAction::triggered, this, &MainWindow::actImportKP);
-    connect(m_actImportXDF,     &QAction::triggered, this, &MainWindow::actImportXdf);
+    connect(m_actImportA2L,  &QAction::triggered, this, [this]{ actImportA2L(); });
+    connect(m_actImportKP,      &QAction::triggered, this, [this]{ actImportKP(); });
+    connect(m_actImportXDF,     &QAction::triggered, this, [this]{ actImportXdf(); });
     connect(m_actImportFRF,     &QAction::triggered, this, &MainWindow::actImportFrf);
     connect(m_actImportOLS, &QAction::triggered, this, &MainWindow::actImportOlsProject);
     connect(m_actAddVersion,   &QAction::triggered, this, &MainWindow::actAddVersion);
@@ -4201,7 +4201,7 @@ void MainWindow::loadA2LIntoProject(Project *project, const QString &a2lPath)
 // should be APPLIED ON TOP of the currently-open project — same UX shape
 // as Import A2L. Previous wiring routed this through actImportOlsProject
 // which created a brand-new project, which is wrong.
-void MainWindow::actImportKP()
+void MainWindow::actImportKP(const QString &droppedPath)
 {
     Project *proj = activeProject();
     if (!proj || proj->currentData.isEmpty()) {
@@ -4211,9 +4211,11 @@ void MainWindow::actImportKP()
         return;
     }
 
-    const QString path = QFileDialog::getOpenFileName(this,
-        tr("Import KP map pack"), {},
-        tr("KP map packs (*.kp);;All files (*)"));
+    QString path = droppedPath;
+    if (path.isEmpty())
+        path = QFileDialog::getOpenFileName(this,
+            tr("Import KP map pack"), {},
+            tr("KP map packs (*.kp);;All files (*)"));
     if (path.isEmpty()) return;
 
     QFile f(path);
@@ -6360,7 +6362,7 @@ void MainWindow::actCloseProject()
     broadcastAvailableProjects();
 }
 
-void MainWindow::actImportA2L()
+void MainWindow::actImportA2L(const QString &droppedPath)
 {
     auto *proj = activeProject();
     if (!proj) {
@@ -6368,8 +6370,10 @@ void MainWindow::actImportA2L()
             tr("Open or create a project first."));
         return;
     }
-    QString path = QFileDialog::getOpenFileName(this, tr("Import A2L / DAMOS File"), {},
-        tr("A2L / DAMOS (*.a2l *.dam *.damos);;A2L Files (*.a2l);;All Files (*)"));
+    QString path = droppedPath;
+    if (path.isEmpty())
+        path = QFileDialog::getOpenFileName(this, tr("Import A2L / DAMOS File"), {},
+            tr("A2L / DAMOS (*.a2l *.dam *.damos);;A2L Files (*.a2l);;All Files (*)"));
     if (!path.isEmpty())
         loadA2LIntoProject(proj, path);
 }
@@ -7961,13 +7965,28 @@ void MainWindow::dropEvent(QDropEvent *e)
 {
     for (const auto &url : e->mimeData()->urls()) {
         QString path = url.toLocalFile();
-        if (path.toLower().endsWith(".a2l")) {
-            actImportA2L();
-        } else if (path.toLower().endsWith(".rx14proj")) {
+        // Route by file extension: overlays (KP/A2L/XDF/CSV) apply to the
+        // active project; a project file opens; everything else is a ROM.
+        const QString ext = QFileInfo(path).suffix().toLower();
+        if (ext == QLatin1String("rx14proj")) {
             auto *proj = Project::open(path, this);
             if (proj) openProject(proj);
+        } else if (ext == QLatin1String("a2l") || ext == QLatin1String("dam")
+                   || ext == QLatin1String("damos")) {
+            actImportA2L(path);
+        } else if (ext == QLatin1String("kp")) {
+            actImportKP(path);
+        } else if (ext == QLatin1String("xdf")) {
+            actImportXdf(path);
+        } else if (ext == QLatin1String("csv")) {
+            if (auto *proj = activeProject())
+                MapPackDlg::importPack(proj, this, /*preferCsv=*/true, path);
+            else
+                QMessageBox::information(this, tr("Import Map List"),
+                    tr("Open a project with ROM data first to import a map list."));
         } else {
-            // Treat as ROM — create project, load ROM, show properties dialog
+            // Everything else (.bin, .mpc, .ori, .hex, .srec, …) → ROM:
+            // create project, load ROM, show properties dialog
             auto *project = new Project(this);
             project->createdAt = QDateTime::currentDateTime();
             project->createdBy = qEnvironmentVariable("USERNAME",
@@ -9388,7 +9407,7 @@ void MainWindow::openExtractedRom(const QByteArray &romBytes, const QString &sug
         tr("Opened extracted ROM: %1 (%2 bytes)").arg(suggestedName).arg(romBytes.size()), 5000);
 }
 
-void MainWindow::actImportXdf()
+void MainWindow::actImportXdf(const QString &droppedPath)
 {
     auto *proj = activeProject();
     if (!proj || proj->currentData.isEmpty()) {
@@ -9397,8 +9416,10 @@ void MainWindow::actImportXdf()
                "on top of an existing ROM (the same way A2L files are)."));
         return;
     }
-    const QString path = QFileDialog::getOpenFileName(this,
-        tr("Import XDF definition"), {}, tr("TunerPro XDF (*.xdf);;All files (*)"));
+    QString path = droppedPath;
+    if (path.isEmpty())
+        path = QFileDialog::getOpenFileName(this,
+            tr("Import XDF definition"), {}, tr("TunerPro XDF (*.xdf);;All files (*)"));
     if (path.isEmpty()) return;
     QFile f(path);
     if (!f.open(QIODevice::ReadOnly)) {

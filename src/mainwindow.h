@@ -149,8 +149,8 @@ private slots:
     void actSaveProject();
     void actSaveProjectAs();
     void actCloseProject();
-    void actImportA2L();
-    void actImportKP();
+    void actImportA2L(const QString &droppedPath = {});
+    void actImportKP(const QString &droppedPath = {});
     void actImportOlsProject();
     void actAddVersion();
     void actExportROM();
@@ -523,7 +523,7 @@ private:
     void exportMapListCsv();
     void exportMapListJson();
     void exportTuningReport();
-    void actImportXdf();
+    void actImportXdf(const QString &droppedPath = {});
     void actImportFrf();
     // Open a decoded VAG flash block (raw bytes) as a fresh project.
     void openExtractedRom(const QByteArray &romBytes, const QString &suggestedName);

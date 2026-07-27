@@ -155,7 +155,9 @@ KPImportDlg::KPImportDlg(const KPVehicleInfo &info,
 
     buildUi(info, m_maps);
     setWindowTitle(tr("Import Map Pack"));
-    resize(720, 640);
+    setSizeGripEnabled(true);      // draggable resize grip in the corner
+    setMinimumSize(560, 480);      // never collapse the map table too small
+    resize(820, 780);              // roomier default so more rows are visible
     setStyleSheet(kDialogStyle);
 
     restoreGeometry(rx14::appSettings()
@@ -382,6 +384,8 @@ void KPImportDlg::buildUi(const KPVehicleInfo &info, const QVector<MapInfo> &map
     m_table->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_table->setAlternatingRowColors(false);
+    m_table->setMinimumHeight(260);   // keep plenty of rows visible even when small
+    m_table->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     const QColor colVal  (Qt::transparent);
     const QColor colCurve(0x1f, 0x6f, 0xeb, 30);

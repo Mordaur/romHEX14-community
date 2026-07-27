@@ -73,16 +73,20 @@ static bool isDefinitionOnly(const MapPack &pack)
     return !pack.maps.isEmpty();
 }
 
-void MapPackDlg::importPack(Project *project, QWidget *parent, bool preferCsv)
+void MapPackDlg::importPack(Project *project, QWidget *parent, bool preferCsv,
+                           const QString &droppedPath)
 {
-    const QString rxpackFilter = QObject::tr("Map packs (*.rxpack)");
-    const QString csvFilter    = QObject::tr("CSV map list (*.csv)");
-    QString selectedFilter     = preferCsv ? csvFilter : rxpackFilter;
-    QString path = QFileDialog::getOpenFileName(
-        parent, QObject::tr("Import Map Pack"), {},
-        rxpackFilter + QStringLiteral(";;") + csvFilter
-            + QStringLiteral(";;") + QObject::tr("All files (*)"),
-        &selectedFilter);
+    QString path = droppedPath;
+    if (path.isEmpty()) {
+        const QString rxpackFilter = QObject::tr("Map packs (*.rxpack)");
+        const QString csvFilter    = QObject::tr("CSV map list (*.csv)");
+        QString selectedFilter     = preferCsv ? csvFilter : rxpackFilter;
+        path = QFileDialog::getOpenFileName(
+            parent, QObject::tr("Import Map Pack"), {},
+            rxpackFilter + QStringLiteral(";;") + csvFilter
+                + QStringLiteral(";;") + QObject::tr("All files (*)"),
+            &selectedFilter);
+    }
     if (path.isEmpty()) return;
 
     const bool isCsv = path.endsWith(QLatin1String(".csv"), Qt::CaseInsensitive);
