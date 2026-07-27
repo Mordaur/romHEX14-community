@@ -4238,6 +4238,23 @@ void MainWindow::actImportKP()
         return;
     }
 
+    // ── Review dialog: show the decoded maps and let the user pick which to
+    // add (table + select-all/none + ROM overview), the same as before. The
+    // deterministic parser already resolves addresses/dimensions, so the
+    // dialog's offset defaults to 0 and passes the maps through unchanged. ──
+    KPVehicleInfo kpInfo;
+    kpInfo.romByteSize = static_cast<uint32_t>(proj->currentData.size());
+    KPImportDlg reviewDlg(kpInfo, result.maps,
+                          static_cast<int>(proj->currentData.size()),
+                          proj->currentData, this);
+    if (reviewDlg.exec() != QDialog::Accepted)
+        return;                              // user cancelled — nothing added
+    const QVector<MapInfo> chosenMaps = reviewDlg.selectedMaps();
+    if (chosenMaps.isEmpty()) {
+        statusBar()->showMessage(tr("Import KP: no maps selected."), 4000);
+        return;
+    }
+
     // De-dupe against existing maps by (name + address). New maps are
     // appended; same-name+addr maps are skipped so a second KP import on
     // the same project doesn't double-stack labels.
@@ -4247,8 +4264,8 @@ void MainWindow::actImportKP()
 
     int added = 0, skipped = 0;
     QStringList addedNames;
-    addedNames.reserve(result.maps.size());
-    for (const auto &m : result.maps) {
+    addedNames.reserve(chosenMaps.size());
+    for (const auto &m : chosenMaps) {
         if (existing.contains({m.name, m.address})) { ++skipped; continue; }
         proj->maps.append(m);
         existing.insert({m.name, m.address});
@@ -4258,8 +4275,8 @@ void MainWindow::actImportKP()
 
     if (added == 0) {
         QMessageBox::information(this, tr("Import KP"),
-            tr("All %1 maps from this KP were already present in the project.")
-                .arg(result.maps.size()));
+            tr("All %1 selected maps were already present in the project.")
+                .arg(chosenMaps.size()));
         return;
     }
 
