@@ -961,6 +961,10 @@ void MainWindow::loadLanguage(const QString &lang)
     if (m_aiAssistant)
         m_aiAssistant->retranslateUi();
 
+    // Re-parse + rebuild the module (BCM) panel so its data labels and its own
+    // strings pick up the new language (both are tr()'d at parse/build time).
+    refreshModulePanel();
+
     // ── Set font per language ────────────────────────────────────────
     QFont baseFont = qApp->font();
     if (lang == "zh_CN" || lang == "zh") {

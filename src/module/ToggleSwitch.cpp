@@ -44,9 +44,11 @@ void ToggleSwitch::animateTo(qreal target)
 void ToggleSwitch::mouseReleaseEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton && rect().contains(e->pos())) {
-        m_checked = !m_checked;
-        animateTo(m_checked ? 1.0 : 0.0);
-        emit toggled(m_checked);
+        // Request the opposite state but do NOT change the visuals here. The
+        // owner performs the (possibly rejected / async server-side) operation
+        // and sets the real state via setChecked() on refresh — so the toggle
+        // never moves when the write is unavailable (no license) or fails.
+        emit toggled(!m_checked);
     }
 }
 
