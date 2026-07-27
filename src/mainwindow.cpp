@@ -7945,6 +7945,14 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 ProjectView *MainWindow::activeView() const
 {
     auto *sw = m_mdi->activeSubWindow();
+    if (!sw) {
+        // The MDI area transiently reports no active subwindow — e.g. during a
+        // drag-and-drop from another app, or when focus is on a dock/menu. Fall
+        // back to the most-recently-active project window so actions like
+        // "import KP/A2L/XDF" still target the project the user has open.
+        const auto history = m_mdi->subWindowList(QMdiArea::ActivationHistoryOrder);
+        if (!history.isEmpty()) sw = history.last();
+    }
     return sw ? qobject_cast<ProjectView *>(sw->widget()) : nullptr;
 }
 
