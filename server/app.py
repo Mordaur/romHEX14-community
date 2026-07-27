@@ -342,5 +342,47 @@ def features_apply():
     return resp
 
 
+@app.route("/v1/module/apply", methods=["POST"])
+def module_apply():
+    """Run a control-module write operation (e.g. a BCM VTS on/off toggle)
+    server-side and return the patched dump. Pro tier — the actual byte
+    recipe lives in the engine (never in this public harness)."""
+    tok = _validate_bearer()
+    if not tok:
+        return jsonify(ok=False, error="invalid or missing token"), 401
+    ok, retry = _rate_limit_features(_hash_token(
+        request.headers.get("Authorization", "")[7:].strip()))
+    if not ok:
+        return jsonify(ok=False, error="rate limit exceeded",
+                       retry_after_sec=retry), 429
+    rom, fname = _read_rom_field()
+    if not rom:
+        return _need_rom_or_400()
+    if _engine is None:
+        return _need_engine_or_503()
+
+    profile = (request.form.get("profile") or "").strip()
+    op      = (request.form.get("op") or "").strip()
+    if not profile or not op:
+        return jsonify(ok=False, error="missing 'profile' or 'op' field"), 400
+    if not hasattr(_engine, "module_apply"):
+        return jsonify(ok=False, error="engine has no module support"), 501
+
+    _store_upload(rom, kind="module.apply",
+                  user_filename=fname, family_hint=profile,
+                  extra_meta={"profile": profile, "op": op,
+                              "token_label": tok.get("label")})
+    try:
+        patched = _engine.module_apply(rom, profile, op)
+    except EngineError as e:
+        return jsonify(ok=False, error=str(e)), 422
+
+    resp = Response(patched, mimetype="application/octet-stream")
+    resp.headers["X-cloudfx-tier"] = "pro"
+    resp.headers["X-cloudfx-op"]   = f"{profile}:{op}"
+    resp.headers["X-cloudfx-bytes-out"] = str(len(patched))
+    return resp
+
+
 if __name__ == "__main__":                                 # pragma: no cover
     app.run(host="127.0.0.1", port=5095, debug=False)

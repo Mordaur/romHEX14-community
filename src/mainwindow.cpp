@@ -17,6 +17,8 @@
 #include "io/winols/WinOlsConfig.h"
 #include "io/winols/OlsCfgParser.h"
 #include "io/legion/LegionDlg.h"
+#include "module/ModuleRegistry.h"
+#include "module/ModulePanel.h"
 #include "io/legion/Legion.h"
 #include <QCryptographicHash>
 #include "savepoints/SavepointsPanel.h"
@@ -887,6 +889,21 @@ MainWindow::MainWindow(QWidget *parent)
     m_savepointsDock->setMinimumWidth(300);
     m_savepointsDock->hide();
     addDockWidget(Qt::RightDockWidgetArea, m_savepointsDock);
+
+    // ── Control-module panel (BCM) — hidden until a module dump is detected,
+    // then auto-revealed and pinned on the right. Read-only in this build. ──
+    m_modulePanel = new ModulePanel(this);
+    m_moduleDock  = new QDockWidget(tr("Module"), this);
+    m_moduleDock->setObjectName("moduleDock");
+    m_moduleDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_moduleDock->setFeatures(QDockWidget::DockWidgetMovable
+                              | QDockWidget::DockWidgetClosable
+                              | QDockWidget::DockWidgetFloatable);
+    m_moduleDock->setWidget(m_modulePanel);
+    m_moduleDock->setMinimumWidth(360);
+    m_moduleDock->hide();
+    addDockWidget(Qt::RightDockWidgetArea, m_moduleDock);
+    refreshModulePanel();   // initial (no-op until a module dump is active)
 
     if (m_actToggleSavepoints) {
         connect(m_actToggleSavepoints, &QAction::toggled,
@@ -3490,6 +3507,25 @@ void MainWindow::loadROMIntoProject(Project *project, const QString &romPath)
     // Auto-detect ECU type and set byte order
     ECUDetection det = detectECU(project->currentData);
     project->byteOrder = det.byteOrder;
+
+    // Control-module dump detection (BCM). When recognized, prefill the
+    // vehicle/module metadata and reveal the pinned, read-only Module panel.
+    if (module::ModuleRegistry::instance().detect(project->currentData)) {
+        const module::ModuleInfo mi =
+            module::ModuleRegistry::instance().parse(project->currentData);
+        auto fill = [](QString &dst, const QString &src) {
+            if (dst.trimmed().isEmpty() && !src.isEmpty()) dst = src;
+        };
+        fill(project->brand,       mi.brand);
+        fill(project->model,       mi.vehicleModel);
+        fill(project->vin,         mi.vin);
+        fill(project->ecuProducer, mi.manufacturer);
+        fill(project->ecuType,     mi.ecuLabel);
+        statusBar()->showMessage(
+            tr("%1 detected (%2)").arg(mi.moduleType, mi.variant), 8000);
+        QMetaObject::invokeMethod(this, [this]{ refreshModulePanel(); },
+                                  Qt::QueuedConnection);
+    }
 
     // If the ROM parser gave us a base address from HEX/SREC, trust it over
     // the ECU detector heuristic (the HEX address is authoritative).
@@ -6879,6 +6915,10 @@ void MainWindow::onSubWindowActivated(QMdiSubWindow *sw)
     }
     auto *pv = qobject_cast<ProjectView *>(sw->widget());
     if (!pv) return;
+
+    // Refresh the control-module (BCM) dock for the newly-active project so it
+    // auto-reveals when the active project holds a recognized module dump.
+    refreshModulePanel();
 
     // Sync byte-order toolbar to this project
     if (pv->project()) {
@@ -10533,3 +10573,17 @@ bool MainWindow::debugSwitchView(int subIdx, int viewIdx, QString *outErr)
 }
 
 #endif // RX14_DEBUG_RPC
+
+// ── Control-module panel (BCM) ──────────────────────────────────────────────
+void MainWindow::refreshModulePanel()
+{
+    if (!m_modulePanel) return;
+    auto *proj = activeProject();
+    module::ModuleInfo info;
+    if (proj && !proj->currentData.isEmpty())
+        info = module::ModuleRegistry::instance().parse(proj->currentData);
+    m_modulePanel->setModuleInfo(info);
+    // Auto-reveal the pinned dock the first time a module is recognized.
+    if (info.detected && m_moduleDock && m_moduleDock->isHidden())
+        m_moduleDock->show();
+}

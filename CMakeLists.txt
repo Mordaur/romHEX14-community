@@ -164,6 +164,10 @@ set(SOURCES
     src/io/ols/OlsImporter.cpp
     src/io/ols/KpImporter.cpp
     src/io/ols/KpExporter.cpp
+    src/module/ModuleRegistry.cpp
+    src/module/BcmProfile.cpp
+    src/module/ModulePanel.cpp
+    src/module/ToggleSwitch.cpp
     src/io/ols/OlsProjectBuilder.cpp
     src/io/ols/MapAutoDetect.cpp
     src/io/ols/EcuAutoDetect.cpp
@@ -291,6 +295,12 @@ set(HEADERS
     src/io/ols/OlsKennfeldParser.h
     src/io/ols/OlsImporter.h
     src/io/ols/KpImporter.h
+    src/module/ModuleData.h
+    src/module/ModuleProfile.h
+    src/module/ModuleRegistry.h
+    src/module/BcmProfile.h
+    src/module/ModulePanel.h
+    src/module/ToggleSwitch.h
     src/io/ols/OlsProjectBuilder.h
     src/io/ols/MapAutoDetect.h
     src/io/ols/EcuAutoDetect.h

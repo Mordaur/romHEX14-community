@@ -8,6 +8,7 @@
 #include "ZipDecompressor.h"
 
 #include <QtEndian>
+#include <QHash>
 #include <algorithm>
 #include <cmath>
 #include <cstring>
@@ -547,9 +548,120 @@ MapDimensions dimensionsFromRecord(uint32_t kind, uint32_t hintX,
     return dims;
 }
 
+// ── Folder table (schema-750) ─────────────────────────────────────────────
+// WinOLS stores the project's folder tree in the trailing metadata after the
+// embedded ZIP, not in the `intern` stream. Each schema-750 map record carries
+// a folder id at metadata +0x1F; resolving it against this table lets maps that
+// share a display name land in their own (sub)folder instead of collapsing
+// into an ambiguous flat list. Format per the community RE notes: a double
+// 0x98638811 marker, a u32 folder count, then one entry each:
+//   u32 id · u32 parentId · u32 nameLen · char[nameLen] name · <fixed suffix>
+// The suffix size is variant-dependent (~46–47 bytes), so rather than trust a
+// single byte count we deterministically read each entry header and re-sync to
+// the next valid [id][parent][nameLen][text] header within a bounded window.
+struct KpFolder {
+    uint32_t parentId = 0;
+    QString  name;
+};
+
+QHash<uint32_t, KpFolder> parseKpFolderTable(const QByteArray &fileData,
+                                             QStringList *warnings)
+{
+    QHash<uint32_t, KpFolder> folders;
+    // This folder-table grammar is the OLS 5.x layout (schema >= 700). Older
+    // schemas embed a folder table too but with a different entry format; their
+    // map records also never carry a schema-750 folder id, so skip (and don't
+    // warn) on them rather than mis-parsing an unsupported layout.
+    if (peekU32(fileData, 16) < 700)
+        return folders;
+    static const uchar sig[12] = { 0x11, 0x88, 0x63, 0x98, 0, 0, 0, 0,
+                                   0x11, 0x88, 0x63, 0x98 };
+    qsizetype tblOff = -1;
+    for (qsizetype i = 0; i + 16 <= fileData.size(); ++i) {
+        if (std::memcmp(fileData.constData() + i, sig, 12) == 0) {
+            tblOff = i;
+            break;
+        }
+    }
+    if (tblOff < 0) return folders;              // legacy/no folder table
+
+    const uint32_t count = peekU32(fileData, tblOff + 12);
+    if (count == 0 || count > 100000) return folders;
+
+    // Parse the fixed [id][parentId][nameLen][name] header at `q`.
+    auto readEntry = [&](qsizetype q, uint32_t *id, uint32_t *parent,
+                         QString *name, qsizetype *nameEnd) -> bool {
+        if (q + 12 > fileData.size()) return false;
+        const uint32_t fid = peekU32(fileData, q);
+        const uint32_t par = peekU32(fileData, q + 4);
+        const uint32_t nl  = peekU32(fileData, q + 8);
+        // id may be 0 (WinOLS root "My maps"); the name gate below prevents
+        // the all-zero suffix from validating as a spurious entry.
+        if (fid > 0x100000 || par > 0x100000) return false;
+        if (nl < 1 || nl > 200 || q + 12 + qsizetype(nl) > fileData.size())
+            return false;
+        if (!isText(fileData.constData() + q + 12, int(nl))) return false;
+        if (id)      *id     = fid;
+        if (parent)  *parent = par;
+        if (name)    *name   = decodeKpText(fileData.mid(int(q + 12), int(nl)));
+        if (nameEnd) *nameEnd = q + 12 + qsizetype(nl);
+        return true;
+    };
+
+    qsizetype q = tblOff + 16;
+    for (uint32_t i = 0; i < count; ++i) {
+        uint32_t id = 0, parent = 0;
+        QString name;
+        qsizetype nameEnd = 0;
+        if (!readEntry(q, &id, &parent, &name, &nameEnd)) break;
+        folders.insert(id, { parent, name });
+        if (i + 1 >= count) break;
+        // Each entry ends with a fixed 48-byte suffix (variant 2) or 47 bytes
+        // (variant 1). Check exactly those two deterministic positions rather
+        // than scanning a window, so a stray printable pair inside the binary
+        // suffix can never derail the walk.
+        if (readEntry(nameEnd + 48, nullptr, nullptr, nullptr, nullptr))
+            q = nameEnd + 48;
+        else if (readEntry(nameEnd + 47, nullptr, nullptr, nullptr, nullptr))
+            q = nameEnd + 47;
+        else
+            break;
+    }
+
+    if (warnings && folders.size() != int(count))
+        warnings->append(KpImporter::tr(
+            "KP folder table: parsed %1 of %2 folders")
+                .arg(folders.size()).arg(count));
+    return folders;
+}
+
+// Resolve each folder id to a "/"-delimited path (no leading slash), matching
+// the convention MapInfo::folderPath uses for A2L groups and XDF categories.
+QHash<uint32_t, QString> resolveKpFolderPaths(
+    const QHash<uint32_t, KpFolder> &folders)
+{
+    QHash<uint32_t, QString> paths;
+    for (auto it = folders.cbegin(); it != folders.cend(); ++it) {
+        QStringList parts;
+        uint32_t cur = it.key();
+        for (int depth = 0; depth < 64 && folders.contains(cur); ++depth) {
+            const KpFolder &f = folders.value(cur);
+            // A folder whose parent is not itself a folder is a WinOLS system
+            // root ("My maps" / "Hexdump"); treat it as the tree root and don't
+            // emit its name, so real folders sit at the top level.
+            if (f.parentId == cur || !folders.contains(f.parentId)) break;
+            if (!f.name.isEmpty()) parts.prepend(f.name);
+            cur = f.parentId;
+        }
+        paths.insert(it.key(), parts.join(QLatin1Char('/')));
+    }
+    return paths;
+}
+
 QVector<MapInfo> parseKpIntern(const QByteArray &payload,
                                uint32_t baseAddress,
                                uint32_t romSize,
+                               const QHash<uint32_t, QString> &folderPaths,
                                QStringList *warnings)
 {
     QVector<MapInfo> maps;
@@ -622,6 +734,13 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
                     if (!idStr.isEmpty())
                         m.setSideProp(QStringLiteral("kpIdName"), idStr);
                 }
+            }
+            // Folder id lives at metadata +0x1F; resolve it to the project-tree
+            // path so identically-named maps land in their own (sub)folder.
+            if (!folderPaths.isEmpty()) {
+                const uint32_t folderId = peekU32(record, 31);
+                const QString fp = folderPaths.value(folderId);
+                if (!fp.isEmpty()) m.folderPath = fp;
             }
         }
         m.type           = typeFromKpKind(hdr.kind, 1, 1);
@@ -700,6 +819,190 @@ QVector<MapInfo> parseKpIntern(const QByteArray &payload,
             "intern map_count = %1 but parser decoded %2 records")
                 .arg(mapCount).arg(maps.size()));
     }
+    return maps;
+}
+
+// ── Deterministic schema-750 (OLS 5.x) object walk ─────────────────────────
+// The .kp intern grammar is self-describing: every object begins with the
+// fixed marker  00 FF FF FF FF  + 17 zero bytes, and every variable field
+// carries its own length/sentinel. So instead of scanning for record starts
+// and pattern-matching an address triplet (the fragile heuristic below), we
+// delimit objects by the marker and read each field from its exact grammar
+// offset — name, folder id, kind, element size, the stored [cols][rows], and
+// the map address (reached by walking the identifier + unit strings and the
+// factor/offset doubles). Confirmed against the Cayenne/Civic corpus: the map
+// data start/end and dimensions match the TunerPro XDF for every addressable
+// object (mapEnd-mapStart == cols*rows*elem holds for 331/332; the one
+// exception carries no address in the file, exactly as WinOLS reports).
+QVector<MapInfo> parseSchema750Deterministic(
+    const QByteArray &payload, uint32_t baseAddress, uint32_t romSize,
+    const QHash<uint32_t, QString> &folderPaths, QStringList *warnings)
+{
+    QVector<MapInfo> maps;
+    const qsizetype sz = payload.size();
+    const uint32_t mapCount = peekU32(payload, 1);
+
+    // Object marker: reserved 0, u32 0xFFFFFFFF, 17 zero bytes, then a valid
+    // length-prefixed display name. This 22-byte structural signature does not
+    // occur inside map data, so it delimits objects deterministically.
+    auto isObjectStart = [&](qsizetype p) -> bool {
+        if (p + 0x1a > sz) return false;
+        if (static_cast<uchar>(payload[p]) != 0x00) return false;
+        if (peekU32(payload, p + 1) != 0xFFFFFFFFu) return false;
+        for (int k = 0; k < 17; ++k)
+            if (static_cast<uchar>(payload[p + 5 + k]) != 0x00) return false;
+        const uint32_t nl = peekU32(payload, p + 0x16);
+        if (nl < 1 || nl > 200 || p + 0x1a + qsizetype(nl) > sz) return false;
+        return isText(payload.constData() + p + 0x1a,
+                      int(qMin<uint32_t>(nl, 8)));
+    };
+
+    QVector<qsizetype> starts;
+    for (qsizetype p = 5; p + 0x1a < sz; ++p)
+        if (isObjectStart(p)) starts.append(p);
+
+    // Serialized string/reference: i32 marker; >=0 means that many inline text
+    // bytes follow, <0 is a reference/absent sentinel with no inline bytes.
+    auto walkString = [&](qsizetype pos) -> qsizetype {
+        if (pos + 4 > sz) return sz;
+        const int32_t m = static_cast<int32_t>(peekU32(payload, pos));
+        return (m >= 0 && pos + 4 + qsizetype(m) <= sz) ? pos + 4 + m : pos + 4;
+    };
+
+    maps.reserve(starts.size());
+    for (int idx = 0; idx < starts.size(); ++idx) {
+        const qsizetype s = starts[idx];
+        const qsizetype objEnd = (idx + 1 < starts.size()) ? starts[idx + 1] : sz;
+
+        const uint32_t nl = peekU32(payload, s + 0x16);
+        const QString name = decodeKpText(payload.mid(int(s + 0x1a), int(nl)));
+        if (name.isEmpty()) continue;
+
+        const qsizetype meta = s + 0x1a + qsizetype(nl) + 1;
+        if (meta + 0x27 > sz) continue;
+        const uint32_t kind     = peekU32(payload, meta + 0x0b);
+        const uint32_t elem     = peekU32(payload, meta + 0x17);
+        const uint32_t folderId = peekU32(payload, meta + 0x1f);
+        const uint32_t idLen    = peekU32(payload, meta + 0x23);
+        const qsizetype P = meta + 0x27 + qsizetype(idLen) + 1;
+        if (P + 124 > sz) continue;
+
+        const uint32_t cols = peekU32(payload, P + 116);
+        const uint32_t rows = peekU32(payload, P + 120);
+
+        // Deterministic address: identifier string, unit string, factor(f64),
+        // offset(f64), then [start][end][romBase] u32s.
+        qsizetype pos = P + 136;
+        pos = walkString(pos);      // optional identifier
+        pos = walkString(pos);      // engineering unit
+        const double factor = (pos + 8 <= sz) ? peekF64(payload, pos) : 0.0;
+        pos += 8;
+        const double offset = (pos + 8 <= sz) ? peekF64(payload, pos) : 0.0;
+        pos += 8;
+        uint32_t mapStart = 0, mapEnd = 0, romBase = 0;
+        if (pos + 12 <= sz) {
+            mapStart = peekU32(payload, pos);
+            mapEnd   = peekU32(payload, pos + 4);
+            romBase  = peekU32(payload, pos + 8);
+        }
+
+        const int ds = elem > 0 ? int(elem) : 1;
+        int dx = 1, dy = 1;
+        if (kind != 2) {
+            dx = (cols >= 1 && cols <= 4096) ? int(cols) : 1;
+            dy = (kind == 3) ? 1 : ((rows >= 1 && rows <= 4096) ? int(rows) : 1);
+        }
+
+        MapInfo m;
+        m.name           = name;
+        m.description    = name;
+        m.dataSize       = ds;
+        m.dimensions     = { dx, dy };
+        m.type           = typeFromKpKind(kind, dx, dy);
+        m.linkConfidence = 100;
+        m.columnMajor    = true;
+
+        if (idLen >= 1 && idLen <= 200 && meta + 0x27 + qsizetype(idLen) <= sz) {
+            const QByteArray idb = payload.mid(int(meta + 0x27), int(idLen));
+            if (isText(idb.constData(), idb.size())) {
+                const QString id = decodeKpText(idb);
+                if (!id.isEmpty()) m.setSideProp(QStringLiteral("kpIdName"), id);
+            }
+        }
+        if (!folderPaths.isEmpty()) {
+            const QString fp = folderPaths.value(folderId);
+            if (!fp.isEmpty()) m.folderPath = fp;
+        }
+
+        // Trust the address only when the self-check holds; the lone object
+        // without one keeps address 0 (it still imports, like WinOLS shows it).
+        const bool sizeOk = mapEnd > mapStart
+            && uint64_t(mapEnd - mapStart)
+                   == uint64_t(dx) * uint64_t(dy) * uint64_t(ds);
+        uint32_t fileOffset = 0;
+        if (sizeOk && normalizeKpAddress(mapStart, mapEnd, romBase,
+                                         baseAddress, romSize, &fileOffset)) {
+            m.rawAddress = (baseAddress != 0 && fileOffset == mapStart)
+                ? baseAddress + fileOffset : mapStart;
+            m.address          = fileOffset;
+            m.olsUniversalBase = romBase;
+            m.length           = int(mapEnd - mapStart);
+        } else {
+            m.address = 0;
+            m.rawAddress = 0;
+            m.length = qMax(1, dx * dy * ds);
+        }
+
+        if (std::isfinite(factor) && std::abs(factor) < 1e12
+            && std::isfinite(offset) && std::abs(offset) < 1e12
+            && ((factor != 0.0 && factor != 1.0) || offset != 0.0)) {
+            m.hasScaling   = true;
+            m.scaling.type = CompuMethod::Type::Linear;
+            m.scaling.linA = factor;
+            m.scaling.linB = offset;
+        }
+
+        // Axis sub-blocks (X = columns, then Y = rows) via the shared parser.
+        if (kind != 2 && sizeOk) {
+            const QByteArray record = payload.mid(int(meta), int(objEnd - meta));
+            const qsizetype addrOffInRec = pos - meta;   // offset of mapStart
+            const QVector<Kp750Axis> axes =
+                parseSchema750Axes(record, addrOffInRec + 12);
+            const uint32_t delta = m.rawAddress - m.address;
+            auto fillAxis = [&](AxisInfo &dst, const Kp750Axis &src, int count) {
+                dst.inputName = src.unit.isEmpty()
+                    ? src.name
+                    : QStringLiteral("%1 [%2]").arg(src.name, src.unit);
+                if (src.hasFactor) {
+                    dst.hasScaling   = true;
+                    dst.scaling.type = CompuMethod::Type::Linear;
+                    dst.scaling.linA = src.factor;
+                    dst.scaling.linB = src.offset;
+                }
+                dst.ptsDataSize = src.dataSize;
+                dst.ptsCount    = count;
+                if (src.rawAddr >= delta) {
+                    const uint32_t fo = src.rawAddr - delta;
+                    if (romSize == 0
+                        || uint64_t(fo) + uint64_t(count) * src.dataSize <= romSize) {
+                        dst.ptsAddress    = fo;
+                        dst.hasPtsAddress = true;
+                    }
+                }
+            };
+            if (axes.size() >= 1)
+                fillAxis(m.xAxis, axes[0], m.dimensions.x);
+            if (axes.size() >= 2 && m.dimensions.y > 1)
+                fillAxis(m.yAxis, axes[1], m.dimensions.y);
+        }
+
+        maps.append(m);
+    }
+
+    if (warnings && maps.size() != int(mapCount))
+        warnings->append(KpImporter::tr(
+            "schema-750 deterministic walk: map_count %1, decoded %2 objects")
+                .arg(mapCount).arg(maps.size()));
     return maps;
 }
 
@@ -835,8 +1138,31 @@ KpImportResult KpImporter::importFromBytes(const QByteArray &fileData,
                 .arg(uncompressedSize));
     }
 
-    result.maps = parseKpIntern(intern, baseAddress, romSize,
-                                &result.warnings);
+    // Folder tree lives in the trailing metadata (after the ZIP), not in
+    // `intern` — parse it so maps can be grouped like WinOLS shows them.
+    const QHash<uint32_t, KpFolder> folders =
+        parseKpFolderTable(fileData, &result.warnings);
+    const QHash<uint32_t, QString> folderPaths = resolveKpFolderPaths(folders);
+
+    // OLS 5.x (schema >= 700): deterministic object walk. Fall back to the
+    // heuristic parser if the walk fails to cover the declared object count
+    // (e.g. a minimal/older intern layout) so no file can regress.
+    const uint32_t internMapCount = intern.size() >= 5 ? peekU32(intern, 1) : 0;
+    if (result.formatVersion >= 700) {
+        result.maps = parseSchema750Deterministic(intern, baseAddress, romSize,
+                                                  folderPaths, &result.warnings);
+        if (internMapCount > 0
+            && result.maps.size() < int(internMapCount) * 3 / 4) {
+            result.warnings.append(KpImporter::tr(
+                "schema-750 walk covered %1/%2 objects; using heuristic parser")
+                    .arg(result.maps.size()).arg(internMapCount));
+            result.maps = parseKpIntern(intern, baseAddress, romSize,
+                                        folderPaths, &result.warnings);
+        }
+    } else {
+        result.maps = parseKpIntern(intern, baseAddress, romSize,
+                                    folderPaths, &result.warnings);
+    }
     result.mapCount = static_cast<uint32_t>(result.maps.size());
 
     return result;

@@ -71,3 +71,13 @@ class CannedEngine:
         if len(rom) < len(marker):
             raise EngineError("rom too small to apply demo marker")
         return marker + rom[len(marker):]
+
+    def module_apply(self, rom: bytes, profile: str, op: str) -> bytes:
+        # Demo only: stamps a marker so the client round-trip is verifiable.
+        # A real engine replaces this with the per-profile byte recipe.
+        if not profile or not op:
+            raise EngineError("missing profile/op")
+        marker = f"MOD:{op}".encode()[:8]
+        if len(rom) < len(marker):
+            raise EngineError("rom too small to apply demo marker")
+        return marker + rom[len(marker):]

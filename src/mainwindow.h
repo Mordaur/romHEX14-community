@@ -50,6 +50,7 @@ class DiffPanel;
 class SavepointManager;
 class SavepointsPanel;
 class QDockWidget;
+class ModulePanel;
 struct PaletteEntry;
 #ifdef RX14_DEBUG_RPC
 class DebugRpc;
@@ -496,6 +497,9 @@ private:
     // ── Differences panel (View → Differences) ─────────────────────────
     QAction     *m_actToggleDiff = nullptr;
     QDockWidget *m_diffDock      = nullptr;
+    QDockWidget *m_moduleDock    = nullptr;
+    ModulePanel *m_modulePanel   = nullptr;
+    void         refreshModulePanel();          // populate from active project
     DiffPanel   *m_diffPanel     = nullptr;
 
     // ── Differences-to-Original overlay (View → Diff vs Original) ──────

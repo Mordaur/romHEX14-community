@@ -123,3 +123,16 @@ class Engine:
         applied.  Same error contract as `disable`.
         """
         raise NotImplementedError
+
+    def module_apply(self, rom: bytes, profile: str, op: str) -> bytes:
+        """
+        Run a control-module write operation and return the patched dump.
+
+        `profile` identifies the module (e.g. "porsche_bcm_front") and `op`
+        the operation (e.g. "vts_off"). The actual byte recipe — which
+        offsets to write and to what — is the proprietary part and lives in
+        your engine, never in this public harness. Same error contract as
+        `disable`: raise `EngineError("...")` for an unsupported
+        profile/op or a malformed dump.
+        """
+        raise NotImplementedError
