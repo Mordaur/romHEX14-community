@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QMessageBox>
 #include <QRegularExpression>
+#include <QSet>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
@@ -64,6 +65,21 @@ QString AIToolExecutor::noProjectError() const
 {
     QJsonObject err; err["error"] = "No project loaded";
     return QString::fromUtf8(QJsonDocument(err).toJson(QJsonDocument::Compact));
+}
+
+static QString mapId(const MapInfo &map)
+{
+    return QString("0x%1").arg(map.rawAddress, 8, 16, QChar('0'));
+}
+
+static void addMapIdentity(QJsonObject &object, const MapInfo &map)
+{
+    // `mapId` and `address` intentionally have the same value.  The former is
+    // a stable identifier; the latter is the explicit argument name accepted
+    // by the tools, which is easier for providers to use in function calls.
+    object["mapId"] = mapId(map);
+    object["address"] = mapId(map);
+    object["fileOffset"] = QString("0x%1").arg(map.address + map.mapDataOffset, 8, 16, QChar('0'));
 }
 
 void AIToolExecutor::ensureVersionSnapshot(const QString &reason)
@@ -859,6 +875,10 @@ QVector<AIToolDef> AIToolExecutor::toolDefinitions()
         valueProp["description"] = "Value for fill/scale/offset";
         QJsonObject itemProps;
         itemProps["map_name"] = mapNameProp;
+        QJsonObject mapAddressProp;
+        mapAddressProp["type"] = "string";
+        mapAddressProp["description"] = "Stable map address from list_maps/search_maps. Required when map_name is duplicated.";
+        itemProps["map_address"] = mapAddressProp;
         itemProps["action"] = actionProp;
         itemProps["value"] = valueProp;
         QJsonObject itemSchema;
@@ -1073,11 +1093,21 @@ QVector<AIToolDef> AIToolExecutor::toolDefinitions()
         srcProp["description"] = "Source linked ROM index (0-based). Use list_linked_roms to find indices.";
         QJsonObject mapsProp;
         mapsProp["type"]        = "array";
-        mapsProp["description"] = "Optional list of specific map names to copy. If empty, copies all modified maps.";
+        mapsProp["description"] = "Legacy optional list of map names. Every name must be unique; use map_refs for duplicate names.";
         mapsProp["items"]       = QJsonObject{{"type", "string"}};
+        QJsonObject mapRefProps;
+        mapRefProps["name"] = QJsonObject{{"type", "string"}};
+        mapRefProps["address"] = QJsonObject{{"type", "string"},
+                                                {"description", "Stable address from list_maps/search_maps."}};
+        QJsonObject mapRefItem{{"type", "object"}, {"properties", mapRefProps}};
+        QJsonObject mapRefsProp;
+        mapRefsProp["type"] = "array";
+        mapRefsProp["description"] = "Optional exact map references to copy. Use address for every duplicate name.";
+        mapRefsProp["items"] = mapRefItem;
         QJsonObject props;
         props["source_index"] = srcProp;
         props["map_names"]    = mapsProp;
+        props["map_refs"]     = mapRefsProp;
         QJsonObject schema;
         schema["type"]       = "object";
         schema["properties"] = props;
@@ -1173,13 +1203,65 @@ QVector<AIToolDef> AIToolExecutor::toolDefinitions()
         defs.append(d);
     }
 
+    // Every map-targeting tool accepts an optional address alongside its name.
+    // Addresses are returned by list/search tools and are required whenever a
+    // name is duplicated.  Keeping `name` preserves compatibility with older
+    // providers and callers for maps whose names are unique.
+    const QSet<QString> mapTargetFields = {
+        "name", "map_name", "source", "destination", "map1", "map2"
+    };
+    const QSet<QString> mapTargetTools = {
+        "get_map_values", "get_original_values", "set_map_values", "set_cell_value",
+        "get_map_info", "compare_map_values", "zero_map", "scale_map_values",
+        "restore_map", "get_map_statistics", "get_axis_values", "fill_map",
+        "offset_map_values", "clamp_map_values", "copy_map_values", "smooth_map",
+        "set_axis_values", "get_linked_rom_map_values", "compare_with_linked_rom",
+        "get_version_map_values", "compare_two_maps", "describe_map_shape",
+        "get_related_maps", "identify_map_purpose", "validate_map_changes",
+        "detect_anomalies", "evaluate_map_expression"
+    };
+    for (AIToolDef &d : defs) {
+        if (!mapTargetTools.contains(d.name)) continue;
+        QJsonObject schema = d.inputSchema;
+        QJsonObject props = schema.value("properties").toObject();
+        bool targetsMap = false;
+        for (const QString &field : mapTargetFields) {
+            if (!props.contains(field)) continue;
+            const QString addressField = field + "_address";
+            QJsonObject addressProp;
+            addressProp["type"] = "string";
+            addressProp["description"] = "Stable map address returned by list_maps or search_maps. "
+                                         "Supply this whenever more than one map has the same name.";
+            props[addressField] = addressProp;
+            targetsMap = true;
+        }
+        if (targetsMap) {
+            d.description += " Map names may be duplicated: always pass the matching *_address returned by a map listing/search when selecting a duplicate.";
+            schema["properties"] = props;
+            d.inputSchema = schema;
+        }
+    }
+
     return defs;
 }
 
 // ── execute() dispatcher ───────────────────────────────────────────────────────
 
-QString AIToolExecutor::execute(const QString &toolName, const QJsonObject &input)
+QString AIToolExecutor::execute(const QString &toolName, QJsonObject input)
 {
+    // Translate an address companion field into an internal selector before
+    // dispatching.  This keeps the individual tools backwards-compatible while
+    // ensuring all of them resolve the exact duplicate selected by the model.
+    const auto selectAddress = [&input](const QString &nameField) {
+        const QString address = input.value(nameField + "_address").toString().trimmed();
+        if (!address.isEmpty()) input[nameField] = "@" + address;
+    };
+    for (const QString &field : {QStringLiteral("name"), QStringLiteral("map_name"),
+                                 QStringLiteral("source"), QStringLiteral("destination"),
+                                 QStringLiteral("map1"), QStringLiteral("map2")}) {
+        selectAddress(field);
+    }
+
     // Read tools
     if (toolName == "list_maps")          return toolListMaps();
     if (toolName == "get_project_info")   return toolGetProjectInfo();
@@ -1254,16 +1336,53 @@ QString AIToolExecutor::execute(const QString &toolName, const QJsonObject &inpu
 QString AIToolExecutor::mapNotFound(const QString &name) const
 {
     QJsonObject obj;
-    obj["error"] = "Map not found: " + name;
+    if (m_project && !name.startsWith('@')) {
+        QJsonArray candidates;
+        for (const MapInfo &m : m_project->maps) {
+            if (m.name != name) continue;
+            candidates.append(QJsonObject{
+                {"name", m.name},
+                {"mapId", QString("0x%1").arg(m.rawAddress, 8, 16, QChar('0'))},
+                {"address", QString("0x%1").arg(m.rawAddress, 8, 16, QChar('0'))},
+                {"dataSize", m.dataSize},
+                {"dimensions", QString("%1x%2").arg(m.dimensions.y).arg(m.dimensions.x)},
+                {"unit", m.scaling.unit}
+            });
+        }
+        if (candidates.size() > 1) {
+            obj["error"] = "Ambiguous map name: " + name;
+            obj["message"] = "Pass the selected candidate's address using the matching *_address field.";
+            obj["candidates"] = candidates;
+            return QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact));
+        }
+    }
+    obj["error"] = "Map not found: " + (name.startsWith('@') ? name.mid(1) : name);
     return QString::fromUtf8(QJsonDocument(obj).toJson(QJsonDocument::Compact));
 }
 
 MapInfo *AIToolExecutor::findMap(const QString &name)
 {
     if (!m_project) return nullptr;
-    for (MapInfo &m : m_project->maps)
-        if (m.name == name) return &m;
-    return nullptr;
+    if (name.startsWith('@')) {
+        bool ok = false;
+        const uint32_t rawAddress = name.mid(1).toUInt(&ok, 0);
+        if (!ok) return nullptr;
+        MapInfo *match = nullptr;
+        for (MapInfo &m : m_project->maps) {
+            if (m.rawAddress != rawAddress) continue;
+            if (match) return nullptr; // An address must also uniquely identify a map.
+            match = &m;
+        }
+        return match;
+    }
+
+    MapInfo *match = nullptr;
+    for (MapInfo &m : m_project->maps) {
+        if (m.name != name) continue;
+        if (match) return nullptr; // Never silently choose the first duplicate.
+        match = &m;
+    }
+    return match;
 }
 
 // ── Read tools ─────────────────────────────────────────────────────────────────
@@ -1284,7 +1403,7 @@ QString AIToolExecutor::toolListMaps()
         obj["type"]        = m.type;
         obj["cols"]        = m.dimensions.x;
         obj["rows"]        = m.dimensions.y;
-        obj["address"]     = QString("0x%1").arg(m.rawAddress, 8, 16, QChar('0'));
+        addMapIdentity(obj, m);
         obj["units"]       = m.scaling.unit;
         obj["dataSize"]    = m.dataSize;
         arr.append(obj);
@@ -1360,6 +1479,7 @@ static QString readMapValues(const MapInfo &m, const QByteArray &romData, ByteOr
 
     QJsonObject result;
     result["name"]     = m.name;
+    addMapIdentity(result, m);
     result["cols"]     = cols;
     result["rows"]     = rows;
     result["unit"]     = m.scaling.unit;
@@ -1410,17 +1530,22 @@ QString AIToolExecutor::toolGetModifiedMaps()
     }
 
     QJsonArray arr;
+    QJsonArray refs;
     for (const MapInfo &m : m_project->maps) {
         if (m.address + m.length > targetDataConst().size()) continue;
         if (m.address + m.length > m_project->originalData.size()) continue;
         if (std::memcmp(targetDataConst().constData() +m.address,
                         m_project->originalData.constData() + m.address,
                         m.length) != 0) {
-            arr.append(m.name);
+            arr.append(m.name); // Legacy field retained for existing clients.
+            QJsonObject ref{{"name", m.name}};
+            addMapIdentity(ref, m);
+            refs.append(ref);
         }
     }
     QJsonObject result;
     result["modifiedMaps"] = arr;
+    result["modifiedMapRefs"] = refs;
     result["count"]        = arr.size();
     return QString::fromUtf8(QJsonDocument(result).toJson(QJsonDocument::Compact));
 }
@@ -1465,6 +1590,8 @@ QString AIToolExecutor::toolSearchMaps(const QJsonObject &input)
             obj["cols"]        = m.dimensions.x;
             obj["rows"]        = m.dimensions.y;
             obj["units"]       = m.scaling.unit;
+            obj["dataSize"]    = m.dataSize;
+            addMapIdentity(obj, m);
             results.append(obj);
         }
     }
@@ -1497,7 +1624,7 @@ QString AIToolExecutor::toolGetMapInfo(const QJsonObject &input)
     obj["dataSize"]    = m->dataSize;
     obj["columnMajor"] = m->columnMajor;
     obj["rawAddress"]  = QString("0x%1").arg(m->rawAddress, 8, 16, QChar('0'));
-    obj["address"]     = QString("0x%1").arg(m->address, 8, 16, QChar('0'));
+    addMapIdentity(obj, *m);
     obj["length"]      = m->length;
 
     // Scaling info
@@ -1711,8 +1838,12 @@ QString AIToolExecutor::toolGetGroupMaps(const QJsonObject &input)
 
     QJsonArray maps;
     for (const QString &charName : found->characteristics) {
-        MapInfo *m = findMap(charName);
-        if (m) {
+        // A2L groups store names, so a duplicate name can legitimately refer
+        // to more than one physical map. Return every matching map with its
+        // address instead of losing all but the first one.
+        for (const MapInfo &candidate : m_project->maps) {
+            if (candidate.name != charName) continue;
+            const MapInfo *m = &candidate;
             QJsonObject obj;
             obj["name"]        = m->name;
             obj["description"] = m->description;
@@ -1720,6 +1851,8 @@ QString AIToolExecutor::toolGetGroupMaps(const QJsonObject &input)
             obj["cols"]        = m->dimensions.x;
             obj["rows"]        = m->dimensions.y;
             obj["units"]       = m->scaling.unit;
+            obj["dataSize"]    = m->dataSize;
+            addMapIdentity(obj, *m);
             maps.append(obj);
         }
     }
@@ -1860,6 +1993,8 @@ QString AIToolExecutor::toolFindMapsByValue(const QJsonObject &input)
             obj["description"] = m.description;
             obj["type"]        = m.type;
             obj["units"]       = m.scaling.unit;
+            obj["dataSize"]    = m.dataSize;
+            addMapIdentity(obj, m);
             results.append(obj);
         }
     }
@@ -1919,6 +2054,7 @@ QString AIToolExecutor::toolGetAllChangesSummary()
         if (cellsChanged > 0) {
             QJsonObject obj;
             obj["map"]          = m.name;
+            addMapIdentity(obj, m);
             obj["description"]  = m.description;
             obj["unit"]         = m.scaling.unit;
             obj["cellsChanged"] = cellsChanged;
@@ -2005,12 +2141,12 @@ QString AIToolExecutor::toolGetLinkedRomMapValues(const QJsonObject &input)
     }
 
     const LinkedRom &lr = m_project->linkedRoms[idx];
-    if (!lr.mapOffsets.contains(name)) {
-        QJsonObject err; err["error"] = QString("Map '%1' not linked in ROM '%2'").arg(name, lr.label);
+    if (!lr.mapOffsets.contains(m->name)) {
+        QJsonObject err; err["error"] = QString("Map '%1' not linked in ROM '%2'").arg(m->name, lr.label);
         return QString::fromUtf8(QJsonDocument(err).toJson(QJsonDocument::Compact));
     }
 
-    uint32_t baseOff = lr.mapOffsets[name] + m->mapDataOffset;
+    uint32_t baseOff = lr.mapOffsets[m->name] + m->mapDataOffset;
     return readMapValues(*m, lr.data, m_project->byteOrder, baseOff);
 }
 
@@ -2030,8 +2166,8 @@ QString AIToolExecutor::toolCompareWithLinkedRom(const QJsonObject &input)
     }
 
     const LinkedRom &lr = m_project->linkedRoms[idx];
-    if (!lr.mapOffsets.contains(name)) {
-        QJsonObject err; err["error"] = QString("Map '%1' not linked in ROM '%2'").arg(name, lr.label);
+    if (!lr.mapOffsets.contains(m->name)) {
+        QJsonObject err; err["error"] = QString("Map '%1' not linked in ROM '%2'").arg(m->name, lr.label);
         return QString::fromUtf8(QJsonDocument(err).toJson(QJsonDocument::Compact));
     }
 
@@ -2041,7 +2177,7 @@ QString AIToolExecutor::toolCompareWithLinkedRom(const QJsonObject &input)
     int lrLen  = lr.data.size();
 
     uint32_t curBase = mapOffsetInTarget(*m);
-    uint32_t lrBase  = lr.mapOffsets[name] + m->mapDataOffset;
+    uint32_t lrBase  = lr.mapOffsets[m->name] + m->mapDataOffset;
     int cols = m->dimensions.x;
     int rows = m->dimensions.y;
 
@@ -3391,11 +3527,13 @@ QString AIToolExecutor::toolBatchModifyMaps(const QJsonObject &input)
     for (const auto &opVal : ops) {
         QJsonObject op = opVal.toObject();
         QString mapName = op["map_name"].toString();
+        const QString mapAddress = op["map_address"].toString().trimmed();
+        if (!mapAddress.isEmpty()) mapName = "@" + mapAddress;
         QString action = op["action"].toString();
         double value = op["value"].toDouble(0);
 
         MapInfo *m = findMap(mapName);
-        if (!m) { errors.append(QString("Map '%1' not found").arg(mapName)); continue; }
+        if (!m) { errors.append(QString("Map '%1' not found or ambiguous; provide map_address for duplicate names").arg(mapName)); continue; }
 
         QStringList validActions = {"zero", "fill", "scale", "offset", "restore"};
         if (!validActions.contains(action)) { errors.append(QString("Invalid action '%1' for '%2'").arg(action, mapName)); continue; }
@@ -3671,12 +3809,12 @@ QString AIToolExecutor::toolGetRelatedMaps(const QJsonObject &input)
     // Name prefix (first 4 chars)
     QString prefix = name.length() >= 4 ? name.left(4) : name;
 
-    struct RelMap { QString name; QString reason; };
+    struct RelMap { const MapInfo *map; QString reason; };
     QVector<RelMap> related;
-    QSet<QString> seen; seen.insert(name);
+    QSet<uint32_t> seen; seen.insert(target->rawAddress);
 
     for (const MapInfo &m : m_project->maps) {
-        if (seen.contains(m.name)) continue;
+        if (seen.contains(m.rawAddress)) continue;
         QStringList reasons;
 
         // Same group
@@ -3699,15 +3837,18 @@ QString AIToolExecutor::toolGetRelatedMaps(const QJsonObject &input)
             reasons << QString("same dimensions %1×%2").arg(target->dimensions.y).arg(target->dimensions.x);
 
         if (!reasons.isEmpty()) {
-            seen.insert(m.name);
-            related.append({m.name, reasons.join(", ")});
+            seen.insert(m.rawAddress);
+            related.append({&m, reasons.join(", ")});
         }
         if (related.size() >= 30) break;
     }
 
     QJsonArray arr;
-    for (const auto &rm : related)
-        arr.append(QJsonObject{{"name", rm.name}, {"reason", rm.reason}});
+    for (const auto &rm : related) {
+        QJsonObject item{{"name", rm.map->name}, {"reason", rm.reason}};
+        addMapIdentity(item, *rm.map);
+        arr.append(item);
+    }
 
     QJsonObject res;
     res["map"]   = name;
@@ -4149,14 +4290,16 @@ QString AIToolExecutor::toolConfidenceSearch(const QJsonObject &input)
 
     QJsonArray arr;
     for (const auto &s : results) {
-        arr.append(QJsonObject{
+        QJsonObject item{
             {"name",        s.m->name},
             {"description", s.m->description},
             {"confidence",  s.score},
             {"type",        s.m->type},
             {"unit",        s.m->scaling.unit},
             {"dimensions",  QString("%1×%2").arg(s.m->dimensions.y).arg(s.m->dimensions.x)}
-        });
+        };
+        addMapIdentity(item, *s.m);
+        arr.append(item);
     }
 
     QJsonObject res;
@@ -4451,10 +4594,34 @@ QString AIToolExecutor::toolApplyDeltaToRom(const QJsonObject &input)
         return QString::fromUtf8(QJsonDocument(err).toJson(QJsonDocument::Compact));
     }
 
-    // Determine which maps to copy
-    QStringList filterNames;
+    // Determine which maps to copy. `map_names` is retained for compatibility,
+    // but must resolve uniquely; `map_refs` supplies the stable address needed
+    // for duplicate names.
+    QSet<MapInfo*> selectedMaps;
+    bool hasExplicitFilter = false;
     QJsonArray namesArr = input["map_names"].toArray();
-    for (const auto &v : namesArr) filterNames.append(v.toString());
+    for (const auto &v : namesArr) {
+        const QString selector = v.toString();
+        if (selector.isEmpty()) continue;
+        hasExplicitFilter = true;
+        MapInfo *m = findMap(selector);
+        if (!m) return mapNotFound(selector);
+        selectedMaps.insert(m);
+    }
+    for (const QJsonValue &value : input["map_refs"].toArray()) {
+        const QJsonObject ref = value.toObject();
+        QString selector = ref.value("address").toString().trimmed();
+        if (!selector.isEmpty()) selector.prepend('@');
+        else selector = ref.value("name").toString();
+        if (selector.isEmpty()) {
+            QJsonObject err; err["error"] = "Each map_refs item needs a name or address";
+            return QString::fromUtf8(QJsonDocument(err).toJson(QJsonDocument::Compact));
+        }
+        hasExplicitFilter = true;
+        MapInfo *m = findMap(selector);
+        if (!m) return mapNotFound(selector);
+        selectedMaps.insert(m);
+    }
 
     const auto *srcData = reinterpret_cast<const uint8_t *>(src.data.constData());
     int srcLen = src.data.size();
@@ -4463,7 +4630,7 @@ QString AIToolExecutor::toolApplyDeltaToRom(const QJsonObject &input)
     QVector<DeltaMap> toCopy;
 
     for (MapInfo &m : m_project->maps) {
-        if (!filterNames.isEmpty() && !filterNames.contains(m.name)) continue;
+        if (hasExplicitFilter && !selectedMaps.contains(&m)) continue;
         if (!src.mapOffsets.contains(m.name)) continue;
         if (src.mapConfidence.value(m.name, 0) < 60) continue;
 
@@ -4522,12 +4689,19 @@ QString AIToolExecutor::toolApplyDeltaToRom(const QJsonObject &input)
     emit projectModified();
 
     QJsonArray copiedNames;
-    for (const auto &dm : toCopy) copiedNames.append(dm.m->name);
+    QJsonArray copiedRefs;
+    for (const auto &dm : toCopy) {
+        copiedNames.append(dm.m->name);
+        QJsonObject ref{{"name", dm.m->name}};
+        addMapIdentity(ref, *dm.m);
+        copiedRefs.append(ref);
+    }
     QJsonObject res;
     res["success"] = true;
     res["source"]  = src.label;
     res["copied"]  = copied;
     res["maps"]    = copiedNames;
+    res["mapRefs"] = copiedRefs;
     return QString::fromUtf8(QJsonDocument(res).toJson(QJsonDocument::Compact));
 }
 

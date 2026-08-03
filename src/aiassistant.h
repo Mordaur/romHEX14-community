@@ -61,7 +61,8 @@ private:
     void startAssistantBubble();
     void buildSystemPrompt();
     void doSend();                             // one async round-trip; continues via timer if tool calls pending
-    void handleToolCall(const QString &callId, const QString &name, const QJsonObject &input);
+    void handleToolCall(const QString &callId, const QString &name, const QJsonObject &input,
+                        bool recordToolUse = true);
     void loadSettings();
     void saveSettings();
     AIProvider *createProvider(int index);
@@ -122,6 +123,7 @@ private:
     bool                m_hasSelectedMap = false;
     QString             m_systemPrompt;
     QVector<AIMessage>  m_history;
+    QString             m_pendingReasoningContent;
 
     // Pending tool calls (accumulated per round-trip)
     struct PendingToolCall {

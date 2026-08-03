@@ -601,6 +601,8 @@ MapOverlay::MapOverlay(QWidget *parent)
                 textLabel->setText(*accum + QString::fromUtf8(" \xe2\x96\x8c"));
                 dlg->adjustSize();
             },
+            // onReasoning
+            [](const QString &) {},
             // onToolCall
             [](const QString &, const QString &, const QJsonObject &) {},
             // onDone

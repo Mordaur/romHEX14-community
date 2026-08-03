@@ -1106,7 +1106,7 @@ AIAssistant::AIAssistant(QWidget *parent) : QWidget(parent)
         {"claude",    "Claude (Anthropic)",    "",                                                         "claude-sonnet-4-6",         true,  0},
         {"openai",    "OpenAI (GPT-4o)",       "https://api.openai.com/v1",                                "gpt-4o",                    false, 1},
         {"qwen",      "Qwen (Alibaba)",        "https://dashscope.aliyuncs.com/compatible-mode/v1",        "qwen-plus",                 false, 2},
-        {"deepseek",  "DeepSeek",              "https://api.deepseek.com/v1",                              "deepseek-chat",             false, 2},
+        {"deepseek",  "DeepSeek",              "https://api.deepseek.com/v1",                              "deepseek-v4-flash",         false, 2},
         {"gemini",    "Gemini (Google)",       "https://generativelanguage.googleapis.com/v1beta/openai/", "gemini-2.0-flash",          false, 2},
         {"groq",      "Groq",                  "https://api.groq.com/openai/v1",                           "llama-3.3-70b-versatile",   false, 2},
         {"ollama",    "Ollama (local)",        "http://localhost:11434/v1",                                "llama3.2",                  false, 2},
@@ -1402,7 +1402,10 @@ void AIAssistant::manageContext()
     static constexpr int kMinKeep     = 6;
 
     auto sizeOf = [](const AIMessage &m) {
-        return m.content.size() + m.toolResultJson.size() + m.toolInputJson.size();
+        int n = m.content.size() + m.toolResultJson.size() + m.toolInputJson.size();
+        for (const AIToolCall &call : m.toolCalls)
+            n += call.id.size() + call.name.size() + call.argumentsJson.size();
+        return n;
     };
 
     int totalSize = 0;
@@ -1438,15 +1441,18 @@ void AIAssistant::manageContext()
     {
         if (lastUserIdx == 0) break;          // active task is already at the front
         const AIMessage &front = m_history.first();
-        // If removing this message would orphan a ToolResult (next message is a
-        // ToolResult referring to this ToolUse), drop the pair together.
-        if (front.role == AIMessage::ToolUse && m_history.size() >= 2
-            && m_history[1].role == AIMessage::ToolResult)
-        {
-            totalSize -= sizeOf(m_history[0]) + sizeOf(m_history[1]);
+        // Tool calls from a single provider response are followed by one or
+        // more tool results.  Drop the complete exchange together so an API
+        // never receives an orphaned result.
+        if (front.role == AIMessage::ToolUse) {
+            totalSize -= sizeOf(m_history[0]);
             m_history.removeFirst();
-            m_history.removeFirst();
-            if (lastUserIdx >= 0) lastUserIdx -= 2;
+            if (lastUserIdx >= 0) --lastUserIdx;
+            while (!m_history.isEmpty() && m_history.first().role == AIMessage::ToolResult) {
+                totalSize -= sizeOf(m_history.first());
+                m_history.removeFirst();
+                if (lastUserIdx >= 0) --lastUserIdx;
+            }
         } else {
             totalSize -= sizeOf(front);
             m_history.removeFirst();
@@ -2162,6 +2168,7 @@ AIProvider *AIAssistant::createProvider(int index)
         c->setModel(model);
         c->setBaseUrl(baseUrl.isEmpty() ? cfg.baseUrl : baseUrl);
         c->setProviderLabel(cfg.label);
+        c->setDeepSeek(cfg.name == "deepseek");
         prov = c;
     }
     return prov;
@@ -2175,7 +2182,7 @@ AIProvider *AIAssistant::createOneShotProvider(QObject *parent)
         {"claude",   "",                                    "claude-sonnet-4-6",       true},
         {"openai",   "https://api.openai.com/v1",           "gpt-4o",                  false},
         {"qwen",     "https://dashscope.aliyuncs.com/compatible-mode/v1", "qwen-plus", false},
-        {"deepseek", "https://api.deepseek.com/v1",         "deepseek-chat",           false},
+        {"deepseek", "https://api.deepseek.com/v1",         "deepseek-v4-flash",       false},
         {"gemini",   "https://generativelanguage.googleapis.com/v1beta/openai/", "gemini-2.0-flash", false},
         {"groq",     "https://api.groq.com/openai/v1",      "llama-3.3-70b-versatile", false},
         {"ollama",   "http://localhost:11434/v1",           "llama3.2",                false},
@@ -2210,6 +2217,7 @@ AIProvider *AIAssistant::createOneShotProvider(QObject *parent)
         c->setApiKey(apiKey);
         c->setModel(model);
         c->setBaseUrl(baseUrl.isEmpty() ? cfg.baseUrl : baseUrl);
+        c->setDeepSeek(cfg.name == "deepseek");
         return c;
     }
 }
@@ -2232,6 +2240,7 @@ void AIAssistant::onClearChat()
     m_history.clear();
     m_streamingBubble = nullptr;
     m_accumulatedText.clear();
+    m_pendingReasoningContent.clear();
     m_pendingToolCalls.clear();
     m_hadToolCalls = false;
     m_sessionStarted = false;   // back to welcome until next user send
@@ -2415,6 +2424,7 @@ void AIAssistant::executeRecipe(const TuningRecipe &recipe)
                     m_accumulatedText += chunk;
                 }, Qt::QueuedConnection);
             },
+            [](const QString &) {}, // reasoning is not needed without tools
             [](const QString &, const QString &, const QJsonObject &) {}, // no tool calls
             [this, candidates, recipe]() {
                 QMetaObject::invokeMethod(this, [this, candidates, recipe]() {
@@ -3015,6 +3025,12 @@ void AIAssistant::doSend()
             }, Qt::QueuedConnection);
         },
 
+        [this](const QString &reasoning) {
+            QMetaObject::invokeMethod(this, [this, reasoning]() {
+                m_pendingReasoningContent = reasoning;
+            }, Qt::QueuedConnection);
+        },
+
         // onToolCall
         [this](const QString &callId, const QString &name, const QJsonObject &input) {
             QMetaObject::invokeMethod(this, [this, callId, name, input]() {
@@ -3037,9 +3053,6 @@ void AIAssistant::doSend()
                         m_streamingBubble->setMarkdownContent(m_accumulatedText);
                 }
 
-                if (!m_accumulatedText.isEmpty())
-                    m_history.append({AIMessage::Assistant, m_accumulatedText, {}, {}, {}, {}, {}});
-                m_accumulatedText.clear();
                 m_streamingBubble = nullptr;
                 showTyping(false);
 
@@ -3049,8 +3062,23 @@ void AIAssistant::doSend()
                     m_pendingToolCalls.clear();
                     m_hadToolCalls = false;
 
+                    // Preserve all tool calls from one provider response as a
+                    // single assistant turn.  DeepSeek requires every matching
+                    // tool result to follow that exact turn.
+                    AIMessage useMsg;
+                    useMsg.role = AIMessage::ToolUse;
+                    useMsg.content = m_accumulatedText;
+                    useMsg.reasoningContent = m_pendingReasoningContent;
                     for (const auto &ptc : batch) {
-                        handleToolCall(ptc.callId, ptc.name, ptc.input);
+                        useMsg.toolCalls.append({ptc.callId, ptc.name,
+                            QString::fromUtf8(QJsonDocument(ptc.input).toJson(QJsonDocument::Compact))});
+                    }
+                    m_history.append(useMsg);
+                    m_accumulatedText.clear();
+                    m_pendingReasoningContent.clear();
+
+                    for (const auto &ptc : batch) {
+                        handleToolCall(ptc.callId, ptc.name, ptc.input, false);
                         if (m_state == AssistantState::AWAITING_CONFIRMATION)
                             return;  // Confirmation accept/reject handler will resume
                     }
@@ -3061,6 +3089,10 @@ void AIAssistant::doSend()
                         if (m_state == AssistantState::WORKING) doSend();
                     });
                 } else {
+                    if (!m_accumulatedText.isEmpty())
+                        m_history.append({AIMessage::Assistant, m_accumulatedText, {}, {}, {}, {}, {}});
+                    m_accumulatedText.clear();
+                    m_pendingReasoningContent.clear();
                     // No more tool calls — done
                     transitionTo(AssistantState::IDLE);
                 }
@@ -3107,15 +3139,18 @@ void AIAssistant::doSend()
     );
 }
 
-void AIAssistant::handleToolCall(const QString &callId, const QString &name, const QJsonObject &input)
+void AIAssistant::handleToolCall(const QString &callId, const QString &name, const QJsonObject &input,
+                                 bool recordToolUse)
 {
     QString inputJson = QString::fromUtf8(QJsonDocument(input).toJson(QJsonDocument::Compact));
-    AIMessage useMsg;
-    useMsg.role          = AIMessage::ToolUse;
-    useMsg.toolCallId    = callId;
-    useMsg.toolName      = name;
-    useMsg.toolInputJson = inputJson;
-    m_history.append(useMsg);
+    if (recordToolUse) {
+        AIMessage useMsg;
+        useMsg.role          = AIMessage::ToolUse;
+        useMsg.toolCallId    = callId;
+        useMsg.toolName      = name;
+        useMsg.toolInputJson = inputJson;
+        m_history.append(useMsg);
+    }
 
     // Show friendly tool call label
     {
@@ -3338,7 +3373,7 @@ void AIAssistant::onSettingsClicked()
 
     QSettings s("CT14", "romHEX14");
     s.beginGroup(kSettingsGroup);
-    QString savedKey     = s.value(cfg.name + "/apiKey").toString();
+    QString savedKey     = QString::fromUtf8(deobfuscate(s.value(cfg.name + "/apiKey").toByteArray()));
     QString savedModel   = s.value(cfg.name + "/model", cfg.defaultModel).toString();
     QString savedBaseUrl = s.value(cfg.name + "/baseUrl", cfg.baseUrl).toString();
     s.endGroup();
