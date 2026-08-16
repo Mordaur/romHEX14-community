@@ -21,7 +21,7 @@ public:
     /// Plugin ABI Version (default 1)
     virtual uint32_t pluginVersion() const = 0;
 
-    /// Corresponding Alientech/WinOLS devNum identifier (e.g. 94 for Bosch MED17)
+    /// Corresponding OLS devNum identifier (e.g. 94 for Bosch MED17)
     virtual uint32_t devNum() const = 0;
 
     /// Plugin identifier slug (e.g. "bosch_med17")

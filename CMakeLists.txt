@@ -581,7 +581,7 @@ else()
 endif()
 
 # ── Deploy checksumhelper.exe and ChecksumDLL next to the executable ──────────
-# The 32-bit checksumhelper.exe bridges 64-bit rx14 to 32-bit WinOLS checksum DLLs.
+# The 32-bit checksumhelper.exe bridges 64-bit rx14 to 32-bit OLS checksum DLLs.
 # Both must sit alongside rx14.exe for the DLL-bridge checksums to work (Windows only).
 if(WIN32)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/checksumhelper.exe")
