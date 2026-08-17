@@ -7,6 +7,8 @@
 #pragma once
 #include <QObject>
 #include <QColor>
+#include <QString>
+#include <QVector>
 #include <functional>
 
 struct AppColors {
@@ -132,6 +134,30 @@ public:
     static bool importTheme(const QString &filePath, AppColors &colorsOut,
                             WaveStyle &styleOut, QString *nameOut = nullptr,
                             QString *errorOut = nullptr);
+
+    // ── User theme library ──────────────────────────────────────────────────
+    // User-created themes live as .rx14theme files under AppData/themes and
+    // appear in the Settings preset combo below the built-ins. Built-in
+    // themes are code (ColorThemes::all()) and can never be renamed/deleted.
+    struct UserTheme {
+        QString   name;
+        QString   filePath;
+        AppColors colors;
+        WaveStyle waveStyle;
+    };
+    static QString userThemesDir();
+    static QVector<UserTheme> userThemes();      // sorted by name
+    // Creates or overwrites (same name, case-insensitive) a user theme.
+    static bool saveUserTheme(const QString &name, const AppColors &colors,
+                              const WaveStyle &style,
+                              QString *pathOut = nullptr,
+                              QString *errorOut = nullptr);
+    static bool renameUserTheme(const QString &filePath,
+                                const QString &newName,
+                                QString *newPathOut = nullptr,
+                                QString *errorOut = nullptr);
+    static bool deleteUserTheme(const QString &filePath,
+                                QString *errorOut = nullptr);
 
 signals:
     void colorsChanged();

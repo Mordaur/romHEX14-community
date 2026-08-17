@@ -1381,15 +1381,20 @@ Proceed?</source>
     <message>
         <location filename="../src/aboutdialog.cpp" line="389"/>
         <source>Edit ops, annotations, savepoints, diff panel, map fingerprint, bulk edit</source>
-        <translation>编辑操作、注释、存档点、差异面板、标定图指纹、批量编辑</translation>
+        <translation>编辑操作、标注、存档点、差异面板、图谱指纹、批量编辑</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.cpp" line="415"/>
+        <location filename="../src/aboutdialog.cpp" line="391"/>
+        <source>ADS docking workspace, centralized patch engine, multi-view sync, versioned KP codec, Dutch translation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/aboutdialog.cpp" line="417"/>
         <source>© 2025 CT14 GARAGE CO., LTD — Bangkok, Thailand. All rights reserved.</source>
         <translation>© 2025 CT14 GARAGE CO., LTD — 泰国·曼谷。保留所有权利。</translation>
     </message>
     <message>
-        <location filename="../src/aboutdialog.cpp" line="421"/>
+        <location filename="../src/aboutdialog.cpp" line="423"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -1488,36 +1493,153 @@ Proceed?</source>
     </message>
 </context>
 <context>
-    <name>ChannelTreeWidget</name>
+    <name>ByteDiffWidget</name>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="29"/>
-        <source>Search channels…</source>
-        <translation type="unfinished">搜索通道…</translation>
+        <location filename="../src/bytediffwidget.cpp" line="190"/>
+        <source>Reference</source>
+        <translation>参考</translation>
     </message>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="33"/>
-        <source>Clear</source>
-        <translation type="unfinished">Clear</translation>
+        <location filename="../src/bytediffwidget.cpp" line="192"/>
+        <source>Compare</source>
+        <translation>比较</translation>
+    </message>
+</context>
+<context>
+    <name>ChecksumManager</name>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="520"/>
+        <source>checksumhelper.exe not found.
+
+The checksum DLLs are 32-bit and require a 32-bit bridge process.
+Please build checksumhelper.exe (see tools/checksumhelper/) or
+place it next to rx14.exe.
+
+Expected path: %1</source>
+        <translation>未找到 checksumhelper.exe。
+
+校验和 DLL 为 32 位,需要 32 位桥接进程。
+请先编译 checksumhelper.exe(参见 tools/checksumhelper/),
+或将其与 rx14.exe 放置在同一目录。
+
+预期路径:%1</translation>
     </message>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="34"/>
-        <source>Deselect all channels</source>
-        <translation type="unfinished">取消选择所有通道</translation>
+        <location filename="../src/checksummanager.cpp" line="529"/>
+        <source>DLL not found: %1</source>
+        <translation>未找到 DLL:%1</translation>
     </message>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="42"/>
-        <source>Channel</source>
-        <translation type="unfinished">通道</translation>
+        <location filename="../src/checksummanager.cpp" line="541"/>
+        <location filename="../src/checksummanager.cpp" line="552"/>
+        <source>Failed to create temporary files</source>
+        <translation>创建临时文件失败</translation>
     </message>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="42"/>
-        <source>Unit</source>
-        <translation type="unfinished">单位</translation>
+        <location filename="../src/checksummanager.cpp" line="566"/>
+        <source>Checksum helper process timed out</source>
+        <translation>校验和辅助进程超时</translation>
     </message>
     <message>
-        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="169"/>
-        <source>Other (raw)</source>
-        <translation type="unfinished">其他（原始）</translation>
+        <location filename="../src/checksummanager.cpp" line="591"/>
+        <source>Failed to read corrected ROM from helper</source>
+        <translation>无法从辅助进程读取校正后的ROM</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="608"/>
+        <source>Invalid JSON response from checksum helper</source>
+        <translation>checksum 助手返回的 JSON 响应无效</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="612"/>
+        <source>Checksum helper returned exit code %1</source>
+        <translation>校验和辅助进程返回退出码 %1</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="615"/>
+        <source> (Windows error %1)</source>
+        <translation>（Windows 错误 %1）</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="620"/>
+        <source>The checksum DLL could not be loaded because a runtime dependency is missing. Please install the Microsoft Visual C++ 2005 SP1 Redistributable (x86) and try again.</source>
+        <translation>无法加载校验和 DLL，因为缺少运行时依赖项。请安装 Microsoft Visual C++ 2005 SP1 Redistributable (x86) 后重试。</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="624"/>
+        <source>The DLL is not a valid 32-bit library.</source>
+        <translation>该 DLL 不是有效的 32 位库。</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="630"/>
+        <source>DLL bridge not available on this platform (Windows only)</source>
+        <translation>此平台不支持 DLL 桥接(仅限 Windows)</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="654"/>
+        <location filename="../src/checksummanager.cpp" line="688"/>
+        <source>Unknown ECU — no checksum DLL matched</source>
+        <translation>未知ECU — 没有匹配的校验和DLL</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="677"/>
+        <location filename="../src/checksummanager.cpp" line="709"/>
+        <source>checksumhelper.exe or DLL not found for %1</source>
+        <translation>未找到 %1 对应的 checksumhelper.exe 或 DLL</translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="679"/>
+        <location filename="../src/checksummanager.cpp" line="711"/>
+        <source>Checksum support for %1 requires the Windows DLL bridge (checksumhelper.exe + the vendor checksum DLLs).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/checksummanager.cpp" line="734"/>
+        <source>Checksum verify/correct requires the Windows DLL bridge (checksumhelper.exe + the vendor checksum DLLs), so it is unavailable on this platform.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ChecksumSelectDlg</name>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="20"/>
+        <source>Select Checksum Algorithm</source>
+        <translation>选择校验和算法</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="59"/>
+        <source>(not set)</source>
+        <translation>（未设置）</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="60"/>
+        <source>ECU type: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>ECU 类型：&lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="66"/>
+        <source>Auto-detected algorithm: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>自动检测的算法：&lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="68"/>
+        <source>Auto-detected algorithm: &lt;b&gt;(no match found)&lt;/b&gt;</source>
+        <translation>自动检测的算法：&lt;b&gt;（未找到匹配项）&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="77"/>
+        <source>Select algorithm:</source>
+        <translation>选择算法：</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="86"/>
+        <source> (built-in)</source>
+        <translation>（内置）</translation>
+    </message>
+    <message>
+        <location filename="../src/checksumelectdlg.cpp" line="96"/>
+        <source>⚠ Some algorithms are only available on Windows.</source>
+        <translation>⚠ 部分算法仅在 Windows 上可用。</translation>
     </message>
 </context>
 <context>
@@ -1525,12 +1647,12 @@ Proceed?</source>
     <message>
         <location filename="../src/cloud/CloudClient.cpp" line="132"/>
         <source>Cloud server not configured. Open Configure… and set the URL.</source>
-        <translation>Cloud server not configured. Open Configure… and set the URL.</translation>
+        <translation>云服务器未配置。请打开配置…并设置 URL。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudClient.cpp" line="209"/>
         <source>Cloud server not configured.</source>
-        <translation>Cloud server not configured.</translation>
+        <translation>云服务器未配置。</translation>
     </message>
 </context>
 <context>
@@ -1538,108 +1660,108 @@ Proceed?</source>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="39"/>
         <source>Cloud Tools — DTC &amp; Features</source>
-        <translation>Cloud Tools — DTC &amp; Features</translation>
+        <translation>云工具 — DTC 与功能</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="93"/>
         <source>ECU: (not detected yet)</source>
-        <translation>ECU: (not detected yet)</translation>
+        <translation>ECU:(尚未检测到)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="102"/>
         <source>Configure…</source>
-        <translation>Configure…</translation>
+        <translation>配置…</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="107"/>
         <source>Analyse ROM</source>
-        <translation>Analyse ROM</translation>
+        <translation>分析 ROM</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="119"/>
         <source>Hint: (none — auto-detect on server)</source>
-        <translation>Hint: (none — auto-detect on server)</translation>
+        <translation>提示:(无 — 由服务器自动检测)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="120"/>
         <source>Hint from Project Properties → Producer: &lt;b&gt;%1&lt;/b&gt;</source>
-        <translation>Hint from Project Properties → Producer: &lt;b&gt;%1&lt;/b&gt;</translation>
+        <translation>来自项目属性 → 制造商的提示:&lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="133"/>
         <source>Click Analyse to fetch DTC list.</source>
-        <translation>Click Analyse to fetch DTC list.</translation>
+        <translation>点击“分析”以获取 DTC 列表。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="141"/>
         <source>Search code / description (P0420, EGR, lambda, …)</source>
-        <translation>Search code / description (P0420, EGR, lambda, …)</translation>
+        <translation>搜索代码/描述(P0420、EGR、lambda 等)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="147"/>
         <source>Select all currently-ON</source>
-        <translation>Select all currently-ON</translation>
+        <translation>选择所有当前为 ON 的项</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="153"/>
         <source>Clear</source>
-        <translation>Clear</translation>
+        <translation>清除</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="164"/>
         <source>Code</source>
-        <translation>Code</translation>
+        <translation>代码</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="164"/>
         <source>Mfr</source>
-        <translation>Mfr</translation>
+        <translation>厂商</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="164"/>
         <source>Status</source>
-        <translation>Status</translation>
+        <translation>状态</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="164"/>
         <source>Description</source>
-        <translation>Description</translation>
+        <translation>描述</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="180"/>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="439"/>
         <source>0 selected</source>
-        <translation>0 selected</translation>
+        <translation>已选 0 项</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="184"/>
         <source>Disable selected → save patched ROM</source>
-        <translation>Disable selected → save patched ROM</translation>
+        <translation>禁用所选项 → 保存修补后的 ROM</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="191"/>
         <source>DTCs (free)</source>
-        <translation>DTCs (free)</translation>
+        <translation>DTC(免费)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="199"/>
         <source>Pro tier — requires API token.</source>
-        <translation>Pro tier — requires API token.</translation>
+        <translation>专业版 — 需要 API 令牌。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="209"/>
         <source>Apply log will appear here.</source>
-        <translation>Apply log will appear here.</translation>
+        <translation>应用日志将显示在此处。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="215"/>
         <source>Apply selected → save patched ROM</source>
-        <translation>Apply selected → save patched ROM</translation>
+        <translation>应用所选项 → 保存修补后的 ROM</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="222"/>
         <source>Features (pro)</source>
-        <translation>Features (pro)</translation>
+        <translation>功能(专业版)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="249"/>
@@ -1649,63 +1771,63 @@ Proceed?</source>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="254"/>
         <source>FREE</source>
-        <translation>FREE</translation>
+        <translation>免费</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="261"/>
         <source>Pro tier — token configured.  Click Analyse to fetch features.</source>
-        <translation>Pro tier — token configured.  Click Analyse to fetch features.</translation>
+        <translation>专业版 — 已配置令牌。点击“分析”以获取功能。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="262"/>
         <source>Pro tier — requires API token.  Click Configure… to set one.</source>
-        <translation>Pro tier — requires API token.  Click Configure… to set one.</translation>
+        <translation>专业版 — 需要 API 令牌。点击“配置…”进行设置。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="288"/>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="330"/>
         <source>Cloud configuration</source>
-        <translation>Cloud configuration</translation>
+        <translation>云配置</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="293"/>
         <source>romHEX14 does not ship with a default cloud server.  Point this client at any compatible backend — the protocol and a reference implementation are documented under &lt;code&gt;server/&lt;/code&gt; in the source tree.</source>
-        <translation>romHEX14 does not ship with a default cloud server.  Point this client at any compatible backend — the protocol and a reference implementation are documented under &lt;code&gt;server/&lt;/code&gt; in the source tree.</translation>
+        <translation>romHEX14 不附带默认云服务器。请将此客户端指向任何兼容的后端 — 协议及参考实现的文档位于源码树的 &lt;code&gt;server/&lt;/code&gt; 目录下。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="302"/>
         <source>Server URL</source>
-        <translation>Server URL</translation>
+        <translation>服务器 URL</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="308"/>
         <source>API token  (optional — required for Pro features)</source>
-        <translation>API token  (optional — required for Pro features)</translation>
+        <translation>API 令牌(可选 — 专业版功能必需)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="312"/>
         <source>leave empty to use the free DTC tier</source>
-        <translation>leave empty to use the free DTC tier</translation>
+        <translation>留空则使用免费 DTC 层级</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="331"/>
         <source>Server URL must start with http:// or https://</source>
-        <translation>Server URL must start with http:// or https://</translation>
+        <translation>服务器 URL 必须以 http:// 或 https:// 开头</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="340"/>
         <source>Cloud disabled — set a server URL to enable.</source>
-        <translation>Cloud disabled — set a server URL to enable.</translation>
+        <translation>云功能已禁用 — 设置服务器 URL 以启用。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="342"/>
         <source>Server saved (free tier — no token).</source>
-        <translation>Server saved (free tier — no token).</translation>
+        <translation>服务器已保存(免费层级 — 无令牌)。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="343"/>
         <source>Server + token saved (Pro tier active).</source>
-        <translation>Server + token saved (Pro tier active).</translation>
+        <translation>服务器与令牌已保存(专业版已激活)。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="349"/>
@@ -1715,124 +1837,124 @@ Proceed?</source>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="588"/>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="601"/>
         <source>Cloud Tools</source>
-        <translation>Cloud Tools</translation>
+        <translation>云工具</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="350"/>
         <source>No ROM data available in the current project.</source>
-        <translation>No ROM data available in the current project.</translation>
+        <translation>当前项目中没有可用的 ROM 数据。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="353"/>
         <source>Analysing on server…</source>
-        <translation>Analysing on server…</translation>
+        <translation>正在服务器上分析…</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="364"/>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="590"/>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="603"/>
         <source>server error</source>
-        <translation>server error</translation>
+        <translation>服务器错误</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="365"/>
         <source>Analyse failed: %1%2</source>
-        <translation>Analyse failed: %1%2</translation>
+        <translation>分析失败:%1%2</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="375"/>
         <source>ECU: %1  (%2)</source>
-        <translation>ECU: %1  (%2)</translation>
+        <translation>ECU:%1(%2)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="376"/>
         <source>unknown</source>
-        <translation>unknown</translation>
+        <translation>未知</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="377"/>
         <source>no match</source>
-        <translation>no match</translation>
+        <translation>无匹配</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="382"/>
         <source>Found %1 DTCs  —  %2 currently ON, %3 OFF</source>
-        <translation>Found %1 DTCs  —  %2 currently ON, %3 OFF</translation>
+        <translation>找到 %1 个 DTC — %2 个当前为 ON,%3 个为 OFF</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="447"/>
         <source>not authorised</source>
-        <translation>not authorised</translation>
+        <translation>未授权</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="448"/>
         <source>Features detect failed: %1</source>
-        <translation>Features detect failed: %1</translation>
+        <translation>功能检测失败:%1</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="453"/>
         <source>No features available for this ECU.</source>
-        <translation>No features available for this ECU.</translation>
+        <translation>此 ECU 没有可用功能。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="456"/>
         <source>%1 features available — select to apply.</source>
-        <translation>%1 features available — select to apply.</translation>
+        <translation>%1 项功能可用 — 选择后应用。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="468"/>
         <source>  (%1 DTCs)</source>
-        <translation>  (%1 DTCs)</translation>
+        <translation>  (%1 个 DTC)</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="527"/>
         <source>%1 selected</source>
-        <translation>%1 selected</translation>
+        <translation>已选 %1 项</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="547"/>
         <source>No DTCs selected.</source>
-        <translation>No DTCs selected.</translation>
+        <translation>未选择任何 DTC。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="550"/>
         <source>Disabling %1 DTC(s)…</source>
-        <translation>Disabling %1 DTC(s)…</translation>
+        <translation>正在禁用 %1 个 DTC…</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="563"/>
         <source>Select at least one feature to apply.</source>
-        <translation>Select at least one feature to apply.</translation>
+        <translation>请至少选择一项要应用的功能。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="566"/>
         <source>Applying %1 feature(s)…</source>
-        <translation>Applying %1 feature(s)…</translation>
+        <translation>正在应用 %1 项功能…</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="580"/>
         <source>Patched ROM applied to the active project.  Save to persist.</source>
-        <translation>Patched ROM applied to the active project.  Save to persist.</translation>
+        <translation>已将修补后的 ROM 应用到当前项目。请保存以持久化。</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="589"/>
         <source>Disable DTCs failed: %1</source>
-        <translation>Disable DTCs failed: %1</translation>
+        <translation>禁用 DTC 失败:%1</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="602"/>
         <source>Apply features failed: %1</source>
-        <translation>Apply features failed: %1</translation>
+        <translation>应用功能失败:%1</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="608"/>
         <source>[%1]  Patched ROM received: %2 bytes</source>
-        <translation>[%1]  Patched ROM received: %2 bytes</translation>
+        <translation>[%1] 已接收修补后的 ROM:%2 字节</translation>
     </message>
     <message>
         <location filename="../src/cloud/CloudToolsDlg.cpp" line="618"/>
         <source>Network error (%1): %2</source>
-        <translation>Network error (%1): %2</translation>
+        <translation>网络错误(%1):%2</translation>
     </message>
 </context>
 <context>
@@ -1866,547 +1988,771 @@ Proceed?</source>
 <context>
     <name>ConfigDialog</name>
     <message>
-        <location filename="../src/configdialog.cpp" line="56"/>
+        <location filename="../src/configdialog.cpp" line="67"/>
         <source>Configuration</source>
         <translation>配置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="86"/>
+        <location filename="../src/configdialog.cpp" line="108"/>
         <source>Colors</source>
         <translation>颜色</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="87"/>
+        <location filename="../src/configdialog.cpp" line="109"/>
         <source>Display</source>
         <translation>显示</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="88"/>
+        <location filename="../src/configdialog.cpp" line="110"/>
         <source>AI</source>
         <translation>AI</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="96"/>
+        <location filename="../src/configdialog.cpp" line="118"/>
         <source>Reset Defaults</source>
         <translation>恢复默认</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="632"/>
-        <source>OpenAI</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/configdialog.cpp" line="671"/>
+        <source>Interface Scale</source>
+        <translation>界面缩放</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="849"/>
+        <location filename="../src/configdialog.cpp" line="680"/>
+        <source>Automatic — match this display (recommended: %1%)</source>
+        <translation>自动 — 匹配此显示器（推荐：%1%）</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="686"/>
+        <source>Custom:</source>
+        <translation>自定义：</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="712"/>
+        <source>Scaling is applied at startup — Apply offers a quick restart. Currently running at %1%. The range is capped at %2% so windows always fit this display.</source>
+        <translation>缩放在启动时应用 — “应用”会提供快速重启。当前为 %1%。范围上限为 %2%，以确保窗口始终适合此显示器。</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="765"/>
+        <source>Restart to Rescale</source>
+        <translation>重启以调整缩放</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="766"/>
+        <source>The interface scale becomes %1% after a restart. Restart romHEX14 now?</source>
+        <translation>重启后界面缩放将变为 %1%。现在重启 romHEX14 吗？</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="874"/>
+        <location filename="../src/configdialog.cpp" line="879"/>
+        <location filename="../src/configdialog.cpp" line="885"/>
+        <location filename="../src/configdialog.cpp" line="895"/>
+        <source>Save Theme As</source>
+        <translation>主题另存为</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="875"/>
+        <source>Theme name:</source>
+        <translation>主题名称：</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="875"/>
+        <source>My Theme</source>
+        <translation>我的主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="880"/>
+        <location filename="../src/configdialog.cpp" line="923"/>
+        <source>“%1” is a built-in theme name — pick another.</source>
+        <translation>“%1”是内置主题名称 — 请另选一个。</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="886"/>
+        <source>A theme named “%1” already exists. Replace it?</source>
+        <translation>已存在名为“%1”的主题。要替换它吗？</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="896"/>
+        <source>Could not save the theme:
+%1</source>
+        <translation>无法保存主题：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="902"/>
+        <source>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ Theme “%1” saved&lt;/span&gt;</source>
+        <translation>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ 主题“%1”已保存&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="917"/>
+        <location filename="../src/configdialog.cpp" line="922"/>
+        <location filename="../src/configdialog.cpp" line="929"/>
+        <location filename="../src/configdialog.cpp" line="936"/>
+        <source>Rename Theme</source>
+        <translation>重命名主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="918"/>
+        <source>New name:</source>
+        <translation>新名称：</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="930"/>
+        <source>A theme named “%1” already exists.</source>
+        <translation>已存在名为“%1”的主题。</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="937"/>
+        <source>Could not rename the theme:
+%1</source>
+        <translation>无法重命名主题：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="951"/>
+        <location filename="../src/configdialog.cpp" line="957"/>
+        <source>Delete Theme</source>
+        <translation>删除主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="952"/>
+        <source>Delete theme “%1”? Its file will be removed.</source>
+        <translation>删除主题“%1”？其文件将被移除。</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="958"/>
+        <source>Could not delete the theme:
+%1</source>
+        <translation>无法删除主题：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="965"/>
+        <source>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ Theme “%1” deleted&lt;/span&gt;</source>
+        <translation>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ 主题“%1”已删除&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="976"/>
+        <source>Custom Theme</source>
+        <translation>自定义主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="982"/>
+        <location filename="../src/configdialog.cpp" line="989"/>
+        <source>Export Theme</source>
+        <translation>导出主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="983"/>
+        <location filename="../src/configdialog.cpp" line="1005"/>
+        <source>romHEX14 Themes (*.rx14theme);;All Files (*)</source>
+        <translation>romHEX14 主题 (*.rx14theme);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="990"/>
+        <source>Could not write the theme file:
+%1</source>
+        <translation>无法写入主题文件：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="995"/>
+        <source>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ Theme exported&lt;/span&gt;</source>
+        <translation>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ 主题已导出&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1003"/>
+        <location filename="../src/configdialog.cpp" line="1012"/>
+        <location filename="../src/configdialog.cpp" line="1034"/>
+        <source>Import Theme</source>
+        <translation>导入主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1013"/>
+        <source>Could not load the theme file:
+%1</source>
+        <translation>无法加载主题文件：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1035"/>
+        <source>Could not add the theme to your library:
+%1</source>
+        <translation>无法将主题添加到您的库：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1042"/>
+        <source>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ Imported “%1”&lt;/span&gt;</source>
+        <translation>&lt;span style=&apos;color:#3fb950;&apos;&gt;✓ 已导入“%1”&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1077"/>
+        <source>OpenAI</source>
+        <translation>OpenAI</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1154"/>
+        <source>🔗 API Docs</source>
+        <translation>🔗 API 文档</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1155"/>
+        <source>Open official model documentation in web browser</source>
+        <translation>在浏览器中打开官方模型文档</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="1294"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="98"/>
+        <location filename="../src/configdialog.cpp" line="120"/>
         <source>Apply</source>
         <translation>应用</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="97"/>
-        <location filename="../src/configdialog.cpp" line="849"/>
-        <source>Close</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog.cpp" line="138"/>
-        <source>&lt;span style=&apos;color:#3fb950; font-weight:bold;&apos;&gt;✓ Settings applied&lt;/span&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog.cpp" line="239"/>
+        <location filename="../src/configdialog.cpp" line="274"/>
         <source>Choose Color</source>
         <translation>选择颜色</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="331"/>
+        <location filename="../src/configdialog.cpp" line="366"/>
         <source>Theme Preset:</source>
         <translation>主题预设：</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="342"/>
+        <location filename="../src/configdialog.cpp" line="800"/>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="378"/>
+        <location filename="../src/configdialog.cpp" line="448"/>
         <source>Map Highlight Bands</source>
         <translation>地图高亮色带</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="383"/>
+        <location filename="../src/configdialog.cpp" line="119"/>
+        <location filename="../src/configdialog.cpp" line="1294"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="161"/>
+        <source>&lt;span style=&apos;color:#3fb950; font-weight:bold;&apos;&gt;✓ Settings applied&lt;/span&gt;</source>
+        <translation>&lt;span style=&apos;color:#3fb950; font-weight:bold;&apos;&gt;✓ 设置已应用&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="408"/>
+        <source>Save As…</source>
+        <translation>另存为…</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="409"/>
+        <source>Save the current colors as a new theme</source>
+        <translation>将当前颜色保存为新主题</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="410"/>
+        <source>Rename…</source>
+        <translation>重命名…</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="412"/>
+        <source>Rename the selected theme (your themes only)</source>
+        <translation>重命名所选主题（仅限您的主题）</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="413"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="415"/>
+        <source>Delete the selected theme (built-in themes cannot be deleted)</source>
+        <translation>删除所选主题（内置主题无法删除）</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="417"/>
+        <source>Export…</source>
+        <translation>导出…</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="418"/>
+        <source>Save the current colors and 2D style as a theme file (.rx14theme)</source>
+        <translation>将当前颜色和 2D 样式保存为主题文件（.rx14theme）</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="420"/>
+        <source>Import…</source>
+        <translation>导入…</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="421"/>
+        <source>Load a theme file (.rx14theme) — it is added to your themes and previewed live</source>
+        <translation>加载主题文件（.rx14theme）— 会添加到您的主题并实时预览</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="453"/>
         <source>Applied to map regions in the hex editor (cell tint + bar fill), 2D waveform bands, and map overlay table.</source>
         <translation>应用于十六进制编辑器中的地图区域（单元格着色 + 条形填充）、2D 波形色带及地图叠加表格。</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="387"/>
+        <location filename="../src/configdialog.cpp" line="457"/>
         <source>Band 1 — Reds (maps 1, 6, 11...)</source>
         <translation>色带 1 — 红色 (地图 1, 6, 11...)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="388"/>
+        <location filename="../src/configdialog.cpp" line="458"/>
         <source>Band 2 — Blues (maps 2, 7, 12...)</source>
         <translation>色带 2 — 蓝色 (地图 2, 7, 12...)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="389"/>
+        <location filename="../src/configdialog.cpp" line="459"/>
         <source>Band 3 — Greens (maps 3, 8, 13...)</source>
         <translation>色带 3 — 绿色 (地图 3, 8, 13...)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="390"/>
+        <location filename="../src/configdialog.cpp" line="460"/>
         <source>Band 4 — Ambers (maps 4, 9, 14...)</source>
         <translation>色带 4 — 琥珀色 (地图 4, 9, 14...)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="391"/>
+        <location filename="../src/configdialog.cpp" line="461"/>
         <source>Band 5 — Purples (maps 5, 10, 15...)</source>
         <translation>色带 5 — 紫色 (地图 5, 10, 15...)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="395"/>
+        <location filename="../src/configdialog.cpp" line="465"/>
         <source>2D View — Curve Colors</source>
         <translation>2D 视图 — 曲线颜色</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="401"/>
+        <location filename="../src/configdialog.cpp" line="471"/>
         <source>Curve 1 — Row 0 (front)</source>
         <translation>曲线 1 — 行 0 (前)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="402"/>
+        <location filename="../src/configdialog.cpp" line="472"/>
         <source>Curve 2 — Row 1</source>
         <translation>曲线 2 — 行 1</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="403"/>
+        <location filename="../src/configdialog.cpp" line="473"/>
         <source>Curve 3 — Row 2</source>
         <translation>曲线 3 — 行 2</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="404"/>
+        <location filename="../src/configdialog.cpp" line="474"/>
         <source>Curve 4 — Row 3</source>
         <translation>曲线 4 — 行 3</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="405"/>
+        <location filename="../src/configdialog.cpp" line="475"/>
         <source>Curve 5 — Row 4</source>
         <translation>曲线 5 — 行 4</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="406"/>
+        <location filename="../src/configdialog.cpp" line="476"/>
         <source>Curve 6 — Row 5</source>
         <translation>曲线 6 — 行 5</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="407"/>
+        <location filename="../src/configdialog.cpp" line="477"/>
         <source>Curve 7 — Row 6</source>
         <translation>曲线 7 — 行 6</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="408"/>
+        <location filename="../src/configdialog.cpp" line="478"/>
         <source>Curve 8 — Row 7 (back)</source>
         <translation>曲线 8 — 行 7 (后)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="412"/>
+        <location filename="../src/configdialog.cpp" line="482"/>
         <source>Hex Editor</source>
         <translation>十六进制编辑器</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="416"/>
+        <location filename="../src/configdialog.cpp" line="486"/>
         <source>Cell area background</source>
         <translation>单元格区域背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="417"/>
+        <location filename="../src/configdialog.cpp" line="487"/>
         <source>Normal byte text</source>
         <translation>正常字节文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="418"/>
+        <location filename="../src/configdialog.cpp" line="488"/>
         <source>Modified byte text / bar</source>
         <translation>已修改字节文本 / 条</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="419"/>
+        <location filename="../src/configdialog.cpp" line="489"/>
         <source>Selected cell fill</source>
         <translation>选中单元格填充</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="420"/>
+        <location filename="../src/configdialog.cpp" line="490"/>
         <source>Offset column + sidebar</source>
         <translation>偏移列 + 侧边栏</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="421"/>
+        <location filename="../src/configdialog.cpp" line="491"/>
         <source>Column header background</source>
         <translation>列标题背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="422"/>
+        <location filename="../src/configdialog.cpp" line="492"/>
         <source>Column header text</source>
         <translation>列标题文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="423"/>
+        <location filename="../src/configdialog.cpp" line="493"/>
         <source>Bar view — default bar</source>
         <translation>条形视图 — 默认条</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="431"/>
+        <location filename="../src/configdialog.cpp" line="501"/>
         <source>Cell background (heat off)</source>
         <translation>单元格背景 (热图关)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="432"/>
+        <location filename="../src/configdialog.cpp" line="502"/>
         <source>Cell text (heat off)</source>
         <translation>单元格文本 (热图关)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="433"/>
+        <location filename="../src/configdialog.cpp" line="503"/>
         <source>Modified cell text (heat off)</source>
         <translation>已修改单元格文本 (热图关)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="434"/>
+        <location filename="../src/configdialog.cpp" line="504"/>
         <source>Grid lines (heat off)</source>
         <translation>网格线 (热图关)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="435"/>
+        <location filename="../src/configdialog.cpp" line="505"/>
         <source>X axis header background</source>
         <translation>X 轴标题背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="436"/>
+        <location filename="../src/configdialog.cpp" line="506"/>
         <source>X axis header text</source>
         <translation>X 轴标题文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="437"/>
+        <location filename="../src/configdialog.cpp" line="507"/>
         <source>Y axis header background</source>
         <translation>Y 轴标题背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="438"/>
+        <location filename="../src/configdialog.cpp" line="508"/>
         <source>Y axis header text</source>
         <translation>Y 轴标题文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="442"/>
+        <location filename="../src/configdialog.cpp" line="512"/>
         <source>2D Waveform View</source>
         <translation>2D 波形视图</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="446"/>
+        <location filename="../src/configdialog.cpp" line="516"/>
         <source>Plot background</source>
         <translation>绘图背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="447"/>
+        <location filename="../src/configdialog.cpp" line="517"/>
         <source>Major grid lines</source>
         <translation>主网格线</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="448"/>
+        <location filename="../src/configdialog.cpp" line="518"/>
         <source>Minor grid lines</source>
         <translation>次网格线</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="449"/>
+        <location filename="../src/configdialog.cpp" line="519"/>
         <source>ROM waveform line</source>
         <translation>ROM 波形线</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="450"/>
+        <location filename="../src/configdialog.cpp" line="520"/>
         <source>Overview / minimap strip</source>
         <translation>概览 / 小地图条</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="481"/>
+        <location filename="../src/configdialog.cpp" line="551"/>
         <source>Curve draw style — applies to the ROM waveform and map curves.</source>
         <translation>曲线绘制样式 — 应用于 ROM 波形和地图曲线。</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="487"/>
+        <location filename="../src/configdialog.cpp" line="557"/>
         <source>Line</source>
         <translation>折线</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="488"/>
+        <location filename="../src/configdialog.cpp" line="558"/>
         <source>Line + points</source>
         <translation>折线 + 点</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="489"/>
+        <location filename="../src/configdialog.cpp" line="559"/>
         <source>Points only</source>
         <translation>仅点</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="490"/>
+        <location filename="../src/configdialog.cpp" line="560"/>
         <source>Bars</source>
         <translation>柱状</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="491"/>
+        <location filename="../src/configdialog.cpp" line="561"/>
         <source>Filled area</source>
         <translation>填充区域</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="493"/>
+        <location filename="../src/configdialog.cpp" line="563"/>
         <source>Curve shape</source>
         <translation>曲线形状</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="500"/>
-        <location filename="../src/configdialog.cpp" line="507"/>
+        <location filename="../src/configdialog.cpp" line="570"/>
+        <location filename="../src/configdialog.cpp" line="577"/>
         <source> px</source>
         <translation> px</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="502"/>
+        <location filename="../src/configdialog.cpp" line="572"/>
         <source>Line thickness</source>
         <translation>线条粗细</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="508"/>
+        <location filename="../src/configdialog.cpp" line="578"/>
         <source>Auto</source>
         <translation>自动</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="510"/>
+        <location filename="../src/configdialog.cpp" line="580"/>
         <source>Point size</source>
         <translation>点大小</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="512"/>
+        <location filename="../src/configdialog.cpp" line="582"/>
         <source>Fill area under the curve</source>
         <translation>填充曲线下方区域</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="531"/>
+        <location filename="../src/configdialog.cpp" line="601"/>
         <source>General UI</source>
         <translation>通用界面</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="536"/>
+        <location filename="../src/configdialog.cpp" line="606"/>
         <source>Main window backgrounds, panels, borders, and text.</source>
         <translation>主窗口背景、面板、边框和文本。</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="538"/>
+        <location filename="../src/configdialog.cpp" line="608"/>
         <source>Window / MDI background</source>
         <translation>窗口 / MDI 背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="539"/>
+        <location filename="../src/configdialog.cpp" line="609"/>
         <source>Panel / toolbar background</source>
         <translation>面板 / 工具栏背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="540"/>
+        <location filename="../src/configdialog.cpp" line="610"/>
         <source>Borders and dividers</source>
         <translation>边框和分隔线</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="541"/>
+        <location filename="../src/configdialog.cpp" line="611"/>
         <source>Primary text</source>
         <translation>主要文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="542"/>
+        <location filename="../src/configdialog.cpp" line="612"/>
         <source>Secondary / dimmed text</source>
         <translation>次要 / 变暗文本</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="543"/>
+        <location filename="../src/configdialog.cpp" line="613"/>
         <source>Accent (links, selection)</source>
         <translation>强调色 (链接、选择)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="547"/>
+        <location filename="../src/configdialog.cpp" line="617"/>
         <source>Bars &amp; Layout</source>
         <translation>栏位与布局</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="551"/>
+        <location filename="../src/configdialog.cpp" line="621"/>
         <source>Top bar background</source>
         <translation>顶部栏背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="552"/>
+        <location filename="../src/configdialog.cpp" line="622"/>
         <source>Toolbar background</source>
         <translation>工具栏背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="553"/>
+        <location filename="../src/configdialog.cpp" line="623"/>
         <source>Status bar background</source>
         <translation>状态栏背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="554"/>
+        <location filename="../src/configdialog.cpp" line="624"/>
         <source>Project tree background</source>
         <translation>项目树背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="555"/>
+        <location filename="../src/configdialog.cpp" line="625"/>
         <source>Tree selection highlight</source>
         <translation>树选中高亮</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="556"/>
+        <location filename="../src/configdialog.cpp" line="626"/>
         <source>Button background</source>
         <translation>按钮背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="557"/>
+        <location filename="../src/configdialog.cpp" line="627"/>
         <source>Button text</source>
         <translation>按钮文字</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="558"/>
+        <location filename="../src/configdialog.cpp" line="628"/>
         <source>Input field background</source>
         <translation>输入框背景</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="559"/>
+        <location filename="../src/configdialog.cpp" line="629"/>
         <source>Input field border</source>
         <translation>输入框边框</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="631"/>
+        <location filename="../src/configdialog.cpp" line="1076"/>
         <source>Claude (Anthropic)</source>
         <translation>Claude (Anthropic)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="633"/>
+        <location filename="../src/configdialog.cpp" line="1078"/>
         <source>Qwen (Alibaba)</source>
         <translation>通义千问 (阿里巴巴)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="634"/>
+        <location filename="../src/configdialog.cpp" line="1079"/>
         <source>DeepSeek</source>
         <translation>DeepSeek (深度求索)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="635"/>
+        <location filename="../src/configdialog.cpp" line="1080"/>
         <source>Gemini (Google)</source>
         <translation>Gemini (Google)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="636"/>
+        <location filename="../src/configdialog.cpp" line="1081"/>
         <source>Groq</source>
         <translation>Groq</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="637"/>
+        <location filename="../src/configdialog.cpp" line="1082"/>
         <source>Ollama (local)</source>
         <translation>Ollama (本地)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="638"/>
+        <location filename="../src/configdialog.cpp" line="1083"/>
         <source>LM Studio (local)</source>
         <translation>LM Studio (本地)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="639"/>
+        <location filename="../src/configdialog.cpp" line="1084"/>
         <source>Custom OpenAI-compat</source>
         <translation>自定义 OpenAI 兼容</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="649"/>
+        <location filename="../src/configdialog.cpp" line="1094"/>
         <source>AI Provider Configuration</source>
         <translation>AI 提供商配置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="653"/>
+        <location filename="../src/configdialog.cpp" line="1098"/>
         <source>Configure the AI provider used by the AI Assistant panel. Settings are shared with the assistant.</source>
         <translation>配置 AI 助手面板使用的 AI 提供商。设置与助手共享。</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="659"/>
+        <location filename="../src/configdialog.cpp" line="1104"/>
         <source>Provider Settings</source>
         <translation>提供商设置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="675"/>
+        <location filename="../src/configdialog.cpp" line="1120"/>
         <source>Provider:</source>
         <translation>提供商：</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="691"/>
+        <location filename="../src/configdialog.cpp" line="1136"/>
         <source>API Key:</source>
         <translation>API 密钥：</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="709"/>
-        <source>🔗 API Docs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog.cpp" line="710"/>
-        <source>Open official model documentation in web browser</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog.cpp" line="725"/>
+        <location filename="../src/configdialog.cpp" line="1170"/>
         <source>Model:</source>
         <translation>型号：</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="730"/>
+        <location filename="../src/configdialog.cpp" line="1175"/>
         <source>Base URL:</source>
         <translation>基础 URL：</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="735"/>
+        <location filename="../src/configdialog.cpp" line="1180"/>
         <source>Support Level Legend</source>
         <translation>支持级别说明</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="739"/>
-        <location filename="../src/configdialog.cpp" line="813"/>
+        <location filename="../src/configdialog.cpp" line="1184"/>
+        <location filename="../src/configdialog.cpp" line="1258"/>
         <source>Best — native API, full tool-calling and streaming</source>
         <translation>最佳 — 原生 API,完整支持工具调用与流式传输</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="740"/>
-        <location filename="../src/configdialog.cpp" line="814"/>
+        <location filename="../src/configdialog.cpp" line="1185"/>
+        <location filename="../src/configdialog.cpp" line="1259"/>
         <source>Good — OpenAI-compatible, tool-calling available</source>
         <translation>良好 — 兼容 OpenAI,支持工具调用</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="741"/>
-        <location filename="../src/configdialog.cpp" line="815"/>
+        <location filename="../src/configdialog.cpp" line="1186"/>
+        <location filename="../src/configdialog.cpp" line="1260"/>
         <source>Limited — compatibility varies, some features may not work</source>
         <translation>有限 — 兼容性不一,部分功能可能不可用</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="744"/>
+        <location filename="../src/configdialog.cpp" line="1189"/>
         <source>API keys are stored locally with obfuscation. Changes take effect when you click Apply.</source>
         <translation>API 密钥以混淆方式存储在本地。点击「应用」后生效。</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="427"/>
+        <location filename="../src/configdialog.cpp" line="497"/>
         <source>Map Overlay</source>
         <translation>地图叠加</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="579"/>
+        <location filename="../src/configdialog.cpp" line="649"/>
         <source>Map List</source>
         <translation>地图列表</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="586"/>
+        <location filename="../src/configdialog.cpp" line="656"/>
         <source>Show long map names (description)</source>
         <translation>显示完整地图名称（描述）</translation>
     </message>
     <message>
-        <location filename="../src/configdialog.cpp" line="593"/>
+        <location filename="../src/configdialog.cpp" line="663"/>
         <source>When enabled, shows the full description (e.g. &quot;Kennfeld Momentenindizierter Motor&quot;) instead of the short identifier (e.g. &quot;KFMIOP&quot;).</source>
         <translation>启用后，将显示完整描述（例如&quot;Kennfeld Momentenindizierter Motor&quot;），而非简短标识符（例如&quot;KFMIOP&quot;）。</translation>
     </message>
@@ -2628,7 +2974,7 @@ Proceed?</source>
     <message>
         <location filename="../src/diffpanel.cpp" line="713"/>
         <source>%1 differences  (showing first %2 — word size %3)</source>
-        <translation>%1 differences  (showing first %2 — word size %3)</translation>
+        <translation>%1 处差异（显示前 %2 个 — 字长 %3）</translation>
     </message>
     <message>
         <location filename="../src/diffpanel.cpp" line="718"/>
@@ -3072,52 +3418,52 @@ Remember to save the project and export the ROM.</source>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="27"/>
         <source>Compare hex — side by side</source>
-        <translation>并排比较十六进制</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="76"/>
         <source>(unnamed)</source>
-        <translation>（未命名）</translation>
+        <translation type="unfinished">(未命名)</translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="87"/>
         <source>Left:</source>
-        <translation>左：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="88"/>
         <source>Right:</source>
-        <translation>右：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="99"/>
         <source>no clusters</source>
-        <translation>无群组</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="107"/>
         <source>Jump to first difference cluster</source>
-        <translation>跳转到第一个差异群组</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="108"/>
         <source>Previous cluster</source>
-        <translation>上一个群组</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="109"/>
         <source>Next cluster</source>
-        <translation>下一个群组</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="110"/>
         <source>Jump to last cluster</source>
-        <translation>跳转到最后一个群组</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="111"/>
         <source>Cluster:</source>
-        <translation>群组：</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="141"/>
@@ -3128,155 +3474,197 @@ Remember to save the project and export the ROM.</source>
         <location filename="../src/hexcomparedlg.cpp" line="226"/>
         <location filename="../src/hexcomparedlg.cpp" line="230"/>
         <source>—</source>
-        <translation>—</translation>
+        <translation type="unfinished">—</translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="262"/>
         <source>0 / 0</source>
-        <translation>0 / 0</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="263"/>
         <source>- / %1</source>
-        <translation>- / %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="273"/>
         <source>%1 / %2  ·  0x%3  (%4 B, %5% changed)</source>
-        <translation>%1 / %2  ·  0x%3  （%4 字节，%5% 已更改）</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="299"/>
         <source>Pick two projects to compare.</source>
-        <translation>选择两个项目进行比较。</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hexcomparedlg.cpp" line="305"/>
         <source>Size mismatch — Left=%1 B, Right=%2 B (byte-by-byte diff disabled).</source>
-        <translation>大小不匹配 — 左=%1 字节，右=%2 字节（已禁用逐字节比较）。</translation>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HexDiffListWidget</name>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="283"/>
+        <source>Differences (%1)</source>
+        <translation>差异 (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="174"/>
+        <source>Address</source>
+        <translation>地址</translation>
+    </message>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="175"/>
+        <source>Length</source>
+        <translation>长度</translation>
+    </message>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="176"/>
+        <source>Preview</source>
+        <translation>预览</translation>
+    </message>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="202"/>
+        <location filename="../src/hexdifflistwidget.cpp" line="295"/>
+        <source>Differences (0)</source>
+        <translation>差异 (0)</translation>
+    </message>
+    <message>
+        <location filename="../src/hexdifflistwidget.cpp" line="253"/>
+        <source>No differences to list.</source>
+        <translation>无差异可显示。</translation>
+    </message>
+</context>
+<context>
+    <name>HexDiffWaveform</name>
+    <message>
+        <location filename="../src/hexdiffwaveform.cpp" line="33"/>
+        <source>Difference density across the file — click to jump</source>
+        <translation>文件中的差异密度 — 点击跳转</translation>
     </message>
 </context>
 <context>
     <name>HexWidget</name>
     <message>
-        <location filename="../src/hexwidget.cpp" line="166"/>
+        <location filename="../src/hexwidget.cpp" line="176"/>
         <source>Drag to change bytes per row</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="191"/>
+        <location filename="../src/hexwidget.cpp" line="200"/>
         <source>Marker</source>
         <translation>标记</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="191"/>
+        <location filename="../src/hexwidget.cpp" line="200"/>
         <source>Comment</source>
         <translation>注释</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1192"/>
+        <location filename="../src/hexwidget.cpp" line="212"/>
+        <source>&lt;b&gt;Map: %1&lt;/b&gt;&lt;br&gt;Span: 0x%2 – 0x%3 (%4 bytes)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hexwidget.cpp" line="700"/>
+        <source>%1×%2 (%3 Bit)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hexwidget.cpp" line="701"/>
+        <source>%1 Bit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hexwidget.cpp" line="708"/>
+        <source>Map @ 0x%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hexwidget.cpp" line="710"/>
+        <source>%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hexwidget.cpp" line="1224"/>
         <source>Go to Address</source>
         <translation>转到地址</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1193"/>
+        <location filename="../src/hexwidget.cpp" line="1225"/>
         <source>Address (hex):</source>
         <translation>地址（十六进制）：</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1339"/>
+        <location filename="../src/hexwidget.cpp" line="1371"/>
         <source>Selection → Map…</source>
         <translation>选区 → 标定图…</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1353"/>
+        <location filename="../src/hexwidget.cpp" line="1385"/>
         <source>Edit selection</source>
         <translation>编辑选区</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1357"/>
+        <location filename="../src/hexwidget.cpp" line="1389"/>
         <source>Value +1</source>
         <translation>数值 +1</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1358"/>
+        <location filename="../src/hexwidget.cpp" line="1390"/>
         <source>Value −1</source>
         <translation>数值 −1</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1359"/>
+        <location filename="../src/hexwidget.cpp" line="1391"/>
         <source>Change absolute…</source>
         <translation>绝对值修改…</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1360"/>
+        <location filename="../src/hexwidget.cpp" line="1392"/>
         <source>Change relative…</source>
         <translation>相对值修改…</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1361"/>
+        <location filename="../src/hexwidget.cpp" line="1393"/>
         <source>Change by slider…</source>
         <translation>滑块修改…</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1362"/>
+        <location filename="../src/hexwidget.cpp" line="1394"/>
         <source>Round / limit…</source>
         <translation>取整 / 限制…</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1363"/>
+        <location filename="../src/hexwidget.cpp" line="1395"/>
         <source>Restore original value</source>
         <translation>恢复原始值</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1364"/>
+        <location filename="../src/hexwidget.cpp" line="1396"/>
         <source>Interpolate</source>
         <translation>插值</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1365"/>
+        <location filename="../src/hexwidget.cpp" line="1397"/>
         <source>Smooth</source>
         <translation>平滑</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1366"/>
+        <location filename="../src/hexwidget.cpp" line="1398"/>
         <source>Flatten</source>
         <translation>展平</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1377"/>
+        <location filename="../src/hexwidget.cpp" line="1409"/>
         <source>ASCII view</source>
         <translation>ASCII 视图</translation>
     </message>
     <message>
-        <location filename="../src/hexwidget.cpp" line="1378"/>
+        <location filename="../src/hexwidget.cpp" line="1410"/>
         <source>Bar view</source>
         <translation>条形视图</translation>
-    </message>
-    <message>
-        <location filename="../src/hexwidget.cpp" line="206"/>
-        <source>&lt;b&gt;Map: %1&lt;/b&gt;&lt;br&gt;Span: 0x%2 – 0x%3 (%4 bytes)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/hexwidget.cpp" line="616"/>
-        <source>%1×%2 (%3 Bit)</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/hexwidget.cpp" line="617"/>
-        <source>%1 Bit</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/hexwidget.cpp" line="624"/>
-        <source>Map @ 0x%1: %2</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../src/hexwidget.cpp" line="626"/>
-        <source>%1: %2</source>
-        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3543,7 +3931,7 @@ Remember to save the project and export the ROM.</source>
         <translation>例如 KP Import</translation>
     </message>
     <message>
-        <location filename="../src/kpimportdlg.cpp" line="372"/>
+        <location filename="../src/kpimportdlg.cpp" line="502"/>
         <source></source>
         <translation></translation>
     </message>
@@ -3626,548 +4014,673 @@ Remember to save the project and export the ROM.</source>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2396"/>
-        <location filename="../src/mainwindow.cpp" line="2899"/>
+        <location filename="../src/mainwindow.cpp" line="2446"/>
+        <location filename="../src/mainwindow.cpp" line="2971"/>
         <source>New Project…</source>
         <translation>新建项目…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2397"/>
-        <location filename="../src/mainwindow.cpp" line="2900"/>
+        <location filename="../src/mainwindow.cpp" line="2447"/>
+        <location filename="../src/mainwindow.cpp" line="2972"/>
         <source>Open Project…</source>
         <translation>打开项目…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2398"/>
-        <location filename="../src/mainwindow.cpp" line="2901"/>
+        <location filename="../src/mainwindow.cpp" line="2448"/>
+        <location filename="../src/mainwindow.cpp" line="2973"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2399"/>
-        <location filename="../src/mainwindow.cpp" line="2902"/>
+        <location filename="../src/mainwindow.cpp" line="2449"/>
+        <location filename="../src/mainwindow.cpp" line="2974"/>
         <source>Save As…</source>
         <translation>另存为…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2400"/>
-        <location filename="../src/mainwindow.cpp" line="2903"/>
-        <location filename="../src/mainwindow.cpp" line="6821"/>
-        <location filename="../src/mainwindow.cpp" line="6887"/>
-        <location filename="../src/mainwindow.cpp" line="8474"/>
+        <location filename="../src/mainwindow.cpp" line="2450"/>
+        <location filename="../src/mainwindow.cpp" line="2975"/>
+        <location filename="../src/mainwindow.cpp" line="6964"/>
+        <location filename="../src/mainwindow.cpp" line="7029"/>
+        <location filename="../src/mainwindow.cpp" line="8881"/>
         <source>Close Project</source>
         <translation>关闭项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2402"/>
-        <location filename="../src/mainwindow.cpp" line="2905"/>
+        <location filename="../src/mainwindow.cpp" line="2452"/>
+        <location filename="../src/mainwindow.cpp" line="2977"/>
         <source>Import A2L…</source>
         <translation>导入 A2L…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2413"/>
-        <location filename="../src/mainwindow.cpp" line="2910"/>
+        <location filename="../src/mainwindow.cpp" line="2463"/>
+        <location filename="../src/mainwindow.cpp" line="2989"/>
         <source>Save Version Snapshot…</source>
         <translation>保存版本快照…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2414"/>
-        <location filename="../src/mainwindow.cpp" line="2911"/>
+        <location filename="../src/mainwindow.cpp" line="2464"/>
+        <location filename="../src/mainwindow.cpp" line="2990"/>
         <source>Export ROM…</source>
         <translation>导出 ROM…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2424"/>
-        <location filename="../src/mainwindow.cpp" line="2913"/>
+        <location filename="../src/mainwindow.cpp" line="2474"/>
+        <location filename="../src/mainwindow.cpp" line="2994"/>
         <source>Link ROM to Project…</source>
         <translation>将ROM链接到项目…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2425"/>
-        <location filename="../src/mainwindow.cpp" line="2914"/>
+        <location filename="../src/mainwindow.cpp" line="2475"/>
+        <location filename="../src/mainwindow.cpp" line="2995"/>
         <source>Import ROM as Version…</source>
         <translation>将ROM导入为版本…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2426"/>
-        <location filename="../src/mainwindow.cpp" line="2915"/>
+        <location filename="../src/mainwindow.cpp" line="2476"/>
+        <location filename="../src/mainwindow.cpp" line="2996"/>
         <source>Compare ROM / Version…</source>
         <translation>比较ROM/版本…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2427"/>
-        <location filename="../src/mainwindow.cpp" line="2916"/>
+        <location filename="../src/mainwindow.cpp" line="2477"/>
+        <location filename="../src/mainwindow.cpp" line="2997"/>
         <source>Compare Hex…</source>
         <translation>比较十六进制…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2428"/>
-        <location filename="../src/mainwindow.cpp" line="2917"/>
+        <location filename="../src/mainwindow.cpp" line="2478"/>
+        <location filename="../src/mainwindow.cpp" line="2998"/>
         <source>Import Map Pack…</source>
         <translation>导入地图包…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2430"/>
-        <location filename="../src/mainwindow.cpp" line="2919"/>
+        <location filename="../src/mainwindow.cpp" line="2480"/>
+        <location filename="../src/mainwindow.cpp" line="3000"/>
         <source>Open Patch Script…</source>
         <translation>打开补丁脚本…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2441"/>
+        <location filename="../src/mainwindow.cpp" line="2491"/>
+        <location filename="../src/mainwindow.cpp" line="3066"/>
         <source>Import a .rxpack map pack and apply selected maps to the current ROM</source>
         <translation>导入 .rxpack 地图包并将所选地图应用于当前 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2443"/>
+        <location filename="../src/mainwindow.cpp" line="2493"/>
+        <location filename="../src/mainwindow.cpp" line="3068"/>
         <source>Open a .rxpatch script file in the patch editor</source>
         <translation>在补丁编辑器中打开 .rxpatch 脚本文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2438"/>
+        <location filename="../src/mainwindow.cpp" line="2488"/>
+        <location filename="../src/mainwindow.cpp" line="3063"/>
         <source>Link another ROM file to this project and auto-locate all maps</source>
         <translation>将另一个ROM文件链接到此项目并自动定位所有地图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2415"/>
-        <location filename="../src/mainwindow.cpp" line="2912"/>
-        <source>Export WinOLS Project (.ols)…</source>
-        <translation>导出 OLS 项目 (.ols)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2431"/>
-        <location filename="../src/mainwindow.cpp" line="2920"/>
-        <source>DTC Manager (A2L)…</source>
-        <translation>DTC 管理器 (A2L)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2439"/>
+        <location filename="../src/mainwindow.cpp" line="2489"/>
+        <location filename="../src/mainwindow.cpp" line="3064"/>
         <source>Import a ROM file as a new version snapshot of this project</source>
         <translation>将ROM文件导入为此项目的新版本快照</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2440"/>
+        <location filename="../src/mainwindow.cpp" line="2490"/>
+        <location filename="../src/mainwindow.cpp" line="3065"/>
         <source>Compare current ROM against a linked ROM or saved version</source>
         <translation>将当前ROM与链接ROM或已保存版本进行比较</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2446"/>
-        <location filename="../src/mainwindow.cpp" line="2927"/>
-        <source>Tile Windows</source>
-        <translation>平铺窗口</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2447"/>
-        <location filename="../src/mainwindow.cpp" line="2928"/>
-        <source>Cascade Windows</source>
-        <translation>层叠窗口</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2448"/>
-        <location filename="../src/mainwindow.cpp" line="2929"/>
+        <location filename="../src/mainwindow.cpp" line="2498"/>
+        <location filename="../src/mainwindow.cpp" line="3014"/>
         <source>Compare Projects…</source>
         <translation>比较项目…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2459"/>
-        <location filename="../src/mainwindow.cpp" line="2951"/>
+        <location filename="../src/mainwindow.cpp" line="2526"/>
+        <location filename="../src/mainwindow.cpp" line="3036"/>
         <source>Sync 2D view scroll across all open projects</source>
         <translation>同步所有已打开项目的2D视图滚动</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2996"/>
+        <location filename="../src/mainwindow.cpp" line="3093"/>
         <source>&amp;Project</source>
         <translation>项目(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2997"/>
+        <location filename="../src/mainwindow.cpp" line="3094"/>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2998"/>
+        <location filename="../src/mainwindow.cpp" line="3095"/>
         <source>&amp;View</source>
         <translation>视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2999"/>
+        <location filename="../src/mainwindow.cpp" line="3096"/>
         <source>&amp;Selection</source>
         <translation>选择(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3000"/>
+        <location filename="../src/mainwindow.cpp" line="3097"/>
         <source>&amp;Find</source>
         <translation>查找(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3001"/>
+        <location filename="../src/mainwindow.cpp" line="3098"/>
         <source>&amp;Miscellaneous</source>
         <translation>杂项(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3003"/>
+        <location filename="../src/mainwindow.cpp" line="3100"/>
         <source>&amp;Window</source>
         <translation>窗口(&amp;W)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3098"/>
+        <location filename="../src/mainwindow.cpp" line="3193"/>
         <source>E&amp;xit</source>
         <translation>退出(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3125"/>
+        <location filename="../src/mainwindow.cpp" line="3220"/>
         <source>&amp;Hex Editor</source>
         <translation>十六进制编辑器(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3127"/>
+        <location filename="../src/mainwindow.cpp" line="3222"/>
         <source>&amp;Waveform</source>
         <translation>波形(&amp;W)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3129"/>
+        <location filename="../src/mainwindow.cpp" line="3224"/>
         <source>&amp;3D Map</source>
         <translation>三维地图(&amp;3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3164"/>
+        <location filename="../src/mainwindow.cpp" line="3259"/>
         <source>Zoom &amp;In</source>
         <translation>放大(&amp;I)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3173"/>
+        <location filename="../src/mainwindow.cpp" line="3266"/>
         <source>Zoom &amp;Out</source>
         <translation>缩小(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3192"/>
+        <location filename="../src/mainwindow.cpp" line="3283"/>
         <source>Find &amp;Address…</source>
         <translation>查找地址…(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3305"/>
+        <location filename="../src/mainwindow.cpp" line="3393"/>
         <source>Project &amp;Info…</source>
         <translation>项目信息…(&amp;I)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3371"/>
+        <location filename="../src/mainwindow.cpp" line="3459"/>
         <source>&amp;Language</source>
         <translation>语言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3404"/>
+        <location filename="../src/mainwindow.cpp" line="3495"/>
         <source>&amp;About RX14</source>
         <translation>关于 RX14(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3196"/>
+        <location filename="../src/mainwindow.cpp" line="3287"/>
         <source>Go to Address</source>
         <translation>转到地址</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3197"/>
+        <location filename="../src/mainwindow.cpp" line="3288"/>
         <source>Address (hex or dec):</source>
         <translation>地址（十六进制或十进制）：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="944"/>
-        <location filename="../src/mainwindow.cpp" line="3441"/>
+        <location filename="../src/mainwindow.cpp" line="998"/>
+        <location filename="../src/mainwindow.cpp" line="3532"/>
         <source>Map Selection</source>
         <translation>地图选择</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3443"/>
+        <location filename="../src/mainwindow.cpp" line="3534"/>
         <source>Filter maps…</source>
         <translation>筛选地图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2457"/>
-        <location filename="../src/mainwindow.cpp" line="2949"/>
+        <location filename="../src/mainwindow.cpp" line="2524"/>
+        <location filename="../src/mainwindow.cpp" line="3034"/>
         <source>Move cursor to previous map  (Ctrl+←)</source>
         <translation>移动光标到上一张地图  (Ctrl+←)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="374"/>
-        <location filename="../src/mainwindow.cpp" line="3492"/>
+        <location filename="../src/mainwindow.cpp" line="432"/>
+        <location filename="../src/mainwindow.cpp" line="3583"/>
         <source>Ready  —  Open a ROM file or project to begin.</source>
         <translation>就绪  —  打开 ROM 文件或项目以开始。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1374"/>
-        <location filename="../src/mainwindow.cpp" line="3445"/>
-        <location filename="../src/mainwindow.cpp" line="8287"/>
+        <location filename="../src/mainwindow.cpp" line="1428"/>
+        <location filename="../src/mainwindow.cpp" line="3536"/>
+        <location filename="../src/mainwindow.cpp" line="8560"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1375"/>
-        <location filename="../src/mainwindow.cpp" line="3446"/>
+        <location filename="../src/mainwindow.cpp" line="1429"/>
+        <location filename="../src/mainwindow.cpp" line="3537"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1629"/>
+        <location filename="../src/mainwindow.cpp" line="1685"/>
         <source>Add Comment…</source>
         <translation>添加注释…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
-        <source>Lua script running...</source>
-        <translation>Lua 脚本运行中...</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="385"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>Scanning ROM for maps…</source>
         <translation>正在扫描 ROM 寻找映射图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="490"/>
-        <location filename="../src/mainwindow.cpp" line="3482"/>
+        <location filename="../src/mainwindow.cpp" line="546"/>
+        <location filename="../src/mainwindow.cpp" line="3573"/>
         <source>Update Now</source>
         <translation>立即更新</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="576"/>
-        <location filename="../src/mainwindow.cpp" line="606"/>
-        <location filename="../src/mainwindow.cpp" line="4591"/>
+        <location filename="../src/mainwindow.cpp" line="632"/>
+        <location filename="../src/mainwindow.cpp" line="662"/>
+        <location filename="../src/mainwindow.cpp" line="4676"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="618"/>
+        <location filename="../src/mainwindow.cpp" line="674"/>
         <source>Downloading update…</source>
         <translation>正在下载更新…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="764"/>
-        <location filename="../src/mainwindow.cpp" line="2593"/>
-        <location filename="../src/mainwindow.cpp" line="2973"/>
-        <location filename="../src/mainwindow.cpp" line="2992"/>
-        <source>Differences</source>
-        <translation>差异</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="798"/>
-        <source>Copied %1 word(s) into %2</source>
-        <translation>已复制 %1 个字到 %2</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="812"/>
-        <location filename="../src/mainwindow.cpp" line="2645"/>
-        <location filename="../src/mainwindow.cpp" line="2974"/>
-        <location filename="../src/mainwindow.cpp" line="2993"/>
-        <source>Tuning Branches</source>
-        <translation>调校分支</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="960"/>
+        <location filename="../src/mainwindow.cpp" line="1014"/>
         <source>Decrease list font size</source>
         <translation>减小列表字体大小</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="970"/>
+        <location filename="../src/mainwindow.cpp" line="1024"/>
         <source>Increase list font size</source>
         <translation>增大列表字体大小</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1036"/>
-        <location filename="../src/mainwindow.cpp" line="1097"/>
-        <location filename="../src/mainwindow.cpp" line="1209"/>
-        <location filename="../src/mainwindow.cpp" line="2196"/>
-        <location filename="../src/mainwindow.cpp" line="2236"/>
+        <location filename="../src/mainwindow.cpp" line="1090"/>
+        <location filename="../src/mainwindow.cpp" line="1151"/>
+        <location filename="../src/mainwindow.cpp" line="1263"/>
+        <location filename="../src/mainwindow.cpp" line="2246"/>
+        <location filename="../src/mainwindow.cpp" line="2286"/>
         <source>AI Translation</source>
         <translation>AI 翻译</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1042"/>
+        <location filename="../src/mainwindow.cpp" line="1096"/>
         <source>&lt;b&gt;Translate %1 maps&lt;/b&gt;</source>
         <translation>&lt;b&gt;翻译 %1 个 MAP&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1044"/>
+        <location filename="../src/mainwindow.cpp" line="1098"/>
         <source>Run a sample of 25 maps first to verify quality, or translate everything now.</source>
         <translation>先翻译 25 个 MAP 样本以验证质量，或立即翻译全部。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1050"/>
-        <location filename="../src/mainwindow.cpp" line="2206"/>
+        <location filename="../src/mainwindow.cpp" line="1104"/>
+        <location filename="../src/mainwindow.cpp" line="2256"/>
         <source>Language:</source>
         <translation>语言：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1061"/>
-        <location filename="../src/mainwindow.cpp" line="1096"/>
-        <location filename="../src/mainwindow.cpp" line="1208"/>
-        <location filename="../src/mainwindow.cpp" line="2214"/>
-        <location filename="../src/mainwindow.cpp" line="2235"/>
-        <location filename="../src/mainwindow.cpp" line="9232"/>
+        <location filename="../src/mainwindow.cpp" line="1115"/>
+        <location filename="../src/mainwindow.cpp" line="1150"/>
+        <location filename="../src/mainwindow.cpp" line="1262"/>
+        <location filename="../src/mainwindow.cpp" line="2264"/>
+        <location filename="../src/mainwindow.cpp" line="2285"/>
+        <location filename="../src/mainwindow.cpp" line="9739"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1062"/>
+        <location filename="../src/mainwindow.cpp" line="1116"/>
         <source>Sample (25)</source>
         <translation>样本（25）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1063"/>
+        <location filename="../src/mainwindow.cpp" line="1117"/>
         <source>Translate All</source>
         <translation>翻译全部</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1095"/>
-        <location filename="../src/mainwindow.cpp" line="1207"/>
+        <location filename="../src/mainwindow.cpp" line="1149"/>
+        <location filename="../src/mainwindow.cpp" line="1261"/>
         <source>Translating %1 maps…</source>
         <translation>正在翻译 %1 个 MAP…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1176"/>
+        <location filename="../src/mainwindow.cpp" line="1230"/>
         <source>AI Translation – Sample Complete</source>
         <translation>AI 翻译 – 样本完成</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1178"/>
+        <location filename="../src/mainwindow.cpp" line="1232"/>
         <source>Sample translated &lt;b&gt;%1 of %2&lt;/b&gt; maps successfully.</source>
         <translation>样本已成功翻译 &lt;b&gt;%1 / %2&lt;/b&gt; 个 MAP。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1182"/>
+        <location filename="../src/mainwindow.cpp" line="1236"/>
         <source>Does the quality look good? Click &quot;Continue&quot; to translate the remaining %1 maps, or &quot;Done&quot; to keep only the sample.</source>
         <translation>质量是否满意？点击&quot;继续&quot;翻译剩余 %1 个 MAP，或点击&quot;完成&quot;仅保留样本。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1185"/>
+        <location filename="../src/mainwindow.cpp" line="1239"/>
         <source>All maps were already in the sample.</source>
         <translation>所有 MAP 已包含在样本中。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1189"/>
+        <location filename="../src/mainwindow.cpp" line="1243"/>
         <source>Continue (%1 maps)</source>
         <translation>继续（%1 个 MAP）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1191"/>
+        <location filename="../src/mainwindow.cpp" line="1245"/>
         <source>Done (keep sample)</source>
         <translation>完成（保留样本）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1191"/>
+        <location filename="../src/mainwindow.cpp" line="1245"/>
         <source>Done</source>
         <translation>完成</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1197"/>
+        <location filename="../src/mainwindow.cpp" line="1251"/>
         <source>Sample complete: %1 of %2 maps translated.</source>
         <translation>样本完成：已翻译 %1 / %2 个 MAP。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1273"/>
+        <location filename="../src/mainwindow.cpp" line="1327"/>
         <source>筛选地图…</source>
         <translation>筛选地图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1287"/>
+        <location filename="../src/mainwindow.cpp" line="1341"/>
         <source>Show only modified maps</source>
         <translation>仅显示已修改的 MAP</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1473"/>
+        <location filename="../src/mainwindow.cpp" line="1428"/>
+        <location filename="../src/mainwindow.cpp" line="3536"/>
+        <source>ID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1429"/>
+        <location filename="../src/mainwindow.cpp" line="3537"/>
+        <source>Size</source>
+        <translation type="unfinished">大小</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1527"/>
         <source>Recent Maps</source>
         <translation>最近的映射图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1486"/>
+        <location filename="../src/mainwindow.cpp" line="1540"/>
         <source>No recent maps yet</source>
         <translation>暂无最近的映射图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1630"/>
+        <location filename="../src/mainwindow.cpp" line="1651"/>
+        <source>View in hexdump</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1652"/>
+        <source>Search for name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1653"/>
+        <source>Copy name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1656"/>
+        <source>Close selected map windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1657"/>
+        <source>Close all map windows</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1665"/>
+        <source>Unstar %1 maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1666"/>
+        <source>Unstar map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1667"/>
+        <source>Star %1 maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1668"/>
+        <source>Star map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1670"/>
+        <source>Duplicate %1 maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1671"/>
+        <source>Duplicate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1672"/>
+        <source>Select…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1673"/>
+        <source>All maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1674"/>
+        <source>Starred maps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1675"/>
+        <source>Clear selection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1677"/>
+        <source>New folder with selected maps…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1679"/>
+        <source>Move to folder…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1686"/>
         <source>Edit Comment…</source>
         <translation>编辑注释…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1632"/>
+        <location filename="../src/mainwindow.cpp" line="1688"/>
         <source>Clear Comment</source>
         <translation>清除注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1660"/>
+        <location filename="../src/mainwindow.cpp" line="1689"/>
+        <source>Properties…</source>
+        <translation type="unfinished">属性…</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1692"/>
+        <source>Delete %1 maps…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1693"/>
+        <source>Delete Map…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1716"/>
         <source>Rename…</source>
         <translation>重命名…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1666"/>
+        <location filename="../src/mainwindow.cpp" line="1722"/>
         <source>Expand All Groups</source>
         <translation>展开所有组</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1667"/>
+        <location filename="../src/mainwindow.cpp" line="1723"/>
         <source>Collapse All Groups</source>
         <translation>折叠所有组</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1680"/>
-        <location filename="../src/mainwindow.cpp" line="1693"/>
+        <location filename="../src/mainwindow.cpp" line="1736"/>
+        <location filename="../src/mainwindow.cpp" line="1749"/>
         <source>Expand &quot;%1&quot;</source>
         <translation>展开 &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1681"/>
-        <location filename="../src/mainwindow.cpp" line="1694"/>
+        <location filename="../src/mainwindow.cpp" line="1737"/>
+        <location filename="../src/mainwindow.cpp" line="1750"/>
         <source>Collapse &quot;%1&quot;</source>
         <translation>折叠 &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1699"/>
+        <location filename="../src/mainwindow.cpp" line="1748"/>
+        <source>Folder Properties…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1755"/>
         <source>✦ AI Translate Group…</source>
         <translation>✦ AI 翻译分组…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1714"/>
-        <source>Bulk edit %1 maps…</source>
-        <translation>批量编辑 %1 个标定图…</translation>
+        <location filename="../src/mainwindow.cpp" line="1872"/>
+        <source>Copied %1 map name(s)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1729"/>
-        <source>Find similar maps…</source>
-        <translation>查找相似标定图…</translation>
+        <location filename="../src/mainwindow.cpp" line="1929"/>
+        <source>Map</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2080"/>
+        <location filename="../src/mainwindow.cpp" line="1930"/>
+        <source> copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="1937"/>
+        <source> copy %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2005"/>
+        <location filename="../src/mainwindow.cpp" line="2005"/>
+        <source>New folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2007"/>
+        <source>New Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2008"/>
+        <location filename="../src/mainwindow.cpp" line="2020"/>
+        <source>Folder path:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2017"/>
+        <location filename="../src/mainwindow.cpp" line="2022"/>
+        <source>(Project root)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2019"/>
+        <source>Move to Folder</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2101"/>
+        <source>Delete Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2103"/>
+        <source>Delete %1 selected map definitions?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2104"/>
+        <source>Delete the map definition &quot;%1&quot;?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2130"/>
         <source>Rename</source>
         <translation>重命名</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2081"/>
+        <location filename="../src/mainwindow.cpp" line="2131"/>
         <source>New name:</source>
         <translation>新名称：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2121"/>
+        <location filename="../src/mainwindow.cpp" line="2171"/>
         <source>Map Comment</source>
         <translation>地图注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2122"/>
+        <location filename="../src/mainwindow.cpp" line="2172"/>
         <source>Comment for  &quot;%1&quot;:</source>
         <translation>&quot;%1&quot;的注释：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2215"/>
+        <location filename="../src/mainwindow.cpp" line="2265"/>
         <source>Translate</source>
         <translation>翻译</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2290"/>
+        <location filename="../src/mainwindow.cpp" line="2340"/>
         <source>API returned %1 results but no translations for group &quot;%2&quot; (possible network/API issue)</source>
         <translation>API 返回了 %1 条结果,但分组 &quot;%2&quot; 没有翻译(可能是网络或 API 问题)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2291"/>
+        <location filename="../src/mainwindow.cpp" line="2341"/>
         <source>Translation Issue</source>
         <translation>翻译问题</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2292"/>
+        <location filename="../src/mainwindow.cpp" line="2342"/>
         <source>API returned %1 results but no translations were generated.
 
 This usually means:
@@ -4186,17 +4699,17 @@ Applied: %2</source>
 已应用：%2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2297"/>
+        <location filename="../src/mainwindow.cpp" line="2347"/>
         <source>No translation results for group &quot;%1&quot; (API error or network issue)</source>
         <translation>分组 &quot;%1&quot; 无翻译结果(API 错误或网络问题)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2298"/>
+        <location filename="../src/mainwindow.cpp" line="2348"/>
         <source>Translation Failed</source>
         <translation>翻译失败</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2299"/>
+        <location filename="../src/mainwindow.cpp" line="2349"/>
         <source>No translation results for group &quot;%1&quot;
 
 The API did not return any data.
@@ -4213,50 +4726,56 @@ API 未返回任何数据。
 - 无效的映射图名称</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2350"/>
+        <location filename="../src/mainwindow.cpp" line="2400"/>
         <source>AI translation complete: %1 of %2 maps translated.</source>
         <translation>AI 翻译完成：已翻译 %1 / %2 个 MAP。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2364"/>
+        <location filename="../src/mainwindow.cpp" line="2414"/>
         <source>Retrying %1 maps…</source>
         <translation>正在重试 %1 个 MAP…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2401"/>
-        <location filename="../src/mainwindow.cpp" line="2904"/>
+        <location filename="../src/mainwindow.cpp" line="2451"/>
+        <location filename="../src/mainwindow.cpp" line="2976"/>
         <source>Home</source>
         <translation>主页</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2404"/>
+        <location filename="../src/mainwindow.cpp" line="2454"/>
+        <location filename="../src/mainwindow.cpp" line="2980"/>
         <source>Import a .kp map pack and apply map labels to the current project</source>
         <translation>导入 .kp 映射图包并将映射图标签应用到当前项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2412"/>
-        <location filename="../src/mainwindow.cpp" line="2909"/>
+        <location filename="../src/mainwindow.cpp" line="2462"/>
+        <location filename="../src/mainwindow.cpp" line="2987"/>
         <source>Import OLS…</source>
         <translation>导入 OLS…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2403"/>
-        <location filename="../src/mainwindow.cpp" line="2906"/>
+        <location filename="../src/mainwindow.cpp" line="2453"/>
+        <location filename="../src/mainwindow.cpp" line="2979"/>
         <source>Import KP…</source>
         <translation>导入KP…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="643"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
+        <source>Lua script running...</source>
+        <translation>Lua 脚本运行中...</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="699"/>
         <source>Update download failed</source>
         <translation>更新下载失败</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="646"/>
+        <location filename="../src/mainwindow.cpp" line="702"/>
         <source>The installer couldn&apos;t be downloaded.</source>
         <translation>无法下载安装程序。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="648"/>
+        <location filename="../src/mainwindow.cpp" line="704"/>
         <source>Reason: %1
 
 If you are in mainland China, the GFW (防火长城) may be blocking the update server. Try a VPN (梯子) and retry, or click &quot;Open in browser&quot; below to download the installer directly through your browser (which can use your system proxy).</source>
@@ -4265,503 +4784,425 @@ If you are in mainland China, the GFW (防火长城) may be blocking the update 
 如果您在中国大陆，防火长城 (GFW) 可能正在屏蔽更新服务器。请尝试使用 VPN（梯子）重试，或点击下方&quot;在浏览器中打开&quot;通过浏览器直接下载安装程序（浏览器可以使用您的系统代理）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="655"/>
+        <location filename="../src/mainwindow.cpp" line="711"/>
         <source>Open in browser</source>
         <translation>在浏览器中打开</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="669"/>
+        <location filename="../src/mainwindow.cpp" line="725"/>
         <source>Server returned only %1 bytes — likely blocked or rate-limited.</source>
         <translation>服务器仅返回 %1 字节 — 可能被屏蔽或限速。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="826"/>
+        <location filename="../src/mainwindow.cpp" line="820"/>
+        <location filename="../src/mainwindow.cpp" line="2660"/>
+        <location filename="../src/mainwindow.cpp" line="3058"/>
+        <location filename="../src/mainwindow.cpp" line="3089"/>
+        <source>Differences</source>
+        <translation>差异</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="882"/>
         <source>Module</source>
         <translation>模块</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1374"/>
-        <location filename="../src/mainwindow.cpp" line="3445"/>
-        <source>ID</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/mainwindow.cpp" line="854"/>
+        <source>Copied %1 word(s) into %2</source>
+        <translation>已复制 %1 个字到 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1375"/>
-        <location filename="../src/mainwindow.cpp" line="3446"/>
-        <source>Size</source>
-        <translation type="unfinished">大小</translation>
+        <location filename="../src/mainwindow.cpp" line="868"/>
+        <location filename="../src/mainwindow.cpp" line="2712"/>
+        <location filename="../src/mainwindow.cpp" line="3059"/>
+        <location filename="../src/mainwindow.cpp" line="3090"/>
+        <source>Tuning Branches</source>
+        <translation>调校分支</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1595"/>
-        <source>View in hexdump</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/mainwindow.cpp" line="1770"/>
+        <source>Bulk edit %1 maps…</source>
+        <translation>批量编辑 %1 个标定图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1596"/>
-        <source>Search for name</source>
-        <translation type="unfinished"></translation>
+        <location filename="../src/mainwindow.cpp" line="1785"/>
+        <source>Find similar maps…</source>
+        <translation>查找相似标定图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1597"/>
-        <source>Copy name</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1600"/>
-        <source>Close selected map windows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1601"/>
-        <source>Close all map windows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1609"/>
-        <source>Unstar %1 maps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1610"/>
-        <source>Unstar map</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1611"/>
-        <source>Star %1 maps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1612"/>
-        <source>Star map</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1614"/>
-        <source>Duplicate %1 maps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1615"/>
-        <source>Duplicate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1616"/>
-        <source>Select…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1617"/>
-        <source>All maps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1618"/>
-        <source>Starred maps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1619"/>
-        <source>Clear selection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1621"/>
-        <source>New folder with selected maps…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1623"/>
-        <source>Move to folder…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1633"/>
-        <source>Properties…</source>
-        <translation type="unfinished">属性…</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1636"/>
-        <source>Delete %1 maps…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1637"/>
-        <source>Delete Map…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1692"/>
-        <source>Folder Properties…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1816"/>
-        <source>Copied %1 map name(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1879"/>
-        <source>Map</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1880"/>
-        <source> copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1887"/>
-        <source> copy %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1955"/>
-        <source>New folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1957"/>
-        <source>New Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1958"/>
-        <location filename="../src/mainwindow.cpp" line="1970"/>
-        <source>Folder path:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1967"/>
-        <location filename="../src/mainwindow.cpp" line="1972"/>
-        <source>(Project root)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="1969"/>
-        <source>Move to Folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2048"/>
-        <source>Delete Map</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2050"/>
-        <source>Delete %1 selected map definitions?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2051"/>
-        <source>Delete the map definition &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="2405"/>
-        <location filename="../src/mainwindow.cpp" line="2907"/>
+        <location filename="../src/mainwindow.cpp" line="2455"/>
+        <location filename="../src/mainwindow.cpp" line="2981"/>
         <source>Import XDF…</source>
         <translation>导入 XDF…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2406"/>
+        <location filename="../src/mainwindow.cpp" line="2456"/>
+        <location filename="../src/mainwindow.cpp" line="2982"/>
         <source>Import a TunerPro .xdf definition and apply its maps to the current project</source>
         <translation>导入 TunerPro .xdf 定义并将其地图应用到当前项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2407"/>
-        <location filename="../src/mainwindow.cpp" line="2908"/>
+        <location filename="../src/mainwindow.cpp" line="2457"/>
+        <location filename="../src/mainwindow.cpp" line="2984"/>
         <source>Import FRF / ODX…</source>
         <translation>导入 FRF / ODX…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2408"/>
+        <location filename="../src/mainwindow.cpp" line="2458"/>
+        <location filename="../src/mainwindow.cpp" line="2985"/>
         <source>Extract a VAG .frf / .sgo / .odx flash container to a ROM binary</source>
         <translation>将 VAG .frf / .sgo / .odx 刷写容器提取为 ROM 二进制文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2429"/>
-        <location filename="../src/mainwindow.cpp" line="2918"/>
+        <location filename="../src/mainwindow.cpp" line="2465"/>
+        <location filename="../src/mainwindow.cpp" line="2992"/>
+        <source>Export WinOLS Project (.ols)…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2479"/>
+        <location filename="../src/mainwindow.cpp" line="2999"/>
         <source>Import Map List (CSV)…</source>
         <translation>导入地图列表 (CSV)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2442"/>
+        <location filename="../src/mainwindow.cpp" line="2481"/>
+        <location filename="../src/mainwindow.cpp" line="3001"/>
+        <source>DTC Manager (A2L)…</source>
+        <translation>DTC 管理器 (A2L)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2482"/>
+        <location filename="../src/mainwindow.cpp" line="3002"/>
+        <source>Cloud Tools (DTC &amp;&amp; Features)…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2492"/>
+        <location filename="../src/mainwindow.cpp" line="3067"/>
         <source>Import a CSV map list (Address;Name;Size) and add the map definitions to the project</source>
         <translation>导入 CSV 地图列表(Address;Name;Size)并将地图定义添加到项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2458"/>
-        <location filename="../src/mainwindow.cpp" line="2950"/>
+        <location filename="../src/mainwindow.cpp" line="2496"/>
+        <location filename="../src/mainwindow.cpp" line="3008"/>
+        <source>Restore Workspace Layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2497"/>
+        <location filename="../src/mainwindow.cpp" line="3009"/>
+        <source>Save Workspace Layout…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2499"/>
+        <location filename="../src/mainwindow.cpp" line="3013"/>
+        <location filename="../src/mainwindow.cpp" line="3071"/>
+        <source>Float / Re-dock Active Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2500"/>
+        <location filename="../src/mainwindow.cpp" line="3011"/>
+        <source>Load Workspace Layout…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2507"/>
+        <location filename="../src/mainwindow.cpp" line="3069"/>
+        <source>Restore the default per-project tab layout  (Shift+F4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2508"/>
+        <location filename="../src/mainwindow.cpp" line="3070"/>
+        <source>Save the current dock arrangement as a named layout  (Shift+F5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2510"/>
+        <source>Float or re-dock the active document  (Alt+F5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2511"/>
+        <location filename="../src/mainwindow.cpp" line="3072"/>
+        <source>Restore a saved workspace layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2525"/>
+        <location filename="../src/mainwindow.cpp" line="3035"/>
         <source>Move cursor to next map  (Ctrl+→)</source>
         <translation>移动光标到下一张地图  (Ctrl+→)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2465"/>
-        <location filename="../src/mainwindow.cpp" line="2925"/>
+        <location filename="../src/mainwindow.cpp" line="2532"/>
+        <location filename="../src/mainwindow.cpp" line="3006"/>
         <source>Command Palette…</source>
         <translation>命令面板…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2472"/>
-        <location filename="../src/mainwindow.cpp" line="2926"/>
+        <location filename="../src/mainwindow.cpp" line="2539"/>
+        <location filename="../src/mainwindow.cpp" line="3007"/>
         <source>Settings…</source>
         <translation>设置…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2522"/>
-        <location filename="../src/mainwindow.cpp" line="2952"/>
+        <location filename="../src/mainwindow.cpp" line="2589"/>
+        <location filename="../src/mainwindow.cpp" line="3037"/>
         <source>Optimize value range — fit colour scale to current map</source>
         <translation>优化数值范围 — 将色阶适配当前地图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2524"/>
-        <location filename="../src/mainwindow.cpp" line="2953"/>
+        <location filename="../src/mainwindow.cpp" line="2591"/>
+        <location filename="../src/mainwindow.cpp" line="3038"/>
         <source>Show difference to original ROM data</source>
         <translation>显示与原始 ROM 数据的差异</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2526"/>
-        <location filename="../src/mainwindow.cpp" line="2954"/>
+        <location filename="../src/mainwindow.cpp" line="2593"/>
+        <location filename="../src/mainwindow.cpp" line="3039"/>
         <source>Ignore this map (exclude from operations)</source>
         <translation>忽略此地图（从操作中排除）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2527"/>
-        <location filename="../src/mainwindow.cpp" line="2955"/>
+        <location filename="../src/mainwindow.cpp" line="2594"/>
+        <location filename="../src/mainwindow.cpp" line="3040"/>
         <source>Apply custom scaling factor</source>
         <translation>应用自定义缩放系数</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2528"/>
-        <location filename="../src/mainwindow.cpp" line="2956"/>
+        <location filename="../src/mainwindow.cpp" line="2595"/>
+        <location filename="../src/mainwindow.cpp" line="3041"/>
         <source>Reset to original scaling factor</source>
         <translation>重置为原始缩放系数</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2535"/>
-        <location filename="../src/mainwindow.cpp" line="2957"/>
+        <location filename="../src/mainwindow.cpp" line="2602"/>
+        <location filename="../src/mainwindow.cpp" line="3042"/>
         <source>8-bit cell width</source>
         <translation>8 位单元格宽度</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2536"/>
-        <location filename="../src/mainwindow.cpp" line="2958"/>
+        <location filename="../src/mainwindow.cpp" line="2603"/>
+        <location filename="../src/mainwindow.cpp" line="3043"/>
         <source>16-bit cell width</source>
         <translation>16 位单元格宽度</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2537"/>
-        <location filename="../src/mainwindow.cpp" line="2959"/>
+        <location filename="../src/mainwindow.cpp" line="2604"/>
+        <location filename="../src/mainwindow.cpp" line="3044"/>
         <source>32-bit cell width</source>
         <translation>32 位单元格宽度</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2538"/>
-        <location filename="../src/mainwindow.cpp" line="2960"/>
+        <location filename="../src/mainwindow.cpp" line="2605"/>
+        <location filename="../src/mainwindow.cpp" line="3045"/>
         <source>32-bit float cell width</source>
         <translation>32 位浮点单元格宽度</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2550"/>
-        <location filename="../src/mainwindow.cpp" line="2961"/>
+        <location filename="../src/mainwindow.cpp" line="2617"/>
+        <location filename="../src/mainwindow.cpp" line="3046"/>
         <source>Low byte first (Little Endian)</source>
         <translation>低字节在前（小端）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2551"/>
-        <location filename="../src/mainwindow.cpp" line="2962"/>
+        <location filename="../src/mainwindow.cpp" line="2618"/>
+        <location filename="../src/mainwindow.cpp" line="3047"/>
         <source>High byte first (Big Endian)</source>
         <translation>高字节在前（大端）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2561"/>
-        <location filename="../src/mainwindow.cpp" line="2963"/>
+        <location filename="../src/mainwindow.cpp" line="2628"/>
+        <location filename="../src/mainwindow.cpp" line="3048"/>
         <source>Signed integer interpretation</source>
         <translation>有符号整数解释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2562"/>
-        <location filename="../src/mainwindow.cpp" line="2964"/>
+        <location filename="../src/mainwindow.cpp" line="2629"/>
+        <location filename="../src/mainwindow.cpp" line="3049"/>
         <source>Unsigned integer interpretation</source>
         <translation>无符号整数解释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2574"/>
-        <location filename="../src/mainwindow.cpp" line="2965"/>
+        <location filename="../src/mainwindow.cpp" line="2641"/>
+        <location filename="../src/mainwindow.cpp" line="3050"/>
         <source>Display values as decimal</source>
         <translation>以十进制显示数值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2575"/>
-        <location filename="../src/mainwindow.cpp" line="2966"/>
+        <location filename="../src/mainwindow.cpp" line="2642"/>
+        <location filename="../src/mainwindow.cpp" line="3051"/>
         <source>Display values as hexadecimal</source>
         <translation>以十六进制显示数值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2576"/>
-        <location filename="../src/mainwindow.cpp" line="2967"/>
+        <location filename="../src/mainwindow.cpp" line="2643"/>
+        <location filename="../src/mainwindow.cpp" line="3052"/>
         <source>Display values as binary</source>
         <translation>以二进制显示数值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2577"/>
-        <location filename="../src/mainwindow.cpp" line="2968"/>
+        <location filename="../src/mainwindow.cpp" line="2644"/>
+        <location filename="../src/mainwindow.cpp" line="3053"/>
         <source>Display values as percentage</source>
         <translation>以百分比显示数值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2590"/>
-        <location filename="../src/mainwindow.cpp" line="2969"/>
+        <location filename="../src/mainwindow.cpp" line="2657"/>
+        <location filename="../src/mainwindow.cpp" line="3054"/>
         <source>Turn height colours on / off</source>
         <translation>开启 / 关闭高度颜色</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2597"/>
+        <location filename="../src/mainwindow.cpp" line="2664"/>
         <source>Show/hide the Differences panel (compare two projects byte-by-byte)</source>
         <translation>显示/隐藏差异面板（逐字节比较两个项目）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2602"/>
-        <location filename="../src/mainwindow.cpp" line="2975"/>
+        <location filename="../src/mainwindow.cpp" line="2669"/>
+        <location filename="../src/mainwindow.cpp" line="3060"/>
         <source>Differences vs Original</source>
         <translation>与原始数据的差异</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2606"/>
+        <location filename="../src/mainwindow.cpp" line="2673"/>
         <source>Highlight every cell that differs from the project&apos;s original ROM</source>
         <translation>高亮与项目原始ROM不同的每个单元格</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2614"/>
-        <location filename="../src/mainwindow.cpp" line="2987"/>
+        <location filename="../src/mainwindow.cpp" line="2681"/>
+        <location filename="../src/mainwindow.cpp" line="3084"/>
         <source>Insert comment…</source>
         <translation>插入注释…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2617"/>
+        <location filename="../src/mainwindow.cpp" line="2684"/>
         <source>Attach a free-text comment to the current ROM offset</source>
         <translation>在当前ROM偏移处添加文本注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2621"/>
-        <location filename="../src/mainwindow.cpp" line="2988"/>
+        <location filename="../src/mainwindow.cpp" line="2688"/>
+        <location filename="../src/mainwindow.cpp" line="3085"/>
         <source>Insert marker</source>
         <translation>插入标记</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2624"/>
+        <location filename="../src/mainwindow.cpp" line="2691"/>
         <source>Pin a quick marker at the current ROM offset (no text)</source>
         <translation>在当前ROM偏移处添加快速标记（无文本）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2628"/>
-        <location filename="../src/mainwindow.cpp" line="2989"/>
+        <location filename="../src/mainwindow.cpp" line="2695"/>
+        <location filename="../src/mainwindow.cpp" line="3086"/>
         <source>Delete annotation here</source>
         <translation>删除此处注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2630"/>
+        <location filename="../src/mainwindow.cpp" line="2697"/>
         <source>Remove the comment / marker at the current ROM offset</source>
         <translation>删除当前ROM偏移处的注释/标记</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2634"/>
-        <location filename="../src/mainwindow.cpp" line="2990"/>
+        <location filename="../src/mainwindow.cpp" line="2701"/>
+        <location filename="../src/mainwindow.cpp" line="3087"/>
         <source>Next marker</source>
         <translation>下一个标记</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2639"/>
-        <location filename="../src/mainwindow.cpp" line="2991"/>
+        <location filename="../src/mainwindow.cpp" line="2706"/>
+        <location filename="../src/mainwindow.cpp" line="3088"/>
         <source>Previous marker</source>
         <translation>上一个标记</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2649"/>
+        <location filename="../src/mainwindow.cpp" line="2716"/>
         <source>Named snapshots of the active project — save current state, switch back, compare trials</source>
         <translation>活动项目的命名快照 — 保存当前状态、切换回退、比较试验</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2669"/>
-        <location filename="../src/mainwindow.cpp" line="2976"/>
-        <location filename="../src/mainwindow.cpp" line="10290"/>
+        <location filename="../src/mainwindow.cpp" line="2736"/>
+        <location filename="../src/mainwindow.cpp" line="3073"/>
+        <location filename="../src/mainwindow.cpp" line="10890"/>
         <source>Value +1</source>
         <translation>数值 +1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2671"/>
-        <location filename="../src/mainwindow.cpp" line="10290"/>
+        <location filename="../src/mainwindow.cpp" line="2738"/>
+        <location filename="../src/mainwindow.cpp" line="3074"/>
+        <location filename="../src/mainwindow.cpp" line="10890"/>
         <source>Value −1</source>
         <translation>数值 −1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2673"/>
-        <location filename="../src/mainwindow.cpp" line="2978"/>
+        <location filename="../src/mainwindow.cpp" line="2740"/>
+        <location filename="../src/mainwindow.cpp" line="3075"/>
         <source>Change absolute…</source>
         <translation>绝对值修改…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2675"/>
-        <location filename="../src/mainwindow.cpp" line="2979"/>
+        <location filename="../src/mainwindow.cpp" line="2742"/>
+        <location filename="../src/mainwindow.cpp" line="3076"/>
         <source>Change relative…</source>
         <translation>相对值修改…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2677"/>
-        <location filename="../src/mainwindow.cpp" line="2980"/>
+        <location filename="../src/mainwindow.cpp" line="2744"/>
+        <location filename="../src/mainwindow.cpp" line="3077"/>
         <source>Change by slider…</source>
         <translation>滑块修改…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2678"/>
-        <location filename="../src/mainwindow.cpp" line="2981"/>
+        <location filename="../src/mainwindow.cpp" line="2745"/>
+        <location filename="../src/mainwindow.cpp" line="3078"/>
         <source>Round / limit values…</source>
         <translation>取整 / 限制值…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2679"/>
-        <location filename="../src/mainwindow.cpp" line="2982"/>
+        <location filename="../src/mainwindow.cpp" line="2746"/>
+        <location filename="../src/mainwindow.cpp" line="3079"/>
         <source>Restore original value</source>
         <translation>恢复原始值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2681"/>
-        <location filename="../src/mainwindow.cpp" line="2983"/>
+        <location filename="../src/mainwindow.cpp" line="2748"/>
+        <location filename="../src/mainwindow.cpp" line="3080"/>
         <source>Interpolate</source>
         <translation>插值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2682"/>
-        <location filename="../src/mainwindow.cpp" line="2984"/>
+        <location filename="../src/mainwindow.cpp" line="2749"/>
+        <location filename="../src/mainwindow.cpp" line="3081"/>
         <source>Smooth</source>
         <translation>平滑</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2683"/>
-        <location filename="../src/mainwindow.cpp" line="2985"/>
+        <location filename="../src/mainwindow.cpp" line="2750"/>
+        <location filename="../src/mainwindow.cpp" line="3082"/>
         <source>Flatten (set to mean)</source>
         <translation>展平（设为均值）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2684"/>
-        <location filename="../src/mainwindow.cpp" line="2986"/>
+        <location filename="../src/mainwindow.cpp" line="2751"/>
+        <location filename="../src/mainwindow.cpp" line="3083"/>
         <source>Again</source>
         <translation>重复</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2687"/>
+        <location filename="../src/mainwindow.cpp" line="2754"/>
         <source>Re-apply the last edit operation on the current selection</source>
         <translation>在当前选区重新应用上次编辑操作</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2733"/>
+        <location filename="../src/mainwindow.cpp" line="2800"/>
         <source>Open a project before importing a map list.</source>
         <translation>请先打开项目,再导入地图列表。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2763"/>
+        <location filename="../src/mainwindow.cpp" line="2830"/>
         <source>No DFC_CtlMsk maps found in this project.
 DTC Manager (A2L) needs DFC definitions from an imported A2L file.
 
@@ -4769,347 +5210,351 @@ Use “Disable DTC &amp;&amp; Features…” for ROM-based (signature-driven) de
         <translation>DTC 管理器 (A2L)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2785"/>
-        <source>AI Functions requires a Pro account.
-Purchase from romhex14.com to unlock.</source>
-        <translation>AI 功能需要专业版账户。</translation>
+        <location filename="../src/mainwindow.cpp" line="2978"/>
+        <source>Import an A2L description file (.a2l) and map labels</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2930"/>
+        <location filename="../src/mainwindow.cpp" line="2991"/>
+        <source>Export modified ROM file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3015"/>
         <source>Undo</source>
         <translation type="unfinished">撤销</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2931"/>
+        <location filename="../src/mainwindow.cpp" line="3016"/>
         <source>Redo</source>
         <translation type="unfinished">重做</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2932"/>
+        <location filename="../src/mainwindow.cpp" line="3017"/>
         <source>Previous Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2933"/>
+        <location filename="../src/mainwindow.cpp" line="3018"/>
         <source>Next Map</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2934"/>
+        <location filename="../src/mainwindow.cpp" line="3019"/>
         <source>Synchronize Cursors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2935"/>
+        <location filename="../src/mainwindow.cpp" line="3020"/>
         <source>8-bit</source>
         <translation type="unfinished">8 位</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2936"/>
+        <location filename="../src/mainwindow.cpp" line="3021"/>
         <source>16-bit</source>
         <translation type="unfinished">16 位</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2937"/>
+        <location filename="../src/mainwindow.cpp" line="3022"/>
         <source>32-bit</source>
         <translation type="unfinished">32 位</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2938"/>
+        <location filename="../src/mainwindow.cpp" line="3023"/>
         <source>32-bit Float</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2939"/>
+        <location filename="../src/mainwindow.cpp" line="3024"/>
         <source>Little Endian</source>
         <translation type="unfinished">小端</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2940"/>
+        <location filename="../src/mainwindow.cpp" line="3025"/>
         <source>Big Endian</source>
         <translation type="unfinished">大端</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2941"/>
+        <location filename="../src/mainwindow.cpp" line="3026"/>
         <source>Signed</source>
         <translation type="unfinished">有符号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2942"/>
+        <location filename="../src/mainwindow.cpp" line="3027"/>
         <source>Unsigned</source>
         <translation type="unfinished">无符号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2943"/>
+        <location filename="../src/mainwindow.cpp" line="3028"/>
         <source>Decimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2944"/>
+        <location filename="../src/mainwindow.cpp" line="3029"/>
         <source>Hexadecimal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2945"/>
+        <location filename="../src/mainwindow.cpp" line="3030"/>
         <source>Binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2946"/>
+        <location filename="../src/mainwindow.cpp" line="3031"/>
         <source>Percentage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2947"/>
+        <location filename="../src/mainwindow.cpp" line="3032"/>
         <source>Show Difference</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2948"/>
+        <location filename="../src/mainwindow.cpp" line="3033"/>
         <source>Height Colours</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2977"/>
-        <source>Value ℡</source>
+        <location filename="../src/mainwindow.cpp" line="3058"/>
+        <source>Show / hide the Differences dock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3002"/>
-        <source>&amp;Datalog</source>
-        <translation>数据日志(&amp;D)</translation>
+        <location filename="../src/mainwindow.cpp" line="3059"/>
+        <source>Show / hide the Tuning Branches (Savepoints) dock</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3009"/>
-        <location filename="../src/mainwindow.cpp" line="3568"/>
+        <location filename="../src/mainwindow.cpp" line="3060"/>
+        <source>Compare active ROM against the original unmodified file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3083"/>
+        <source>Repeat the last edit operation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3084"/>
+        <source>Insert comment / annotation at current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3085"/>
+        <source>Insert marker at current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3086"/>
+        <source>Delete annotation at current location</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3106"/>
+        <location filename="../src/mainwindow.cpp" line="3659"/>
         <source>Project</source>
         <translation>项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3010"/>
-        <location filename="../src/mainwindow.cpp" line="3606"/>
+        <location filename="../src/mainwindow.cpp" line="3107"/>
+        <location filename="../src/mainwindow.cpp" line="3697"/>
         <source>Format</source>
         <translation>格式</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3036"/>
+        <location filename="../src/mainwindow.cpp" line="3133"/>
         <source>Open Version in New Window</source>
-        <translation>Open Version in New Window</translation>
+        <translation>在新窗口中打开版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3041"/>
+        <location filename="../src/mainwindow.cpp" line="3138"/>
         <source>(no active project)</source>
-        <translation>(no active project)</translation>
+        <translation>（无活动项目）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3045"/>
+        <location filename="../src/mainwindow.cpp" line="3142"/>
         <source>Current (working)</source>
-        <translation>Current (working)</translation>
+        <translation>当前（工作版本）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3050"/>
+        <location filename="../src/mainwindow.cpp" line="3147"/>
         <source>(no extra versions)</source>
-        <translation>(no extra versions)</translation>
+        <translation>（无额外版本）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3057"/>
-        <location filename="../src/mainwindow.cpp" line="8085"/>
+        <location filename="../src/mainwindow.cpp" line="3154"/>
+        <location filename="../src/mainwindow.cpp" line="8350"/>
         <source>Version %1</source>
-        <translation>Version %1</translation>
+        <translation>版本 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3087"/>
+        <location filename="../src/mainwindow.cpp" line="3182"/>
         <source>Export map list as &amp;CSV…</source>
         <translation>导出标定图列表为 CSV(&amp;C)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3089"/>
+        <location filename="../src/mainwindow.cpp" line="3184"/>
         <source>Export map list as &amp;JSON…</source>
         <translation>导出标定图列表为 JSON(&amp;J)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3091"/>
+        <location filename="../src/mainwindow.cpp" line="3186"/>
         <source>Export XD&amp;F (TunerPro)…</source>
         <translation>导出 XD&amp;F (TunerPro)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3093"/>
+        <location filename="../src/mainwindow.cpp" line="3188"/>
         <source>Export &amp;Tuning Report…</source>
         <translation>导出调校报告 (&amp;T)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3133"/>
-        <source>Data &amp;Width</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="3139"/>
-        <source>Byte &amp;Order</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="3143"/>
-        <source>&amp;Sign</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="3147"/>
-        <source>Number &amp;Format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="3204"/>
+        <location filename="../src/mainwindow.cpp" line="3295"/>
         <source>Find &amp;Value…</source>
         <translation>查找值 (&amp;V)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3205"/>
-        <source>Find &amp;Map…</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="3211"/>
+        <location filename="../src/mainwindow.cpp" line="3302"/>
         <source>Find &amp;Similar Files…</source>
-        <translation>Find &amp;Similar Files…</translation>
+        <translation>查找相似文件(&amp;S)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3213"/>
+        <location filename="../src/mainwindow.cpp" line="3304"/>
         <source>Catalog Tune &amp;Suggestions…</source>
         <translation>目录调校建议(&amp;S)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3217"/>
+        <location filename="../src/mainwindow.cpp" line="3308"/>
         <source>Open a project first to scan the catalog.</source>
-        <translation>请先打开一个项目以扫描目录。</translation>
+        <translation>请先打开项目以扫描目录。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3234"/>
+        <location filename="../src/mainwindow.cpp" line="3325"/>
         <source>No applicable catalog suggestions for this ROM.</source>
-        <translation>目录中没有适用于此 ROM 的建议。</translation>
+        <translation>没有适用于此 ROM 的目录建议。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3286"/>
+        <location filename="../src/mainwindow.cpp" line="3374"/>
         <source>Applied %1 catalog suggestions (%2 bytes changed). Ctrl+Z to undo.</source>
-        <translation>已应用 %1 条目录建议（更改了 %2 字节）。按 Ctrl+Z 撤销。</translation>
+        <translation>已应用 %1 条目录建议(更改 %2 字节)。按 Ctrl+Z 撤销。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3319"/>
+        <location filename="../src/mainwindow.cpp" line="3407"/>
         <source>Auto-scan &amp;ROM on import</source>
         <translation>导入时自动扫描 ROM(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3334"/>
+        <location filename="../src/mainwindow.cpp" line="3422"/>
         <source>Auto &amp;Save</source>
         <translation>自动保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3355"/>
+        <location filename="../src/mainwindow.cpp" line="3443"/>
         <source>Off</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3356"/>
+        <location filename="../src/mainwindow.cpp" line="3444"/>
         <source>Manual save only (Ctrl+S)</source>
         <translation>仅手动保存 (Ctrl+S)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3358"/>
+        <location filename="../src/mainwindow.cpp" line="3446"/>
         <source>After Delay</source>
         <translation>延迟后</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3359"/>
+        <location filename="../src/mainwindow.cpp" line="3447"/>
         <source>Save 5 s after the last edit (recommended)</source>
         <translation>在最后一次编辑后 5 秒保存（推荐）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3361"/>
+        <location filename="../src/mainwindow.cpp" line="3449"/>
         <source>On Focus Change</source>
         <translation>焦点切换时</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3362"/>
+        <location filename="../src/mainwindow.cpp" line="3450"/>
         <source>Save when switching projects</source>
         <translation>切换项目时保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3364"/>
+        <location filename="../src/mainwindow.cpp" line="3452"/>
         <source>On Window Deactivate</source>
         <translation>窗口失活时</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3365"/>
+        <location filename="../src/mainwindow.cpp" line="3453"/>
         <source>Save when romHEX14 loses focus</source>
         <translation>romHEX14 失去焦点时保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3466"/>
+        <location filename="../src/mainwindow.cpp" line="3557"/>
         <source>N+</source>
         <extracomment>Toolbar icon label for &quot;New Project&quot; (keep very short, 2-3 chars)</extracomment>
         <translation>项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3468"/>
+        <location filename="../src/mainwindow.cpp" line="3559"/>
         <source>V+</source>
         <comment>toolbar icon</comment>
         <extracomment>Toolbar icon label for &quot;Add Version&quot; (keep very short, 2-3 chars)</extracomment>
         <translation>版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3470"/>
+        <location filename="../src/mainwindow.cpp" line="3561"/>
         <source>EXP</source>
         <comment>toolbar icon</comment>
         <extracomment>Toolbar icon label for &quot;Export ROM&quot; (keep very short, 2-3 chars)</extracomment>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3472"/>
+        <location filename="../src/mainwindow.cpp" line="3563"/>
         <source>LE</source>
         <comment>toolbar icon</comment>
         <extracomment>Toolbar icon label for &quot;Little Endian&quot; byte order (keep very short)</extracomment>
         <translation>小端</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3474"/>
+        <location filename="../src/mainwindow.cpp" line="3565"/>
         <source>BE</source>
         <comment>toolbar icon</comment>
         <extracomment>Toolbar icon label for &quot;Big Endian&quot; byte order (keep very short)</extracomment>
         <translation>大端</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3655"/>
+        <location filename="../src/mainwindow.cpp" line="3746"/>
         <source>Hex editor font size</source>
         <translation>十六进制编辑器字体大小</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3945"/>
+        <location filename="../src/mainwindow.cpp" line="4030"/>
         <source>Loading ROM</source>
         <translation>正在加载 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3946"/>
-        <location filename="../src/mainwindow.cpp" line="3956"/>
+        <location filename="../src/mainwindow.cpp" line="4031"/>
+        <location filename="../src/mainwindow.cpp" line="4041"/>
         <source>Reading  %1…</source>
         <translation>正在读取  %1…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3957"/>
+        <location filename="../src/mainwindow.cpp" line="4042"/>
         <source>Parsing ROM format…</source>
         <translation>正在解析 ROM 格式…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3958"/>
+        <location filename="../src/mainwindow.cpp" line="4043"/>
         <source>Detecting ECU type…</source>
         <translation>正在检测 ECU 类型…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3959"/>
-        <location filename="../src/mainwindow.cpp" line="4300"/>
+        <location filename="../src/mainwindow.cpp" line="4044"/>
+        <location filename="../src/mainwindow.cpp" line="4385"/>
         <source>Almost done…</source>
         <translation>即将完成…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3989"/>
+        <location filename="../src/mainwindow.cpp" line="4074"/>
         <source>Cannot load ROM file:
 %1
 
@@ -5120,18 +5565,18 @@ Purchase from romhex14.com to unlock.</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4020"/>
+        <location filename="../src/mainwindow.cpp" line="4105"/>
         <source>%1 detected (%2)</source>
         <translation>已检测到 %1（%2）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4055"/>
-        <location filename="../src/mainwindow.cpp" line="4946"/>
+        <location filename="../src/mainwindow.cpp" line="4140"/>
+        <location filename="../src/mainwindow.cpp" line="5029"/>
         <source>ECU detected: %1</source>
         <translation>已检测到 ECU：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4121"/>
+        <location filename="../src/mainwindow.cpp" line="4206"/>
         <source>romHEX14 can automatically scan every ROM file you open and highlight the maps it finds in the 2D waveform view.
 
 This is a fallback while you haven&apos;t imported an A2L — once an A2L is loaded, the auto-detected overlays disappear and the real maps take over.</source>
@@ -5140,30 +5585,30 @@ This is a fallback while you haven&apos;t imported an A2L — once an A2L is loa
 这是在您尚未导入 A2L 时的回退方案——一旦加载了 A2L，自动检测的叠加层将消失，真实的映射图将接管。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4130"/>
+        <location filename="../src/mainwindow.cpp" line="4215"/>
         <source>Enable automatic map scanning for every ROM I open</source>
         <translation>为我打开的每个 ROM 启用自动映射图扫描</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4201"/>
-        <location filename="../src/mainwindow.cpp" line="8360"/>
+        <location filename="../src/mainwindow.cpp" line="4286"/>
+        <location filename="../src/mainwindow.cpp" line="8633"/>
         <source>Auto-detected: %1</source>
         <translation>自动检测：%1</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="4221"/>
+        <location filename="../src/mainwindow.cpp" line="4306"/>
         <source>Auto-detected %n map(s) — visible in 2D view until an A2L is imported</source>
         <translation>
             <numerusform>自动检测到 %n 个映射图——在导入 A2L 之前在 2D 视图中可见</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4257"/>
+        <location filename="../src/mainwindow.cpp" line="4342"/>
         <source>Binary DAMOS not supported</source>
         <translation>不支持二进制 DAMOS</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4258"/>
+        <location filename="../src/mainwindow.cpp" line="4343"/>
         <source>This looks like a binary DAMOS file, which has no open format and cannot be read directly.
 
 Convert it to A2L (ASAP2) first — e.g. with your OLS/DAMOS toolchain&apos;s &quot;DAMOS/ASAP2 export&quot; — then import the .a2l here. Text-based DAMOS/A2L files import directly.</source>
@@ -5172,94 +5617,143 @@ Convert it to A2L (ASAP2) first — e.g. with your OLS/DAMOS toolchain&apos;s &q
 请先将其转换为 A2L (ASAP2) — 例如使用您的 OLS/DAMOS 工具链的“DAMOS/ASAP2 导出” — 然后在此导入 .a2l。基于文本的 DAMOS/A2L 文件可直接导入。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4537"/>
+        <location filename="../src/mainwindow.cpp" line="4622"/>
         <source>&lt;div style=&apos;background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px; margin:4px 0;&apos;&gt;&lt;b style=&apos;font-size:11pt;&apos;&gt;%1 %2: %3%&lt;/b&gt;&lt;br&gt;&lt;pre style=&apos;color:%5; font-size:8pt; margin-top:6px;&apos;&gt;%4&lt;/pre&gt;&lt;/div&gt;</source>
         <translation>&lt;div style=&apos;background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:12px; margin:4px 0;&apos;&gt;&lt;b style=&apos;font-size:11pt;&apos;&gt;%1 %2: %3%&lt;/b&gt;&lt;br&gt;&lt;pre style=&apos;color:%5; font-size:8pt; margin-top:6px;&apos;&gt;%4&lt;/pre&gt;&lt;/div&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4699"/>
-        <location filename="../src/mainwindow.cpp" line="4729"/>
-        <location filename="../src/mainwindow.cpp" line="4840"/>
+        <location filename="../src/mainwindow.cpp" line="4782"/>
+        <location filename="../src/mainwindow.cpp" line="4812"/>
+        <location filename="../src/mainwindow.cpp" line="4923"/>
         <source>Import KP</source>
         <translation>导入 KP</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4700"/>
+        <location filename="../src/mainwindow.cpp" line="4783"/>
         <source>Open a project with ROM data first. KP map packs are added on top of an existing project (the same way A2L files are).</source>
         <translation>请先打开一个含有 ROM 数据的项目。KP 映射图包会被添加到现有项目之上（与 A2L 文件相同）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4708"/>
+        <location filename="../src/mainwindow.cpp" line="4791"/>
         <source>Import KP map pack</source>
         <translation>导入 KP 映射图包</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4709"/>
+        <location filename="../src/mainwindow.cpp" line="4792"/>
         <source>KP map packs (*.kp);;All files (*)</source>
         <translation>KP 映射图包 (*.kp);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4730"/>
+        <location filename="../src/mainwindow.cpp" line="4813"/>
         <source>No maps found in this .kp file.</source>
         <translation>在此 .kp 文件中未找到映射图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4850"/>
+        <location filename="../src/mainwindow.cpp" line="4933"/>
         <source>Imported %1 maps from %2</source>
         <translation>已从 %2 导入 %1 个映射图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4851"/>
-        <source>Updated existing maps from %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4853"/>
+        <location filename="../src/mainwindow.cpp" line="4936"/>
         <source> (%1 already present, skipped)</source>
         <translation>（%1 已存在，已跳过）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4855"/>
-        <source>; %1 data range(s) applied</source>
+        <location filename="../src/mainwindow.cpp" line="4946"/>
+        <source>Import WinOLS Project</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6298"/>
-        <source>Folder — use the arrow to expand or collapse</source>
+        <location filename="../src/mainwindow.cpp" line="4947"/>
+        <source>WinOLS files (*.ols *.kp);;All files (*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6937"/>
+        <location filename="../src/mainwindow.cpp" line="4978"/>
+        <location filename="../src/mainwindow.cpp" line="6826"/>
+        <source>No Versions found in WinOLS file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="5042"/>
+        <source>Imported WinOLS project: %1 — %2 maps, %3 extra version(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="5047"/>
+        <source>Imported WinOLS project: %1 — %2 maps loaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7058"/>
         <source>Import A2L / DAMOS File</source>
         <translation>导入 A2L / DAMOS 文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6938"/>
+        <location filename="../src/mainwindow.cpp" line="7059"/>
         <source>A2L / DAMOS (*.a2l *.dam *.damos);;A2L Files (*.a2l);;All Files (*)</source>
         <translation>A2L / DAMOS (*.a2l *.dam *.damos);;A2L 文件 (*.a2l);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7875"/>
-        <location filename="../src/mainwindow.cpp" line="7905"/>
-        <source>Similarity index</source>
-        <translation>Similarity index</translation>
+        <location filename="../src/mainwindow.cpp" line="7151"/>
+        <source>Export WinOLS</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7876"/>
+        <location filename="../src/mainwindow.cpp" line="7179"/>
+        <source>Cannot Export to WinOLS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7180"/>
+        <source>This project cannot be exported to a WinOLS .ols file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7182"/>
+        <source>WinOLS export requires the per-segment metadata that is only captured when importing an existing .ols file. This project was created from a raw ROM (HEX / BIN / SREC), so that metadata isn&apos;t available — WinOLS would reject the resulting file as corrupt.
+
+Alternatives:
+  • Save Project (.rx14proj) — preserves all your edits, maps and A2L data
+  • Export ROM (.bin) — writes the raw ROM bytes you can flash directly
+  • Re-import an existing .ols file as your starting point, then OLS export will work end-to-end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7207"/>
+        <source>Export WinOLS Project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7208"/>
+        <source>WinOLS files (*.ols);;All files (*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7229"/>
+        <source>Exported WinOLS project to: %1 (%2 bytes, %3 maps)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="8141"/>
+        <location filename="../src/mainwindow.cpp" line="8171"/>
+        <source>Similarity index</source>
+        <translation>相似度索引</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="8142"/>
         <source>No scan roots configured.
 
 Open Project Manager → WinOLS Catalog → Settings to import paths from WinOLS&apos; ols.cfg first.</source>
-        <translation>No scan roots configured.
-
-Open Project Manager → WinOLS Catalog → Settings to import paths from WinOLS&apos; ols.cfg first.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7886"/>
+        <location filename="../src/mainwindow.cpp" line="8152"/>
         <source>Build similarity index</source>
-        <translation>Build similarity index</translation>
+        <translation>构建相似度索引</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7887"/>
+        <location filename="../src/mainwindow.cpp" line="8153"/>
         <source>Scan the following %1 folder(s) recursively for .ols / .kp / .bin / .rom files and build the similarity index?
 
 %2
@@ -5270,125 +5764,135 @@ This may take a while (potentially hours for terabyte collections).  You can pau
 This may take a while (potentially hours for terabyte collections).  You can pause or cancel at any point — already-processed files are kept.</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7906"/>
+        <location filename="../src/mainwindow.cpp" line="8172"/>
         <source>Could not open index database:
 %1</source>
         <translation>Could not open index database:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7915"/>
+        <location filename="../src/mainwindow.cpp" line="8181"/>
         <source>Similarity index ready</source>
-        <translation>Similarity index ready</translation>
+        <translation>相似度索引就绪</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7923"/>
+        <location filename="../src/mainwindow.cpp" line="8189"/>
         <source>Open a project first to find similar files.</source>
-        <translation>Open a project first to find similar files.</translation>
+        <translation>请先打开项目以查找相似文件。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7941"/>
+        <location filename="../src/mainwindow.cpp" line="8207"/>
         <source>Open similar</source>
-        <translation>Open similar</translation>
+        <translation>打开相似文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7942"/>
-        <location filename="../src/mainwindow.cpp" line="8002"/>
+        <location filename="../src/mainwindow.cpp" line="8208"/>
+        <location filename="../src/mainwindow.cpp" line="8268"/>
         <source>Could not read file: %1</source>
-        <translation>Could not read file: %1</translation>
+        <translation>无法读取文件：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7957"/>
-        <location filename="../src/mainwindow.cpp" line="7962"/>
-        <location filename="../src/mainwindow.cpp" line="7971"/>
-        <location filename="../src/mainwindow.cpp" line="8015"/>
-        <location filename="../src/mainwindow.cpp" line="8019"/>
-        <location filename="../src/mainwindow.cpp" line="8024"/>
+        <location filename="../src/mainwindow.cpp" line="8223"/>
+        <location filename="../src/mainwindow.cpp" line="8228"/>
+        <location filename="../src/mainwindow.cpp" line="8237"/>
+        <location filename="../src/mainwindow.cpp" line="8281"/>
+        <location filename="../src/mainwindow.cpp" line="8285"/>
+        <location filename="../src/mainwindow.cpp" line="8290"/>
         <source>Import error</source>
-        <translation>Import error</translation>
+        <translation>导入错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7958"/>
-        <location filename="../src/mainwindow.cpp" line="8016"/>
+        <location filename="../src/mainwindow.cpp" line="8224"/>
+        <location filename="../src/mainwindow.cpp" line="8282"/>
         <source>OLS import threw: %1</source>
-        <translation>OLS import threw: %1</translation>
+        <translation>OLS 导入异常：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7963"/>
-        <location filename="../src/mainwindow.cpp" line="8020"/>
+        <location filename="../src/mainwindow.cpp" line="8229"/>
+        <location filename="../src/mainwindow.cpp" line="8286"/>
         <source>OLS import threw an unknown exception</source>
-        <translation>OLS import threw an unknown exception</translation>
+        <translation>OLS 导入引发未知异常</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8001"/>
-        <location filename="../src/mainwindow.cpp" line="8008"/>
+        <location filename="../src/mainwindow.cpp" line="8267"/>
+        <location filename="../src/mainwindow.cpp" line="8274"/>
         <source>Open as comparison</source>
-        <translation>作为比较打开</translation>
+        <translation>作为对比打开</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8009"/>
+        <location filename="../src/mainwindow.cpp" line="8275"/>
         <source>File is empty: %1</source>
-        <translation>文件为空：%1</translation>
+        <translation>文件为空:%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8060"/>
+        <location filename="../src/mainwindow.cpp" line="8325"/>
         <source>Opened %1 as comparison.</source>
-        <translation>已将 %1 作为比较打开。</translation>
+        <translation>已将 %1 作为对比打开。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8080"/>
+        <location filename="../src/mainwindow.cpp" line="8345"/>
         <source>Current</source>
-        <translation>Current</translation>
+        <translation>当前</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8087"/>
-        <location filename="../src/mainwindow.cpp" line="8092"/>
+        <location filename="../src/mainwindow.cpp" line="8352"/>
+        <location filename="../src/mainwindow.cpp" line="8357"/>
         <source>Open version</source>
-        <translation>Open version</translation>
+        <translation>打开版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8088"/>
+        <location filename="../src/mainwindow.cpp" line="8353"/>
         <source>Version index %1 out of range</source>
-        <translation>Version index %1 out of range</translation>
+        <translation>版本索引 %1 超出范围</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8093"/>
+        <location filename="../src/mainwindow.cpp" line="8358"/>
         <source>That version has no ROM data.</source>
-        <translation>That version has no ROM data.</translation>
+        <translation>该版本没有 ROM 数据。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8129"/>
+        <location filename="../src/mainwindow.cpp" line="8394"/>
         <source>Opened %1 alongside %2</source>
-        <translation>Opened %1 alongside %2</translation>
+        <translation>已同时打开 %1 和 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8570"/>
+        <location filename="../src/mainwindow.cpp" line="9078"/>
         <source>Import Map List</source>
         <translation>导入地图列表</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8571"/>
+        <location filename="../src/mainwindow.cpp" line="9079"/>
         <source>Open a project with ROM data first to import a map list.</source>
         <translation>请先打开包含 ROM 数据的项目，然后再导入地图列表。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9404"/>
+        <location filename="../src/mainwindow.cpp" line="9923"/>
+        <source>✓ Checksum OK
+
+ECU: %1
+Algorithm: %2
+
+All checksum blocks are valid and match.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="10013"/>
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9408"/>
-        <location filename="../src/mainwindow.cpp" line="9435"/>
+        <location filename="../src/mainwindow.cpp" line="10017"/>
+        <location filename="../src/mainwindow.cpp" line="10044"/>
         <source>Checksum</source>
         <translation>校验和</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9409"/>
+        <location filename="../src/mainwindow.cpp" line="10018"/>
         <source>This ROM has an invalid checksum.</source>
         <translation>该 ROM 的校验和无效。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9411"/>
+        <location filename="../src/mainwindow.cpp" line="10020"/>
         <source>ECU: %1
 Algorithm: %2
 
@@ -5399,17 +5903,17 @@ Correct the checksum before exporting? Flashing a ROM with an invalid checksum c
 导出前是否修正校验和？刷写校验和无效的 ROM 可能被 ECU 拒绝。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9414"/>
+        <location filename="../src/mainwindow.cpp" line="10023"/>
         <source>Correct &amp;&amp; Export</source>
         <translation>修正并导出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9415"/>
+        <location filename="../src/mainwindow.cpp" line="10024"/>
         <source>Export Anyway</source>
         <translation>仍然导出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9436"/>
+        <location filename="../src/mainwindow.cpp" line="10045"/>
         <source>Checksum correction failed: %1
 
 Export cancelled.</source>
@@ -5418,138 +5922,138 @@ Export cancelled.</source>
 已取消导出。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9437"/>
+        <location filename="../src/mainwindow.cpp" line="10046"/>
         <source>unknown error</source>
         <translation>未知错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9753"/>
+        <location filename="../src/mainwindow.cpp" line="10353"/>
         <source>Insert comment</source>
         <translation>插入注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9754"/>
+        <location filename="../src/mainwindow.cpp" line="10354"/>
         <source>Comment for offset 0x%1:</source>
         <translation>偏移 0x%1 的注释：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9764"/>
+        <location filename="../src/mainwindow.cpp" line="10364"/>
         <source>Comment added at 0x%1</source>
         <translation>已在 0x%1 添加注释</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9777"/>
+        <location filename="../src/mainwindow.cpp" line="10377"/>
         <source>Marker added at 0x%1</source>
         <translation>已在 0x%1 添加标记</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9799"/>
-        <location filename="../src/mainwindow.cpp" line="9821"/>
+        <location filename="../src/mainwindow.cpp" line="10399"/>
+        <location filename="../src/mainwindow.cpp" line="10421"/>
         <source>Export map list</source>
         <translation>导出标定图列表</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9800"/>
-        <location filename="../src/mainwindow.cpp" line="9822"/>
-        <location filename="../src/mainwindow.cpp" line="10064"/>
+        <location filename="../src/mainwindow.cpp" line="10400"/>
+        <location filename="../src/mainwindow.cpp" line="10422"/>
+        <location filename="../src/mainwindow.cpp" line="10664"/>
         <source>Open a project with at least one map first.</source>
         <translation>请先打开至少包含一个标定图的项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9805"/>
+        <location filename="../src/mainwindow.cpp" line="10405"/>
         <source>Export map list as CSV</source>
         <translation>导出标定图列表为 CSV</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9806"/>
+        <location filename="../src/mainwindow.cpp" line="10406"/>
         <source>CSV (*.csv)</source>
         <translation>CSV (*.csv)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9810"/>
-        <location filename="../src/mainwindow.cpp" line="9832"/>
+        <location filename="../src/mainwindow.cpp" line="10410"/>
+        <location filename="../src/mainwindow.cpp" line="10432"/>
         <source>Export failed</source>
         <translation>导出失败</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9813"/>
-        <location filename="../src/mainwindow.cpp" line="9835"/>
+        <location filename="../src/mainwindow.cpp" line="10413"/>
+        <location filename="../src/mainwindow.cpp" line="10435"/>
         <source>Wrote %1 maps to %2</source>
         <translation>已写入 %1 个标定图到 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9827"/>
+        <location filename="../src/mainwindow.cpp" line="10427"/>
         <source>Export map list as JSON</source>
         <translation>导出标定图列表为 JSON</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9828"/>
+        <location filename="../src/mainwindow.cpp" line="10428"/>
         <source>JSON (*.json)</source>
         <translation>JSON (*.json)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9843"/>
-        <location filename="../src/mainwindow.cpp" line="9860"/>
-        <location filename="../src/mainwindow.cpp" line="9867"/>
-        <location filename="../src/mainwindow.cpp" line="9889"/>
-        <location filename="../src/mainwindow.cpp" line="9904"/>
-        <location filename="../src/mainwindow.cpp" line="9913"/>
+        <location filename="../src/mainwindow.cpp" line="10443"/>
+        <location filename="../src/mainwindow.cpp" line="10460"/>
+        <location filename="../src/mainwindow.cpp" line="10467"/>
+        <location filename="../src/mainwindow.cpp" line="10489"/>
+        <location filename="../src/mainwindow.cpp" line="10504"/>
+        <location filename="../src/mainwindow.cpp" line="10513"/>
         <source>Tuning Report</source>
         <translation>调校报告</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9844"/>
+        <location filename="../src/mainwindow.cpp" line="10444"/>
         <source>Open a project with at least one map first. The report compares the current ROM against its original snapshot.</source>
         <translation>请先打开至少包含一个地图的项目。报告会将当前 ROM 与其原始快照进行比较。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9855"/>
+        <location filename="../src/mainwindow.cpp" line="10455"/>
         <source>Select the original (baseline) ROM to compare against</source>
         <translation>选择用于比较的原始（基准）ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9856"/>
+        <location filename="../src/mainwindow.cpp" line="10456"/>
         <source>ROM files (*.bin *.rom *.ori *.hex);;All files (*)</source>
         <translation>ROM 文件 (*.bin *.rom *.ori *.hex);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9868"/>
+        <location filename="../src/mainwindow.cpp" line="10468"/>
         <source>The baseline ROM (%1 bytes) is a different size from the current ROM (%2 bytes); they must match to compare maps.</source>
         <translation>基准 ROM（%1 字节）与当前 ROM（%2 字节）大小不同；比较地图时两者必须一致。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9890"/>
+        <location filename="../src/mainwindow.cpp" line="10490"/>
         <source>No differences found between the current ROM and the baseline — nothing to report.</source>
         <translation>当前 ROM 与基准之间未发现差异 — 无内容可报告。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9897"/>
+        <location filename="../src/mainwindow.cpp" line="10497"/>
         <source>-tuning-report</source>
         <translation>-调校报告</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9899"/>
+        <location filename="../src/mainwindow.cpp" line="10499"/>
         <source>Save Tuning Report</source>
         <translation>保存调校报告</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9899"/>
+        <location filename="../src/mainwindow.cpp" line="10499"/>
         <source>HTML report (*.html)</source>
         <translation>HTML 报告 (*.html)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9905"/>
-        <location filename="../src/mainwindow.cpp" line="10079"/>
+        <location filename="../src/mainwindow.cpp" line="10505"/>
+        <location filename="../src/mainwindow.cpp" line="10679"/>
         <source>Could not write %1</source>
         <translation>无法写入 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9912"/>
+        <location filename="../src/mainwindow.cpp" line="10512"/>
         <source>Tuning report: %1 changed maps written to %2</source>
         <translation>调校报告：%1 个已更改的地图已写入 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9914"/>
+        <location filename="../src/mainwindow.cpp" line="10514"/>
         <source>Report saved with %1 changed maps.
 
 Open it now?</source>
@@ -5558,530 +6062,443 @@ Open it now?</source>
 立即打开？</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9924"/>
+        <location filename="../src/mainwindow.cpp" line="10524"/>
         <source>Find Value</source>
         <translation>查找值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9950"/>
+        <location filename="../src/mainwindow.cpp" line="10550"/>
         <source>Import VAG FRF / ODX</source>
         <translation>导入 VAG FRF / ODX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9951"/>
+        <location filename="../src/mainwindow.cpp" line="10551"/>
         <source>VAG flash containers (*.frf *.sgo *.odx *.zip);;All files (*)</source>
         <translation>VAG 刷写容器 (*.frf *.sgo *.odx *.zip);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9973"/>
+        <location filename="../src/mainwindow.cpp" line="10573"/>
         <source>Import FRF / ODX</source>
         <translation>导入 FRF / ODX</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9974"/>
+        <location filename="../src/mainwindow.cpp" line="10574"/>
         <source>Could not stage the extracted ROM to a temporary file.</source>
         <translation>无法将提取的 ROM 暂存到临时文件。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9993"/>
+        <location filename="../src/mainwindow.cpp" line="10593"/>
         <source>Opened extracted ROM: %1 (%2 bytes)</source>
         <translation>已打开提取的 ROM：%1 (%2 字节)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10000"/>
-        <location filename="../src/mainwindow.cpp" line="10020"/>
-        <location filename="../src/mainwindow.cpp" line="10024"/>
-        <location filename="../src/mainwindow.cpp" line="10046"/>
+        <location filename="../src/mainwindow.cpp" line="10600"/>
+        <location filename="../src/mainwindow.cpp" line="10620"/>
+        <location filename="../src/mainwindow.cpp" line="10624"/>
+        <location filename="../src/mainwindow.cpp" line="10646"/>
         <source>Import XDF</source>
         <translation>导入 XDF</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10001"/>
+        <location filename="../src/mainwindow.cpp" line="10601"/>
         <source>Open a project with ROM data first. XDF definitions are added on top of an existing ROM (the same way A2L files are).</source>
         <translation>请先打开包含 ROM 数据的项目。XDF 定义会叠加在现有 ROM 之上（与 A2L 文件相同）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10008"/>
+        <location filename="../src/mainwindow.cpp" line="10608"/>
         <source>Import XDF definition</source>
         <translation>导入 XDF 定义</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10008"/>
+        <location filename="../src/mainwindow.cpp" line="10608"/>
         <source>TunerPro XDF (*.xdf);;All files (*)</source>
         <translation>TunerPro XDF (*.xdf);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10025"/>
+        <location filename="../src/mainwindow.cpp" line="10625"/>
         <source>No maps with addresses were found in this XDF.</source>
         <translation>在此 XDF 中未找到带地址的地图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10047"/>
+        <location filename="../src/mainwindow.cpp" line="10647"/>
         <source>No new maps were added (%1 already present, %2 outside the ROM).</source>
         <translation>未添加新地图（%1 个已存在，%2 个超出 ROM 范围）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10053"/>
+        <location filename="../src/mainwindow.cpp" line="10653"/>
         <source>Imported %1 maps from XDF</source>
         <translation>已从 XDF 导入 %1 个地图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10054"/>
+        <location filename="../src/mainwindow.cpp" line="10654"/>
         <source>, %1 already present</source>
         <translation>，%1 个已存在</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10055"/>
+        <location filename="../src/mainwindow.cpp" line="10655"/>
         <source>, %1 outside ROM</source>
         <translation>，%1 个超出 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10063"/>
-        <location filename="../src/mainwindow.cpp" line="10079"/>
+        <location filename="../src/mainwindow.cpp" line="10663"/>
+        <location filename="../src/mainwindow.cpp" line="10679"/>
         <source>Export XDF</source>
         <translation>导出 XDF</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10069"/>
+        <location filename="../src/mainwindow.cpp" line="10669"/>
         <source>Export XDF (TunerPro)</source>
         <translation>导出 XDF (TunerPro)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10069"/>
+        <location filename="../src/mainwindow.cpp" line="10669"/>
         <source>TunerPro XDF (*.xdf)</source>
         <translation>TunerPro XDF (*.xdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10084"/>
+        <location filename="../src/mainwindow.cpp" line="10684"/>
         <source>Exported %1 maps to %2</source>
         <translation>已将 %1 个地图导出到 %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10092"/>
+        <location filename="../src/mainwindow.cpp" line="10692"/>
         <source>No annotations in this project.</source>
         <translation>此项目无注释。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10100"/>
+        <location filename="../src/mainwindow.cpp" line="10700"/>
         <source>→ 0x%1</source>
         <translation>→ 0x%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10132"/>
-        <location filename="../src/mainwindow.cpp" line="10291"/>
+        <location filename="../src/mainwindow.cpp" line="10732"/>
+        <location filename="../src/mainwindow.cpp" line="10891"/>
         <source>Change absolute</source>
         <translation>绝对值修改</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10133"/>
+        <location filename="../src/mainwindow.cpp" line="10733"/>
         <source>Set every selected cell to:</source>
         <translation>将每个选中单元格设为：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10142"/>
+        <location filename="../src/mainwindow.cpp" line="10742"/>
         <source>Change relative</source>
         <translation>相对值修改</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10143"/>
+        <location filename="../src/mainwindow.cpp" line="10743"/>
         <source>Enter delta (e.g. +5, -3, *1.10, +5%):</source>
         <translation>输入差值（如 +5、-3、*1.10、+5%）：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10171"/>
-        <location filename="../src/mainwindow.cpp" line="10216"/>
-        <location filename="../src/mainwindow.cpp" line="10223"/>
-        <location filename="../src/mainwindow.cpp" line="10231"/>
+        <location filename="../src/mainwindow.cpp" line="10771"/>
+        <location filename="../src/mainwindow.cpp" line="10816"/>
+        <location filename="../src/mainwindow.cpp" line="10823"/>
+        <location filename="../src/mainwindow.cpp" line="10831"/>
         <source>Selection</source>
         <translation>选择</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10194"/>
-        <location filename="../src/mainwindow.cpp" line="10197"/>
-        <location filename="../src/mainwindow.cpp" line="10200"/>
-        <location filename="../src/mainwindow.cpp" line="10293"/>
+        <location filename="../src/mainwindow.cpp" line="10794"/>
+        <location filename="../src/mainwindow.cpp" line="10797"/>
+        <location filename="../src/mainwindow.cpp" line="10800"/>
+        <location filename="../src/mainwindow.cpp" line="10893"/>
         <source>Round / limit</source>
         <translation>取整 / 限制</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10195"/>
+        <location filename="../src/mainwindow.cpp" line="10795"/>
         <source>Round to nearest multiple of:</source>
         <translation>取整为最近的倍数：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10198"/>
+        <location filename="../src/mainwindow.cpp" line="10798"/>
         <source>Minimum allowed value:</source>
         <translation>允许的最小值：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10201"/>
+        <location filename="../src/mainwindow.cpp" line="10801"/>
         <source>Maximum allowed value:</source>
         <translation>允许的最大值：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10217"/>
+        <location filename="../src/mainwindow.cpp" line="10817"/>
         <source>No active project view.</source>
         <translation>无活动项目视图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10224"/>
+        <location filename="../src/mainwindow.cpp" line="10824"/>
         <source>Editor not ready for this view.</source>
         <translation>编辑器未准备好用于此视图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10264"/>
+        <location filename="../src/mainwindow.cpp" line="10864"/>
         <source>Find similar</source>
         <translation>查找相似</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10265"/>
+        <location filename="../src/mainwindow.cpp" line="10865"/>
         <source>Need at least 2 maps in the project to compare.</source>
         <translation>项目中至少需要2个标定图才能比较。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10291"/>
+        <location filename="../src/mainwindow.cpp" line="10891"/>
         <source>Change relative (delta)</source>
         <translation>相对值修改（差值）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10292"/>
+        <location filename="../src/mainwindow.cpp" line="10892"/>
         <source>Change relative (scale ×)</source>
         <translation>相对值修改（比例 ×）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10294"/>
+        <location filename="../src/mainwindow.cpp" line="10894"/>
         <source>Restore original</source>
         <translation>恢复原始值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10298"/>
+        <location filename="../src/mainwindow.cpp" line="10898"/>
         <source>Bulk edit %1 maps</source>
         <translation>批量编辑 %1 个标定图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10299"/>
+        <location filename="../src/mainwindow.cpp" line="10899"/>
         <source>Operation:</source>
         <translation>操作：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10312"/>
-        <location filename="../src/mainwindow.cpp" line="10320"/>
-        <location filename="../src/mainwindow.cpp" line="10329"/>
-        <location filename="../src/mainwindow.cpp" line="10338"/>
-        <location filename="../src/mainwindow.cpp" line="10342"/>
-        <location filename="../src/mainwindow.cpp" line="10345"/>
-        <location filename="../src/mainwindow.cpp" line="10355"/>
+        <location filename="../src/mainwindow.cpp" line="10912"/>
+        <location filename="../src/mainwindow.cpp" line="10920"/>
+        <location filename="../src/mainwindow.cpp" line="10929"/>
+        <location filename="../src/mainwindow.cpp" line="10938"/>
+        <location filename="../src/mainwindow.cpp" line="10942"/>
+        <location filename="../src/mainwindow.cpp" line="10945"/>
+        <location filename="../src/mainwindow.cpp" line="10955"/>
         <source>Bulk edit</source>
         <translation>批量编辑</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10312"/>
+        <location filename="../src/mainwindow.cpp" line="10912"/>
         <source>Absolute value:</source>
         <translation>绝对值：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10320"/>
+        <location filename="../src/mainwindow.cpp" line="10920"/>
         <source>Add delta (raw):</source>
         <translation>添加差值（原始）：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10329"/>
+        <location filename="../src/mainwindow.cpp" line="10929"/>
         <source>Scale factor (1.05 = +5%):</source>
         <translation>比例系数（1.05 = +5%）：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10338"/>
+        <location filename="../src/mainwindow.cpp" line="10938"/>
         <source>Round to multiple of:</source>
         <translation>取整为倍数：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10342"/>
+        <location filename="../src/mainwindow.cpp" line="10942"/>
         <source>Min:</source>
         <translation>最小：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10345"/>
+        <location filename="../src/mainwindow.cpp" line="10945"/>
         <source>Max:</source>
         <translation>最大：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10356"/>
+        <location filename="../src/mainwindow.cpp" line="10956"/>
         <source>This will modify %1 byte ranges across %2 maps. Proceed?</source>
         <translation>这将修改 %2 个标定图中的 %1 个字节范围。继续？</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10381"/>
+        <location filename="../src/mainwindow.cpp" line="10981"/>
         <source>Bulk edit applied to %1 maps</source>
         <translation>已批量编辑 %1 个标定图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="10506"/>
-        <location filename="../src/mainwindow.cpp" line="10514"/>
-        <location filename="../src/mainwindow.cpp" line="10646"/>
-        <source>Open datalog</source>
-        <translation>打开数据日志</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10507"/>
-        <source>Vehical logs (*.csv);;All files (*)</source>
-        <translation>Vehical 日志 (*.csv);;所有文件 (*)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10515"/>
-        <location filename="../src/mainwindow.cpp" line="10647"/>
-        <source>Failed to open %1:
-%2</source>
-        <translation>无法打开 %1：
-%2</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10535"/>
-        <source>&amp;Open Log…</source>
-        <translation>打开日志(&amp;O)…</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10539"/>
-        <source>&amp;Compare Logs…</source>
-        <translation>对比日志(&amp;C)…</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10544"/>
-        <source>Run &amp;Lua Script…</source>
-        <translation>运行 Lua 脚本(&amp;L)…</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10552"/>
-        <location filename="../src/mainwindow.cpp" line="10567"/>
-        <source>Run Lua Script</source>
-        <translation>运行 Lua 脚本</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10553"/>
-        <source>Lua scripts (*.lua);;All files (*)</source>
-        <translation>Lua 脚本 (*.lua);;所有文件 (*)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="9861"/>
-        <location filename="../src/mainwindow.cpp" line="10568"/>
-        <source>Could not open %1</source>
-        <translation>无法打开 %1</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10581"/>
-        <source>Run Lua Script — consent required</source>
-        <translation>运行 Lua 脚本 — 需要授权</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10582"/>
-        <source>&lt;b&gt;About to execute:&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;</source>
-        <translation>&lt;b&gt;即将执行：&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10584"/>
-        <source>This Lua script will run with privileges to:&lt;ul&gt;&lt;li&gt;read and modify the active project&apos;s ROM bytes;&lt;/li&gt;&lt;li&gt;read, write, and delete files inside the project tree     and the system temp directory;&lt;/li&gt;&lt;li&gt;make HTTP requests to allowlisted hosts;&lt;/li&gt;&lt;li&gt;query the WOLS similarity catalog.&lt;/li&gt;&lt;/ul&gt;Code-execution paths (&lt;code&gt;os.execute&lt;/code&gt;, &lt;code&gt;io.popen&lt;/code&gt;, loading native libraries, &lt;code&gt;dofile&lt;/code&gt;) are &lt;b&gt;blocked&lt;/b&gt; by the sandbox.&lt;br&gt;&lt;br&gt;&lt;b&gt;Only run scripts from sources you trust.&lt;/b&gt;&lt;br&gt;SHA-256: &lt;code&gt;%1…&lt;/code&gt;</source>
-        <translation>此 Lua 脚本将以下列权限运行：&lt;ul&gt;&lt;li&gt;读取和修改活动项目的 ROM 字节；&lt;/li&gt;&lt;li&gt;读取、写入和删除项目目录及系统临时目录中的文件；&lt;/li&gt;&lt;li&gt;向允许列表中的主机发起 HTTP 请求；&lt;/li&gt;&lt;li&gt;查询 WOLS 相似度目录。&lt;/li&gt;&lt;/ul&gt;沙箱已 &lt;b&gt;阻止&lt;/b&gt; 代码执行路径（&lt;code&gt;os.execute&lt;/code&gt;、&lt;code&gt;io.popen&lt;/code&gt;、加载原生库、&lt;code&gt;dofile&lt;/code&gt;）。&lt;br&gt;&lt;br&gt;&lt;b&gt;仅运行来自您信任来源的脚本。&lt;/b&gt;&lt;br&gt;SHA-256：&lt;code&gt;%1…&lt;/code&gt;</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10599"/>
-        <source>Run once</source>
-        <translation>运行一次</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10601"/>
-        <source>Trust this script</source>
-        <translation>信任此脚本</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10621"/>
-        <source>Lua error</source>
-        <translation>Lua 错误</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10626"/>
-        <source>Lua output</source>
-        <translation>Lua 输出</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10636"/>
-        <source>&amp;Recent</source>
-        <translation>最近(&amp;R)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="10656"/>
-        <source>&amp;Clear list</source>
-        <translation>清除列表(&amp;C)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4715"/>
-        <location filename="../src/mainwindow.cpp" line="4869"/>
-        <location filename="../src/mainwindow.cpp" line="6668"/>
-        <location filename="../src/mainwindow.cpp" line="10012"/>
+        <location filename="../src/mainwindow.cpp" line="4798"/>
+        <location filename="../src/mainwindow.cpp" line="4952"/>
+        <location filename="../src/mainwindow.cpp" line="6811"/>
+        <location filename="../src/mainwindow.cpp" line="10612"/>
         <source>Cannot open file: %1</source>
         <translation>无法打开文件：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4725"/>
-        <location filename="../src/mainwindow.cpp" line="4878"/>
-        <location filename="../src/mainwindow.cpp" line="4894"/>
-        <location filename="../src/mainwindow.cpp" line="6676"/>
-        <location filename="../src/mainwindow.cpp" line="6682"/>
+        <location filename="../src/mainwindow.cpp" line="4808"/>
+        <location filename="../src/mainwindow.cpp" line="4961"/>
+        <location filename="../src/mainwindow.cpp" line="4977"/>
+        <location filename="../src/mainwindow.cpp" line="6819"/>
+        <location filename="../src/mainwindow.cpp" line="6825"/>
         <source>Import Error</source>
         <translation>导入错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4882"/>
+        <location filename="../src/mainwindow.cpp" line="4965"/>
         <source>Import completed with %1 warning(s)</source>
         <translation>导入完成，出现 %1 条警告</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="5142"/>
+        <location filename="../src/mainwindow.cpp" line="5225"/>
         <source>%n modules</source>
         <translation>
             <numerusform>%n 个模块</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5143"/>
+        <location filename="../src/mainwindow.cpp" line="5226"/>
         <source>Free</source>
         <translation>免费</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5181"/>
+        <location filename="../src/mainwindow.cpp" line="5264"/>
         <source>Sign in</source>
         <translation>登录</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5183"/>
+        <location filename="../src/mainwindow.cpp" line="5266"/>
         <source>Sign in to your account</source>
         <translation>登录您的账户</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5237"/>
+        <location filename="../src/mainwindow.cpp" line="5320"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5227"/>
-        <location filename="../src/mainwindow.cpp" line="5453"/>
+        <location filename="../src/mainwindow.cpp" line="5310"/>
+        <location filename="../src/mainwindow.cpp" line="5536"/>
         <source>Preferences</source>
         <translation>偏好设置</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5635"/>
+        <location filename="../src/mainwindow.cpp" line="4832"/>
+        <source>Import KP: no maps selected.</source>
+        <translation>导入 KP：未选择映射。</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="4924"/>
+        <source>All %1 selected maps were already present in the project.</source>
+        <translation>所选的 %1 个映射均已存在于项目中。</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="5718"/>
         <source>Recent projects</source>
         <translation>最近的项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6269"/>
+        <location filename="../src/mainwindow.cpp" line="6361"/>
         <source>Auto-detected  (%1)</source>
         <translation>自动检测  (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6373"/>
+        <location filename="../src/mainwindow.cpp" line="6465"/>
         <source>Scanning…</source>
         <translation>正在扫描…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6376"/>
+        <location filename="../src/mainwindow.cpp" line="6468"/>
         <source>Linked-ROM reference (ORI)</source>
         <translation>链接 ROM 参考 (ORI)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6379"/>
+        <location filename="../src/mainwindow.cpp" line="6471"/>
         <source>Linked-ROM child</source>
         <translation>链接 ROM 子项</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6385"/>
-        <location filename="../src/mainwindow.cpp" line="6411"/>
+        <location filename="../src/mainwindow.cpp" line="6477"/>
+        <location filename="../src/mainwindow.cpp" line="6503"/>
         <source>Saved</source>
         <translation>已保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6404"/>
+        <location filename="../src/mainwindow.cpp" line="6496"/>
         <source>Modified — autosave in %1s</source>
         <translation>已修改 — %1 秒后自动保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6413"/>
+        <location filename="../src/mainwindow.cpp" line="6505"/>
         <source>Saved · %1s ago</source>
         <translation>已保存 · %1 秒前</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6415"/>
+        <location filename="../src/mainwindow.cpp" line="6507"/>
         <source>Saved · %1m ago</source>
         <translation>已保存 · %1 分钟前</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6417"/>
+        <location filename="../src/mainwindow.cpp" line="6509"/>
         <source>Saved · %1h ago</source>
         <translation>已保存 · %1 小时前</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6700"/>
+        <location filename="../src/mainwindow.cpp" line="6843"/>
         <source>ROM files (*.bin *.hex *.rom *.ori *.bbf *.mot *.s19 *.mpc);;All files (*)</source>
         <translation>ROM 文件 (*.bin *.hex *.rom *.ori *.bbf *.mot *.s19 *.mpc);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6746"/>
+        <location filename="../src/mainwindow.cpp" line="6889"/>
         <source>Open RX14 Project</source>
         <translation>打开 RX14 项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6825"/>
-        <location filename="../src/mainwindow.cpp" line="6891"/>
+        <location filename="../src/mainwindow.cpp" line="6968"/>
+        <location filename="../src/mainwindow.cpp" line="7033"/>
         <source>Save &amp;&amp; Close</source>
         <translation>保存并关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2743"/>
-        <location filename="../src/mainwindow.cpp" line="7031"/>
-        <location filename="../src/mainwindow.cpp" line="9925"/>
+        <location filename="../src/mainwindow.cpp" line="2810"/>
+        <location filename="../src/mainwindow.cpp" line="7152"/>
+        <location filename="../src/mainwindow.cpp" line="10525"/>
         <source>Open a project with ROM data first.</source>
         <translation>请先打开一个包含 ROM 数据的项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7094"/>
+        <location filename="../src/mainwindow.cpp" line="7215"/>
         <source>Export Error</source>
         <translation>导出错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7102"/>
+        <location filename="../src/mainwindow.cpp" line="7223"/>
         <source>Could not write file: %1</source>
         <translation>无法写入文件：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7114"/>
+        <location filename="../src/mainwindow.cpp" line="7235"/>
         <source> — %1 warning(s)</source>
         <translation> — %1 条警告</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7713"/>
+        <location filename="../src/mainwindow.cpp" line="7992"/>
         <source>%1  |  %2  |  Addr: %3  |  %4×%5</source>
         <translation>%1  |  %2  |  地址：%3  |  %4×%5</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8221"/>
+        <location filename="../src/mainwindow.cpp" line="8494"/>
         <source>ROM files (*.bin *.hex *.rom *.mpc);;All files (*)</source>
         <translation>ROM 文件 (*.bin *.hex *.rom *.mpc);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8704"/>
+        <location filename="../src/mainwindow.cpp" line="9213"/>
         <source>ECU dumps (*.bin *.hex *.rom *.s19 *.srec *.s28 *.s37 *.mpc);;All files (*)</source>
         <translation>ECU 转储 (*.bin *.hex *.rom *.s19 *.srec *.s28 *.s37 *.mpc);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8804"/>
+        <location filename="../src/mainwindow.cpp" line="9313"/>
         <source>&lt;h3&gt;%1&lt;/h3&gt;</source>
         <translation>&lt;h3&gt;%1&lt;/h3&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8821"/>
+        <location filename="../src/mainwindow.cpp" line="9330"/>
         <source>No maps in active project</source>
         <translation>活动项目中无标定图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8822"/>
+        <location filename="../src/mainwindow.cpp" line="9331"/>
         <source>The currently active project has no map definitions to match against.
 
 Link ROM to Project works by taking the maps from the ACTIVE project (the reference) and locating them in the ROM you select.  So the active project must be the one WITH metadata — typically the .ols / .kp file, or a project that already has an A2L imported.
@@ -6093,17 +6510,17 @@ Workflow:
         <translation>当前活动项目没有标定图定义可用于匹配。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9002"/>
+        <location filename="../src/mainwindow.cpp" line="9510"/>
         <source>ROM files (*.bin *.hex *.rom *.ori *.mpc);;All files (*)</source>
         <translation>ROM 文件 (*.bin *.hex *.rom *.ori *.mpc);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9316"/>
+        <location filename="../src/mainwindow.cpp" line="9925"/>
         <source>Checksum OK — %1 (%2)</source>
         <translation>校验和正确 — %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9320"/>
+        <location filename="../src/mainwindow.cpp" line="9929"/>
         <source>✗ Checksum mismatch
 
 ECU: %1
@@ -6118,7 +6535,7 @@ ECU: %1
 请在刷写前使用「校正校验和」修复。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9325"/>
+        <location filename="../src/mainwindow.cpp" line="9934"/>
         <source>Checksum verification is not supported for this ECU.
 
 ECU: %1</source>
@@ -6127,7 +6544,7 @@ ECU: %1</source>
 ECU: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9327"/>
+        <location filename="../src/mainwindow.cpp" line="9936"/>
         <source>Native checksum verification unavailable for this ECU on macOS/Linux.
 
 ECU: %1</source>
@@ -6136,551 +6553,496 @@ ECU: %1</source>
 ECU: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9362"/>
-        <location filename="../src/mainwindow.cpp" line="9431"/>
+        <location filename="../src/mainwindow.cpp" line="9971"/>
+        <location filename="../src/mainwindow.cpp" line="10040"/>
         <source>Checksum corrected — %1 (%2)</source>
         <translation>校验和已修正 — %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9486"/>
+        <location filename="../src/mainwindow.cpp" line="10095"/>
         <source>open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9502"/>
+        <location filename="../src/mainwindow.cpp" line="10111"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9503"/>
+        <location filename="../src/mainwindow.cpp" line="10112"/>
         <source>Change UI language</source>
         <translation>更改界面语言</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9504"/>
+        <location filename="../src/mainwindow.cpp" line="10113"/>
         <source>Auto Save Mode</source>
         <translation>自动保存模式</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9505"/>
+        <location filename="../src/mainwindow.cpp" line="10114"/>
         <source>Off / After Delay / On Focus Change / On Window Deactivate</source>
         <translation>关闭 / 延迟后 / 焦点切换时 / 窗口失活时</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9506"/>
+        <location filename="../src/mainwindow.cpp" line="10115"/>
         <source>Byte Order</source>
         <translation>字节顺序</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9507"/>
+        <location filename="../src/mainwindow.cpp" line="10116"/>
         <source>Little Endian / Big Endian</source>
         <translation>小端 / 大端</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9508"/>
+        <location filename="../src/mainwindow.cpp" line="10117"/>
         <source>Theme &amp; Colors</source>
         <translation>主题和颜色</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9509"/>
+        <location filename="../src/mainwindow.cpp" line="10118"/>
         <source>Open Preferences → Colors</source>
         <translation>打开偏好设置 → 颜色</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3988"/>
-        <location filename="../src/mainwindow.cpp" line="4236"/>
-        <location filename="../src/mainwindow.cpp" line="4714"/>
-        <location filename="../src/mainwindow.cpp" line="4869"/>
-        <location filename="../src/mainwindow.cpp" line="5858"/>
-        <location filename="../src/mainwindow.cpp" line="6653"/>
-        <location filename="../src/mainwindow.cpp" line="6667"/>
-        <location filename="../src/mainwindow.cpp" line="6752"/>
-        <location filename="../src/mainwindow.cpp" line="6768"/>
-        <location filename="../src/mainwindow.cpp" line="6808"/>
-        <location filename="../src/mainwindow.cpp" line="7020"/>
-        <location filename="../src/mainwindow.cpp" line="7101"/>
-        <location filename="../src/mainwindow.cpp" line="9007"/>
-        <location filename="../src/mainwindow.cpp" line="9553"/>
-        <location filename="../src/mainwindow.cpp" line="10012"/>
+        <location filename="../src/mainwindow.cpp" line="4073"/>
+        <location filename="../src/mainwindow.cpp" line="4321"/>
+        <location filename="../src/mainwindow.cpp" line="4797"/>
+        <location filename="../src/mainwindow.cpp" line="4952"/>
+        <location filename="../src/mainwindow.cpp" line="5941"/>
+        <location filename="../src/mainwindow.cpp" line="6796"/>
+        <location filename="../src/mainwindow.cpp" line="6810"/>
+        <location filename="../src/mainwindow.cpp" line="6895"/>
+        <location filename="../src/mainwindow.cpp" line="6911"/>
+        <location filename="../src/mainwindow.cpp" line="6951"/>
+        <location filename="../src/mainwindow.cpp" line="7141"/>
+        <location filename="../src/mainwindow.cpp" line="7222"/>
+        <location filename="../src/mainwindow.cpp" line="9515"/>
+        <location filename="../src/mainwindow.cpp" line="10162"/>
+        <location filename="../src/mainwindow.cpp" line="10612"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1327"/>
-        <location filename="../src/mainwindow.cpp" line="3453"/>
+        <location filename="../src/mainwindow.cpp" line="1381"/>
+        <location filename="../src/mainwindow.cpp" line="3544"/>
         <source>All</source>
         <translation>全部</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1328"/>
-        <location filename="../src/mainwindow.cpp" line="3454"/>
-        <location filename="../src/mainwindow.cpp" line="6382"/>
+        <location filename="../src/mainwindow.cpp" line="1382"/>
+        <location filename="../src/mainwindow.cpp" line="3545"/>
+        <location filename="../src/mainwindow.cpp" line="6474"/>
         <source>Modified</source>
         <translation>已修改</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1329"/>
-        <location filename="../src/mainwindow.cpp" line="3455"/>
+        <location filename="../src/mainwindow.cpp" line="1383"/>
+        <location filename="../src/mainwindow.cpp" line="3546"/>
         <source>Starred</source>
         <translation>已收藏</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1330"/>
-        <location filename="../src/mainwindow.cpp" line="3456"/>
+        <location filename="../src/mainwindow.cpp" line="1384"/>
+        <location filename="../src/mainwindow.cpp" line="3547"/>
         <source>Recent</source>
         <translation>最近</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1339"/>
-        <location filename="../src/mainwindow.cpp" line="3457"/>
+        <location filename="../src/mainwindow.cpp" line="1393"/>
+        <location filename="../src/mainwindow.cpp" line="3548"/>
         <source>Values</source>
         <translation>数值</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1341"/>
-        <location filename="../src/mainwindow.cpp" line="3458"/>
+        <location filename="../src/mainwindow.cpp" line="1395"/>
+        <location filename="../src/mainwindow.cpp" line="3549"/>
         <source>Curves</source>
         <translation>曲线</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1343"/>
-        <location filename="../src/mainwindow.cpp" line="3459"/>
+        <location filename="../src/mainwindow.cpp" line="1397"/>
+        <location filename="../src/mainwindow.cpp" line="3550"/>
         <source>Maps</source>
         <translation>图表</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2493"/>
-        <location filename="../src/mainwindow.cpp" line="2972"/>
+        <location filename="../src/mainwindow.cpp" line="2560"/>
+        <location filename="../src/mainwindow.cpp" line="3057"/>
         <source>AI Assistant</source>
         <translation>AI 助手</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2496"/>
+        <location filename="../src/mainwindow.cpp" line="2563"/>
+        <location filename="../src/mainwindow.cpp" line="3057"/>
         <source>Show / hide the AI Assistant panel  (Ctrl+\)</source>
         <translation>显示/隐藏 AI 助手面板（Ctrl+\uff09</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4236"/>
+        <location filename="../src/mainwindow.cpp" line="4321"/>
         <source>Cannot open A2L file:
 </source>
         <translation>无法打开 A2L 文件：
 </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4279"/>
+        <location filename="../src/mainwindow.cpp" line="4364"/>
         <source>Parsing A2L file…</source>
         <translation>正在解析 A2L 文件…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="429"/>
         <source>Parsing A2L…  %1  (%2%)</source>
         <translation>正在解析 A2L…  %1（%2%）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4284"/>
+        <location filename="../src/mainwindow.cpp" line="4369"/>
         <source>Importing A2L</source>
         <translation>正在导入 A2L</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4285"/>
-        <location filename="../src/mainwindow.cpp" line="4295"/>
+        <location filename="../src/mainwindow.cpp" line="4370"/>
+        <location filename="../src/mainwindow.cpp" line="4380"/>
         <source>Parsing  %1…</source>
         <translation>正在解析  %1…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4296"/>
+        <location filename="../src/mainwindow.cpp" line="4381"/>
         <source>Reading RECORD_LAYOUTs…</source>
         <translation>正在读取 RECORD_LAYOUT…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4297"/>
+        <location filename="../src/mainwindow.cpp" line="4382"/>
         <source>Parsing CHARACTERISTIC blocks…</source>
         <translation>正在解析 CHARACTERISTIC 块…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4298"/>
+        <location filename="../src/mainwindow.cpp" line="4383"/>
         <source>Resolving COMPU_METHODs…</source>
         <translation>正在解析 COMPU_METHOD…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4299"/>
+        <location filename="../src/mainwindow.cpp" line="4384"/>
         <source>Building map list…</source>
         <translation>正在构建地图列表…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4352"/>
+        <location filename="../src/mainwindow.cpp" line="4437"/>
         <source>A2L import cancelled.</source>
         <translation>A2L 导入已取消。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6234"/>
+        <location filename="../src/mainwindow.cpp" line="6325"/>
         <source>This map has unsaved edits</source>
         <translation>此地图有未保存的编辑</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6738"/>
-        <location filename="../src/mainwindow.cpp" line="6765"/>
-        <location filename="../src/mainwindow.cpp" line="6789"/>
+        <location filename="../src/mainwindow.cpp" line="6881"/>
+        <location filename="../src/mainwindow.cpp" line="6908"/>
+        <location filename="../src/mainwindow.cpp" line="6932"/>
         <source>Project saved: </source>
         <translation>项目已保存：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6768"/>
-        <location filename="../src/mainwindow.cpp" line="6808"/>
+        <location filename="../src/mainwindow.cpp" line="6911"/>
+        <location filename="../src/mainwindow.cpp" line="6951"/>
         <source>Failed to save project.</source>
         <translation>保存项目失败。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6731"/>
-        <location filename="../src/mainwindow.cpp" line="6784"/>
-        <location filename="../src/mainwindow.cpp" line="6836"/>
-        <location filename="../src/mainwindow.cpp" line="8489"/>
-        <location filename="../src/mainwindow.cpp" line="8595"/>
-        <location filename="../src/mainwindow.cpp" line="9242"/>
+        <location filename="../src/mainwindow.cpp" line="6874"/>
+        <location filename="../src/mainwindow.cpp" line="6927"/>
+        <location filename="../src/mainwindow.cpp" line="6979"/>
+        <location filename="../src/mainwindow.cpp" line="8896"/>
+        <location filename="../src/mainwindow.cpp" line="9103"/>
+        <location filename="../src/mainwindow.cpp" line="9749"/>
         <source>Save Project As</source>
         <translation>项目另存为</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4396"/>
+        <location filename="../src/mainwindow.cpp" line="2988"/>
+        <source>Import a WinOLS project file (.ols)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2993"/>
+        <source>Export as WinOLS project file (.ols)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="4481"/>
         <source>EPK &quot;%1&quot; found in ROM</source>
         <translation>在 ROM 中找到 EPK &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4399"/>
+        <location filename="../src/mainwindow.cpp" line="4484"/>
         <source>EPK &quot;%1&quot; NOT found in ROM</source>
         <translation>在 ROM 中未找到 EPK &quot;%1&quot;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4402"/>
+        <location filename="../src/mainwindow.cpp" line="4487"/>
         <source>No EPK in A2L (skipped)</source>
         <translation>A2L 中无 EPK（已跳过）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4427"/>
+        <location filename="../src/mainwindow.cpp" line="4512"/>
         <source>Axis header check: %1% match (%2/%3)</source>
         <translation>轴标头检查：%1% 匹配（%2/%3）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4431"/>
+        <location filename="../src/mainwindow.cpp" line="4516"/>
         <source>Axis header check: skipped (no STD_AXIS maps)</source>
         <translation>轴标头检查：已跳过（无 STD_AXIS MAP）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4469"/>
+        <location filename="../src/mainwindow.cpp" line="4554"/>
         <source>MAP data smoothness: %1% (%2/%3 maps)</source>
         <translation>MAP 数据平滑度：%1%（%2/%3 个 MAP）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4473"/>
+        <location filename="../src/mainwindow.cpp" line="4558"/>
         <source>MAP data smoothness: skipped (not enough MAPs)</source>
         <translation>MAP 数据平滑度：已跳过（MAP 数量不足）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4491"/>
+        <location filename="../src/mainwindow.cpp" line="4576"/>
         <source>A2L Import Results</source>
         <translation>A2L 导入结果</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4507"/>
+        <location filename="../src/mainwindow.cpp" line="4592"/>
         <source>&lt;b&gt;A2L does not match this ROM&lt;/b&gt;</source>
         <translation>&lt;b&gt;A2L 与此 ROM 不匹配&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4508"/>
+        <location filename="../src/mainwindow.cpp" line="4593"/>
         <source>&lt;b&gt;A2L Import Complete&lt;/b&gt;</source>
         <translation>&lt;b&gt;A2L 导入完成&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4516"/>
+        <location filename="../src/mainwindow.cpp" line="4601"/>
         <source>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px;&apos;&gt;Total maps in A2L:&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;</source>
         <translation>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px;&apos;&gt;A2L 中 MAP 总数：&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4517"/>
+        <location filename="../src/mainwindow.cpp" line="4602"/>
         <source>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px; color:#3fb950;&apos;&gt;Valid (in ROM):&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt; (%2%)&lt;/td&gt;&lt;/tr&gt;</source>
         <translation>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px; color:#3fb950;&apos;&gt;有效（在 ROM 中）：&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt;（%2%）&lt;/td&gt;&lt;/tr&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4518"/>
+        <location filename="../src/mainwindow.cpp" line="4603"/>
         <source>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px; color:#ff7b72;&apos;&gt;Out of bounds:&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt; (%2%)&lt;/td&gt;&lt;/tr&gt;</source>
         <translation>&lt;tr&gt;&lt;td style=&apos;padding:2px 12px; color:#ff7b72;&apos;&gt;超出范围：&lt;/td&gt;&lt;td&gt;&lt;b&gt;%1&lt;/b&gt;（%2%）&lt;/td&gt;&lt;/tr&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4522"/>
+        <location filename="../src/mainwindow.cpp" line="4607"/>
         <source>&lt;tr&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;MAPs:&lt;/td&gt;&lt;td&gt;%1&lt;/td&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;CURVEs:&lt;/td&gt;&lt;td&gt;%2&lt;/td&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;VALUEs:&lt;/td&gt;&lt;td&gt;%3&lt;/td&gt;&lt;/tr&gt;</source>
         <translation>&lt;tr&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;MAP：&lt;/td&gt;&lt;td&gt;%1&lt;/td&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;CURVE：&lt;/td&gt;&lt;td&gt;%2&lt;/td&gt;&lt;td style=&apos;padding:1px 8px;&apos;&gt;VALUE：&lt;/td&gt;&lt;td&gt;%3&lt;/td&gt;&lt;/tr&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4543"/>
+        <location filename="../src/mainwindow.cpp" line="4628"/>
         <source>Compatibility</source>
         <translation>兼容性</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4553"/>
+        <location filename="../src/mainwindow.cpp" line="4638"/>
         <source>&lt;div style=&apos;background:rgba(255,123,114,0.1); border:1px solid rgba(255,123,114,0.3); border-radius:8px; padding:12px; margin:8px 0;&apos;&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;%2&lt;br&gt;&lt;br&gt;&lt;b&gt;%3&lt;/b&gt; %4&lt;/div&gt;</source>
         <translation>&lt;div style=&apos;background:rgba(255,123,114,0.1); border:1px solid rgba(255,123,114,0.3); border-radius:8px; padding:12px; margin:8px 0;&apos;&gt;&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;&lt;br&gt;%2&lt;br&gt;&lt;br&gt;&lt;b&gt;%3&lt;/b&gt; %4&lt;/div&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4559"/>
+        <location filename="../src/mainwindow.cpp" line="4644"/>
         <source>This A2L file does not match the loaded ROM.</source>
         <translation>此 A2L 文件与已加载的 ROM 不匹配。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4560"/>
+        <location filename="../src/mainwindow.cpp" line="4645"/>
         <source>Most map addresses point outside the ROM data, which means this A2L was created for a different firmware version.</source>
         <translation>大多数 MAP 地址指向 ROM 数据范围之外，这意味着此 A2L 是为不同的固件版本创建的。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4562"/>
+        <location filename="../src/mainwindow.cpp" line="4647"/>
         <source>Recommendation:</source>
         <translation>建议：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4563"/>
+        <location filename="../src/mainwindow.cpp" line="4648"/>
         <source>Import the A2L into the &lt;i&gt;original&lt;/i&gt; matching ROM file first, then use &lt;b&gt;Link ROM&lt;/b&gt; to transfer the maps to this file.</source>
         <translation>请先将 A2L 导入&lt;i&gt;原始&lt;/i&gt;匹配的 ROM 文件，然后使用&lt;b&gt;链接 ROM&lt;/b&gt;将 MAP 传输到此文件。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4573"/>
+        <location filename="../src/mainwindow.cpp" line="4658"/>
         <source>Import %1 valid maps anyway</source>
         <translation>仍然导入 %1 个有效 MAP</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4582"/>
+        <location filename="../src/mainwindow.cpp" line="4667"/>
         <source>Cancel import</source>
         <translation>取消导入</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4608"/>
+        <location filename="../src/mainwindow.cpp" line="4693"/>
         <source>No valid maps to import.</source>
         <translation>没有可导入的有效 MAP。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5859"/>
-        <location filename="../src/mainwindow.cpp" line="6752"/>
+        <location filename="../src/mainwindow.cpp" line="5942"/>
+        <location filename="../src/mainwindow.cpp" line="6895"/>
         <source>Failed to open project:
 %1</source>
         <translation>打开项目失败：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6132"/>
+        <location filename="../src/mainwindow.cpp" line="6215"/>
         <source>Linked ROMs</source>
         <translation>已链接 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6134"/>
+        <location filename="../src/mainwindow.cpp" line="6217"/>
         <source>Versions</source>
         <translation>版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6391"/>
+        <location filename="../src/mainwindow.cpp" line="6483"/>
         <source>ORI</source>
         <translation>原始</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6443"/>
+        <location filename="../src/mainwindow.cpp" line="6535"/>
         <source>Hexdump  </source>
         <translation>Hexdump  </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6455"/>
+        <location filename="../src/mainwindow.cpp" line="6547"/>
         <source>Linked ROMs  (%1)</source>
         <translation>已链接 ROM（%1）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6480"/>
+        <location filename="../src/mainwindow.cpp" line="6572"/>
         <source>Versions  (%1)</source>
         <translation>版本（%1）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6254"/>
+        <location filename="../src/mainwindow.cpp" line="6346"/>
         <source>My maps  (%1)</source>
         <translation>我的 MAP（%1）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6507"/>
+        <location filename="../src/mainwindow.cpp" line="6599"/>
         <source>Potential maps  (0)</source>
         <translation>候选 MAP（0）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6653"/>
-        <location filename="../src/mainwindow.cpp" line="9554"/>
+        <location filename="../src/mainwindow.cpp" line="6796"/>
+        <location filename="../src/mainwindow.cpp" line="10163"/>
         <source>Failed to open project:
 </source>
         <translation>无法打开项目：
 </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6732"/>
-        <location filename="../src/mainwindow.cpp" line="6747"/>
-        <location filename="../src/mainwindow.cpp" line="6786"/>
-        <location filename="../src/mainwindow.cpp" line="6838"/>
-        <location filename="../src/mainwindow.cpp" line="8492"/>
-        <location filename="../src/mainwindow.cpp" line="8596"/>
-        <location filename="../src/mainwindow.cpp" line="9170"/>
-        <location filename="../src/mainwindow.cpp" line="9244"/>
+        <location filename="../src/mainwindow.cpp" line="6875"/>
+        <location filename="../src/mainwindow.cpp" line="6890"/>
+        <location filename="../src/mainwindow.cpp" line="6929"/>
+        <location filename="../src/mainwindow.cpp" line="6981"/>
+        <location filename="../src/mainwindow.cpp" line="8899"/>
+        <location filename="../src/mainwindow.cpp" line="9104"/>
+        <location filename="../src/mainwindow.cpp" line="9677"/>
+        <location filename="../src/mainwindow.cpp" line="9751"/>
         <source>RX14 Projects (*.rx14proj);;All Files (*)</source>
         <translation>RX14 项目 (*.rx14proj);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9226"/>
+        <location filename="../src/mainwindow.cpp" line="9733"/>
         <source>Unsaved Changes</source>
         <translation>未保存的更改</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2732"/>
-        <location filename="../src/mainwindow.cpp" line="2742"/>
-        <location filename="../src/mainwindow.cpp" line="2753"/>
-        <location filename="../src/mainwindow.cpp" line="2775"/>
-        <location filename="../src/mainwindow.cpp" line="6931"/>
-        <location filename="../src/mainwindow.cpp" line="8816"/>
-        <location filename="../src/mainwindow.cpp" line="8996"/>
-        <location filename="../src/mainwindow.cpp" line="9045"/>
-        <location filename="../src/mainwindow.cpp" line="9094"/>
-        <location filename="../src/mainwindow.cpp" line="9274"/>
+        <location filename="../src/mainwindow.cpp" line="2799"/>
+        <location filename="../src/mainwindow.cpp" line="2809"/>
+        <location filename="../src/mainwindow.cpp" line="2820"/>
+        <location filename="../src/mainwindow.cpp" line="2842"/>
+        <location filename="../src/mainwindow.cpp" line="7052"/>
+        <location filename="../src/mainwindow.cpp" line="9325"/>
+        <location filename="../src/mainwindow.cpp" line="9504"/>
+        <location filename="../src/mainwindow.cpp" line="9553"/>
+        <location filename="../src/mainwindow.cpp" line="9602"/>
+        <location filename="../src/mainwindow.cpp" line="9882"/>
         <source>No project</source>
         <translation>无项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4169"/>
+        <location filename="../src/mainwindow.cpp" line="4254"/>
         <source>Scanning  %1  for maps…</source>
         <translation>正在扫描  %1  寻找映射图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4229"/>
+        <location filename="../src/mainwindow.cpp" line="4314"/>
         <source>Scanning ROM for maps in the background…</source>
         <translation>正在后台扫描 ROM 寻找映射图…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4863"/>
-        <source>Import WinOLS Project</source>
-        <translation>导入 OLS 项目</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4864"/>
-        <source>WinOLS files (*.ols *.kp);;All files (*)</source>
-        <translation>OLS 文件 (*.ols *.kp);;所有文件 (*)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4895"/>
-        <location filename="../src/mainwindow.cpp" line="6683"/>
-        <source>No Versions found in WinOLS file.</source>
-        <translation>在 OLS 文件中未找到版本。</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4959"/>
-        <source>Imported WinOLS project: %1 — %2 maps, %3 extra version(s)</source>
-        <translation>已导入 OLS 项目</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4964"/>
-        <source>Imported WinOLS project: %1 — %2 maps loaded</source>
-        <translation>已导入 OLS 项目</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="6932"/>
+        <location filename="../src/mainwindow.cpp" line="7053"/>
         <source>Open or create a project first.</source>
         <translation>请先打开或创建一个项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6960"/>
-        <location filename="../src/mainwindow.cpp" line="7011"/>
+        <location filename="../src/mainwindow.cpp" line="7081"/>
+        <location filename="../src/mainwindow.cpp" line="7132"/>
         <source>Export ROM</source>
         <translation>导出 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6963"/>
+        <location filename="../src/mainwindow.cpp" line="7084"/>
         <source>Select ROM version to export:</source>
         <translation>选择要导出的 ROM 版本:</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6966"/>
+        <location filename="../src/mainwindow.cpp" line="7087"/>
         <source>Current ROM (working)</source>
         <translation>当前 ROM（工作中）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7012"/>
+        <location filename="../src/mainwindow.cpp" line="7133"/>
         <source>ROM Files (*.bin *.rom);;All Files (*)</source>
         <translation>ROM 文件 (*.bin *.rom);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7018"/>
+        <location filename="../src/mainwindow.cpp" line="7139"/>
         <source>Exported ROM to: </source>
         <translation>ROM 已导出至：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7020"/>
+        <location filename="../src/mainwindow.cpp" line="7141"/>
         <source>Could not write file.</source>
         <translation>无法写入文件。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7030"/>
-        <source>Export WinOLS</source>
-        <translation>导出 OLS</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7058"/>
-        <source>Cannot Export to WinOLS</source>
-        <translation>无法导出为 OLS</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7059"/>
-        <source>This project cannot be exported to a WinOLS .ols file.</source>
-        <translation>此项目无法导出为 OLS .ols 文件。</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7061"/>
-        <source>WinOLS export requires the per-segment metadata that is only captured when importing an existing .ols file. This project was created from a raw ROM (HEX / BIN / SREC), so that metadata isn&apos;t available — WinOLS would reject the resulting file as corrupt.
-
-Alternatives:
-  • Save Project (.rx14proj) — preserves all your edits, maps and A2L data
-  • Export ROM (.bin) — writes the raw ROM bytes you can flash directly
-  • Re-import an existing .ols file as your starting point, then OLS export will work end-to-end</source>
-        <translation>OLS 导出需要按段元数据</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7086"/>
-        <source>Export WinOLS Project</source>
-        <translation>导出 OLS 项目</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7087"/>
-        <source>WinOLS files (*.ols);;All files (*)</source>
-        <translation>OLS 文件 (*.ols);;所有文件 (*)</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7108"/>
-        <source>Exported WinOLS project to: %1 (%2 bytes, %3 maps)</source>
-        <translation>已导出 OLS 项目</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="7151"/>
+        <location filename="../src/mainwindow.cpp" line="7343"/>
         <source>Compare</source>
         <translation>比较</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7152"/>
+        <location filename="../src/mainwindow.cpp" line="7344"/>
         <source>Open at least two projects to compare.</source>
         <translation>请至少打开两个项目进行比较。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7552"/>
+        <location filename="../src/mainwindow.cpp" line="7732"/>
         <source>Value not located — %1</source>
         <translation>值未定位 — %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7568"/>
+        <location filename="../src/mainwindow.cpp" line="7748"/>
         <source>Reference ROM value: &lt;b&gt;%1&lt;/b&gt; (0x%2)</source>
         <translation>参考 ROM 值：&lt;b&gt;%1&lt;/b&gt;（0x%2）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7572"/>
+        <location filename="../src/mainwindow.cpp" line="7752"/>
         <source>&lt;b&gt;%1&lt;/b&gt; could not be located in the linked ROM.</source>
         <translation>&lt;b&gt;%1&lt;/b&gt; 无法在已链接的 ROM 中定位。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7575"/>
+        <location filename="../src/mainwindow.cpp" line="7755"/>
         <source>The surrounding maps disagreed on the address shift, so RomHEX 14 cannot safely determine where this value lives in the target ROM.
 
 %1
@@ -6693,510 +7055,594 @@ Description: %2</source>
 描述：%2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7579"/>
+        <location filename="../src/mainwindow.cpp" line="7759"/>
         <source>(Reference ROM not available)</source>
         <translation>（参考 ROM 不可用）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="7758"/>
+        <location filename="../src/mainwindow.cpp" line="8024"/>
         <source>Map &quot;%1&quot; address 0x%2 is outside ROM bounds — skipped</source>
         <translation>MAP &quot;%1&quot; 地址 0x%2 超出 ROM 范围 — 已跳过</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8147"/>
+        <location filename="../src/mainwindow.cpp" line="8412"/>
         <source>Switch Version</source>
         <translation>切换版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8148"/>
+        <location filename="../src/mainwindow.cpp" line="8413"/>
         <source>Switch to version &lt;b&gt;%1&lt;/b&gt;?&lt;br&gt;Unsaved changes to the current ROM will be lost.</source>
         <translation>是否切换到版本 &lt;b&gt;%1&lt;/b&gt;？&lt;br&gt;当前 ROM 中未保存的更改将丢失。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8155"/>
+        <location filename="../src/mainwindow.cpp" line="8420"/>
         <source>Switched to version %1</source>
         <translation>已切换到版本 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6824"/>
-        <location filename="../src/mainwindow.cpp" line="6890"/>
-        <location filename="../src/mainwindow.cpp" line="8476"/>
+        <location filename="../src/mainwindow.cpp" line="6967"/>
+        <location filename="../src/mainwindow.cpp" line="7032"/>
+        <location filename="../src/mainwindow.cpp" line="8883"/>
         <source>This project has unsaved changes.</source>
         <translation>此项目有未保存的更改。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8477"/>
+        <location filename="../src/mainwindow.cpp" line="8884"/>
         <source>Save &amp; Close</source>
         <translation>保存并关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6826"/>
-        <location filename="../src/mainwindow.cpp" line="6892"/>
-        <location filename="../src/mainwindow.cpp" line="8478"/>
+        <location filename="../src/mainwindow.cpp" line="6969"/>
+        <location filename="../src/mainwindow.cpp" line="7034"/>
+        <location filename="../src/mainwindow.cpp" line="8885"/>
         <source>Close without saving</source>
         <translation>不保存关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2432"/>
-        <location filename="../src/mainwindow.cpp" line="2921"/>
-        <source>Cloud Tools (DTC &amp;&amp; Features)…</source>
-        <translation>云端工具 (DTC &amp;&amp; 功能)…</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4749"/>
-        <source>Import KP: no maps selected.</source>
-        <translation>导入 KP：未选择映射。</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="4841"/>
-        <source>All %1 selected maps were already present in the project.</source>
-        <translation>所选的 %1 个映射均已存在于项目中。</translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="5307"/>
+        <location filename="../src/mainwindow.cpp" line="5390"/>
         <source>romHEX 14</source>
         <translation>romHEX 14</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5322"/>
+        <location filename="../src/mainwindow.cpp" line="5405"/>
         <source>AI-assisted ECU calibration</source>
         <translation>AI 辅助 ECU 标定</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5379"/>
+        <location filename="../src/mainwindow.cpp" line="5462"/>
         <source>Drop a ROM file to start</source>
         <translation>拖放 ROM 文件以开始</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5392"/>
+        <location filename="../src/mainwindow.cpp" line="5475"/>
         <source>or click to browse</source>
         <translation>或点击浏览</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5408"/>
+        <location filename="../src/mainwindow.cpp" line="5491"/>
         <source>Supported: .hex .bin .rom .ori .s19 .mpc</source>
         <translation>支持的格式：.hex .bin .rom .ori .s19 .mpc</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1594"/>
-        <location filename="../src/mainwindow.cpp" line="5445"/>
+        <location filename="../src/mainwindow.cpp" line="1650"/>
+        <location filename="../src/mainwindow.cpp" line="5528"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5447"/>
+        <location filename="../src/mainwindow.cpp" line="3228"/>
+        <source>Data &amp;Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3234"/>
+        <source>Byte &amp;Order</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3238"/>
+        <source>&amp;Sign</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3242"/>
+        <source>Number &amp;Format</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3296"/>
+        <source>Find &amp;Map…</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="4934"/>
+        <source>Updated existing maps from %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="4938"/>
+        <source>; %1 data range(s) applied</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="5530"/>
         <source>New</source>
         <translation>新建</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5449"/>
+        <location filename="../src/mainwindow.cpp" line="5532"/>
         <source>Manager</source>
         <translation>管理器</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5451"/>
+        <location filename="../src/mainwindow.cpp" line="5534"/>
         <source>Find</source>
         <translation>查找</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5455"/>
+        <location filename="../src/mainwindow.cpp" line="5538"/>
         <source>Documentation</source>
         <translation>文档</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5465"/>
+        <location filename="../src/mainwindow.cpp" line="5548"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5649"/>
+        <location filename="../src/mainwindow.cpp" line="5732"/>
         <source>View all  →</source>
         <translation>查看全部  →</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5687"/>
+        <location filename="../src/mainwindow.cpp" line="5770"/>
         <source>today</source>
         <translation>今天</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5688"/>
+        <location filename="../src/mainwindow.cpp" line="5771"/>
         <source>yesterday</source>
         <translation>昨天</translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="5689"/>
+        <location filename="../src/mainwindow.cpp" line="5772"/>
         <source>%n days ago</source>
         <translation>
             <numerusform>%n 天前</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="5692"/>
+        <location filename="../src/mainwindow.cpp" line="5775"/>
         <source>%n weeks ago</source>
         <translation>
             <numerusform>%n 周前</numerusform>
         </translation>
     </message>
     <message numerus="yes">
-        <location filename="../src/mainwindow.cpp" line="5695"/>
+        <location filename="../src/mainwindow.cpp" line="5778"/>
         <source>%n months ago</source>
         <translation>
             <numerusform>%n 个月前</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5903"/>
+        <location filename="../src/mainwindow.cpp" line="5986"/>
         <source>No projects yet — drop a ROM above to begin.</source>
         <translation>暂无项目 — 拖放 ROM 到上方以开始。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="5928"/>
+        <location filename="../src/mainwindow.cpp" line="6011"/>
         <source>Recent maps</source>
         <translation>最近的映射图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6059"/>
+        <location filename="../src/mainwindow.cpp" line="6142"/>
         <source>CT14 Garage · Bangkok, Thailand · © 2026</source>
         <translation>CT14 Garage · 曼谷，泰国 · © 2026</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8763"/>
-        <source>No detector matched. The flash does not contain any of the 73 known ECU family anchors. (See RE/winOLS/winols_analysis/ECU_PATTERN_DB.json for the catalog.)</source>
-        <translation>没有匹配的检测器。</translation>
+        <location filename="../src/mainwindow.cpp" line="6390"/>
+        <source>Folder — use the arrow to expand or collapse</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8817"/>
+        <location filename="../src/mainwindow.cpp" line="7252"/>
+        <source>Save Workspace Layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7253"/>
+        <source>Layout name:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7300"/>
+        <source>No saved workspace layouts.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7304"/>
+        <source>Load Workspace Layout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7305"/>
+        <source>Layout:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7319"/>
+        <source>Saved workspace layout ‘%1’</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="7328"/>
+        <source>Restored workspace layout ‘%1’</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9326"/>
         <source>Please open a project with maps before linking a ROM.</source>
         <translation>请在链接ROM之前打开一个包含地图的项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8966"/>
+        <location filename="../src/mainwindow.cpp" line="9474"/>
         <source>  ⇔  Cursors are now synchronized.
        Click this button to unlink them.</source>
         <translation>  ⇔  光标已同步。
        点击此按钮可取消同步。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8986"/>
+        <location filename="../src/mainwindow.cpp" line="9494"/>
         <source>Linked ROM &apos;%1&apos; opened — %2/%3 maps located.</source>
         <translation>已打开链接ROM &apos;%1&apos; — 已定位%2/%3个地图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8996"/>
-        <location filename="../src/mainwindow.cpp" line="9045"/>
-        <location filename="../src/mainwindow.cpp" line="9094"/>
+        <location filename="../src/mainwindow.cpp" line="9504"/>
+        <location filename="../src/mainwindow.cpp" line="9553"/>
+        <location filename="../src/mainwindow.cpp" line="9602"/>
         <source>No active project.</source>
         <translation>没有活动项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9001"/>
+        <location filename="../src/mainwindow.cpp" line="9509"/>
         <source>Import ROM as Version</source>
         <translation>将ROM导入为版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9007"/>
+        <location filename="../src/mainwindow.cpp" line="9515"/>
         <source>Cannot open file:
 %1</source>
         <translation>无法打开文件：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9014"/>
+        <location filename="../src/mainwindow.cpp" line="9522"/>
         <source>Version Label</source>
         <translation>版本标签</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9015"/>
+        <location filename="../src/mainwindow.cpp" line="9523"/>
         <source>Enter a name for this ROM version:</source>
         <translation>请输入此ROM版本的名称：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9037"/>
+        <location filename="../src/mainwindow.cpp" line="9545"/>
         <source>Version &apos;%1&apos; imported from %2  (%3 bytes).</source>
         <translation>版本&apos;%1&apos;从%2导入（%3字节）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9049"/>
+        <location filename="../src/mainwindow.cpp" line="9557"/>
         <source>No ROM</source>
         <translation>没有ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9049"/>
+        <location filename="../src/mainwindow.cpp" line="9557"/>
         <source>The active project has no ROM data loaded.</source>
         <translation>活动项目没有加载ROM数据。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9059"/>
+        <location filename="../src/mainwindow.cpp" line="9567"/>
         <source>[Linked] %1</source>
         <translation>[已链接] %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9064"/>
+        <location filename="../src/mainwindow.cpp" line="9572"/>
         <source>[Version] %1  (%2)</source>
         <translation>[版本] %1  (%2)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9071"/>
+        <location filename="../src/mainwindow.cpp" line="9579"/>
         <source>Nothing to compare</source>
         <translation>没有可比较的内容</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9072"/>
+        <location filename="../src/mainwindow.cpp" line="9580"/>
         <source>No linked ROMs or saved versions found.
 Use &apos;Link ROM to Project…&apos; or &apos;Import ROM as Version…&apos; first.</source>
         <translation>未找到链接ROM或已保存版本。
 请先使用&quot;将ROM链接到项目…&quot;或&quot;将ROM导入为版本…&quot;。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9078"/>
+        <location filename="../src/mainwindow.cpp" line="9586"/>
         <source>Compare ROM</source>
         <translation>比较ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9079"/>
+        <location filename="../src/mainwindow.cpp" line="9587"/>
         <source>Select a ROM to compare against the current data:</source>
         <translation>选择一个ROM与当前数据进行比较：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9168"/>
+        <location filename="../src/mainwindow.cpp" line="9675"/>
         <source>Auto-save: choose a location for this project</source>
         <translation>自动保存：为此项目选择保存位置</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9188"/>
+        <location filename="../src/mainwindow.cpp" line="9695"/>
         <source>●  Modified</source>
         <translation>●  已修改</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9198"/>
+        <location filename="../src/mainwindow.cpp" line="9705"/>
         <source>✓  Saved</source>
         <translation>✓  已保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9199"/>
+        <location filename="../src/mainwindow.cpp" line="9706"/>
         <source>✓  Saved %1s ago</source>
         <translation>✓  %1 秒前已保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9200"/>
+        <location filename="../src/mainwindow.cpp" line="9707"/>
         <source>✓  Saved %1m ago</source>
         <translation>✓  %1 分钟前已保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9201"/>
+        <location filename="../src/mainwindow.cpp" line="9708"/>
         <source>✓  Saved %1h ago</source>
         <translation>✓  %1 小时前已保存</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9275"/>
+        <location filename="../src/mainwindow.cpp" line="9859"/>
+        <source>Display Changed</source>
+        <translation>显示器已更改</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9860"/>
+        <source>This display looks best at an interface scale of %1%. Restart romHEX14 now to apply it?</source>
+        <translation>此显示器在界面缩放 %1% 时效果最佳。现在重启 romHEX14 以应用吗？</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9865"/>
+        <source>Restart Now</source>
+        <translation>立即重启</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9866"/>
+        <source>Later</source>
+        <translation>稍后</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9883"/>
         <source>Open a project before importing a map pack.</source>
         <translation>请先打开项目再导入地图包。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3426"/>
-        <location filename="../src/mainwindow.cpp" line="3434"/>
+        <location filename="../src/mainwindow.cpp" line="3517"/>
+        <location filename="../src/mainwindow.cpp" line="3525"/>
         <source>&amp;Account / Sign in…</source>
         <translation>&amp;账号 / 登录…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3424"/>
-        <location filename="../src/mainwindow.cpp" line="3432"/>
+        <location filename="../src/mainwindow.cpp" line="3515"/>
+        <location filename="../src/mainwindow.cpp" line="3523"/>
         <source>&amp;Account: %1</source>
         <translation>&amp;账号：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2394"/>
-        <location filename="../src/mainwindow.cpp" line="2898"/>
+        <location filename="../src/mainwindow.cpp" line="2444"/>
+        <location filename="../src/mainwindow.cpp" line="2970"/>
         <source>Project Manager…</source>
         <translation>项目管理器…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6699"/>
+        <location filename="../src/mainwindow.cpp" line="6842"/>
         <source>Select ROM file</source>
         <translation>选择 ROM 文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="6712"/>
-        <location filename="../src/mainwindow.cpp" line="8582"/>
+        <location filename="../src/mainwindow.cpp" line="6855"/>
+        <location filename="../src/mainwindow.cpp" line="9090"/>
         <source>New Project — Import</source>
         <translation>新建项目 — 导入</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9228"/>
+        <location filename="../src/mainwindow.cpp" line="9735"/>
         <source>The following projects have unsaved changes:</source>
         <translation>以下项目存在未保存的更改：</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9230"/>
+        <location filename="../src/mainwindow.cpp" line="9737"/>
         <source>Save All &amp;&amp; Exit</source>
         <translation>全部保存并退出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9231"/>
+        <location filename="../src/mainwindow.cpp" line="9738"/>
         <source>Exit Without Saving</source>
         <translation>不保存退出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="997"/>
-        <location filename="../src/mainwindow.cpp" line="3450"/>
+        <location filename="../src/mainwindow.cpp" line="1051"/>
+        <location filename="../src/mainwindow.cpp" line="3541"/>
         <source>✦ AI Translate</source>
         <translation>✦ AI翻译</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1004"/>
+        <location filename="../src/mainwindow.cpp" line="1058"/>
         <source>Sign in to use AI map translation</source>
         <translation>登录以使用 AI 地图翻译</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1016"/>
+        <location filename="../src/mainwindow.cpp" line="1070"/>
         <source>AI Translation module not active</source>
         <translation>AI 翻译模块未激活</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1018"/>
+        <location filename="../src/mainwindow.cpp" line="1072"/>
         <source>Translate all map names using AI</source>
         <translation>使用 AI 翻译所有地图名称</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3409"/>
+        <location filename="../src/mainwindow.cpp" line="3500"/>
         <source>Check for &amp;Updates…</source>
         <translation>检查更新(&amp;U)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="550"/>
-        <location filename="../src/mainwindow.cpp" line="3485"/>
+        <location filename="../src/mainwindow.cpp" line="606"/>
+        <location filename="../src/mainwindow.cpp" line="3576"/>
         <source>Update available: &lt;b&gt;v%1&lt;/b&gt; — %2</source>
         <translation>有可用更新：&lt;b&gt;v%1&lt;/b&gt; — %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="626"/>
         <source>You are running the latest version (v%1).</source>
         <translation>您已在使用最新版本 (v%1)。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="557"/>
+        <location filename="../src/mainwindow.cpp" line="613"/>
         <source>Updates</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="588"/>
+        <location filename="../src/mainwindow.cpp" line="644"/>
         <source>Update Check Failed</source>
         <translation>检查更新失败</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="663"/>
+        <location filename="../src/mainwindow.cpp" line="719"/>
         <source>Download failed: %1</source>
         <translation>下载失败：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="671"/>
+        <location filename="../src/mainwindow.cpp" line="727"/>
         <source>Download failed: file too small (%1 bytes)</source>
         <translation>下载失败：文件太小（%1 字节）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="680"/>
+        <location filename="../src/mainwindow.cpp" line="736"/>
         <source>Failed to write installer to disk.</source>
         <translation>写入安装程序到磁盘失败。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="685"/>
+        <location filename="../src/mainwindow.cpp" line="741"/>
         <source>Launching installer…</source>
         <translation>正在启动安装程序…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="687"/>
+        <location filename="../src/mainwindow.cpp" line="743"/>
         <source>Failed to launch installer.</source>
         <translation>启动安装程序失败。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2753"/>
+        <location filename="../src/mainwindow.cpp" line="2820"/>
         <source>Open a project with A2L maps first.</source>
         <translation>请先打开包含 A2L 地图的项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2762"/>
+        <location filename="../src/mainwindow.cpp" line="2829"/>
         <source>No DTCs Found</source>
         <translation>未找到 DTC</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2433"/>
-        <location filename="../src/mainwindow.cpp" line="2922"/>
+        <location filename="../src/mainwindow.cpp" line="2483"/>
+        <location filename="../src/mainwindow.cpp" line="3003"/>
         <source>AI Functions…</source>
         <translation>AI 功能…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2779"/>
-        <location filename="../src/mainwindow.cpp" line="2784"/>
+        <location filename="../src/mainwindow.cpp" line="2846"/>
+        <location filename="../src/mainwindow.cpp" line="2851"/>
         <source>AI Functions</source>
         <translation>AI 功能</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2780"/>
+        <location filename="../src/mainwindow.cpp" line="2852"/>
+        <source>AI Functions requires a Pro account.
+Purchase from romhex14.com to unlock.</source>
+        <translation>AI 功能需要 Pro 账户。
+请在 romhex14.com 购买以解锁。</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="2847"/>
         <source>AI Functions requires map definitions.
 Import an A2L file first to define ECU maps.</source>
         <translation>AI 功能需要地图定义。
 请先导入 A2L 文件以定义 ECU 地图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2434"/>
-        <location filename="../src/mainwindow.cpp" line="2923"/>
-        <location filename="../src/mainwindow.cpp" line="9303"/>
-        <location filename="../src/mainwindow.cpp" line="9304"/>
-        <location filename="../src/mainwindow.cpp" line="9306"/>
-        <location filename="../src/mainwindow.cpp" line="9319"/>
-        <location filename="../src/mainwindow.cpp" line="9323"/>
-        <location filename="../src/mainwindow.cpp" line="9332"/>
+        <location filename="../src/mainwindow.cpp" line="2484"/>
+        <location filename="../src/mainwindow.cpp" line="3004"/>
+        <location filename="../src/mainwindow.cpp" line="9911"/>
+        <location filename="../src/mainwindow.cpp" line="9912"/>
+        <location filename="../src/mainwindow.cpp" line="9914"/>
+        <location filename="../src/mainwindow.cpp" line="9922"/>
+        <location filename="../src/mainwindow.cpp" line="9928"/>
+        <location filename="../src/mainwindow.cpp" line="9932"/>
+        <location filename="../src/mainwindow.cpp" line="9941"/>
         <source>Verify Checksum</source>
         <translation>校验和验证</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2435"/>
-        <location filename="../src/mainwindow.cpp" line="2924"/>
+        <location filename="../src/mainwindow.cpp" line="2485"/>
+        <location filename="../src/mainwindow.cpp" line="3005"/>
         <source>Correct Checksum…</source>
         <translation>修正校验和…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2436"/>
+        <location filename="../src/mainwindow.cpp" line="2486"/>
+        <location filename="../src/mainwindow.cpp" line="3061"/>
         <source>Verify the ROM checksum using the ECU-specific algorithm</source>
         <translation>使用 ECU 专用算法验证 ROM 校验和</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2437"/>
+        <location filename="../src/mainwindow.cpp" line="2487"/>
+        <location filename="../src/mainwindow.cpp" line="3062"/>
         <source>Recalculate and write the correct ROM checksum</source>
         <translation>重新计算并写入正确的 ROM 校验和</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2775"/>
-        <location filename="../src/mainwindow.cpp" line="9303"/>
-        <location filename="../src/mainwindow.cpp" line="9340"/>
-        <location filename="../src/mainwindow.cpp" line="9748"/>
-        <location filename="../src/mainwindow.cpp" line="9772"/>
+        <location filename="../src/mainwindow.cpp" line="2842"/>
+        <location filename="../src/mainwindow.cpp" line="9911"/>
+        <location filename="../src/mainwindow.cpp" line="9949"/>
+        <location filename="../src/mainwindow.cpp" line="10348"/>
+        <location filename="../src/mainwindow.cpp" line="10372"/>
         <source>Open a project first.</source>
         <translation>请先打开一个项目。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9304"/>
-        <location filename="../src/mainwindow.cpp" line="9341"/>
+        <location filename="../src/mainwindow.cpp" line="9912"/>
+        <location filename="../src/mainwindow.cpp" line="9950"/>
         <source>No ROM data loaded.</source>
         <translation>未加载 ROM 数据。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9332"/>
+        <location filename="../src/mainwindow.cpp" line="9941"/>
         <source>Checksum error: %1</source>
         <translation>校验和错误：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9340"/>
-        <location filename="../src/mainwindow.cpp" line="9341"/>
-        <location filename="../src/mainwindow.cpp" line="9343"/>
-        <location filename="../src/mainwindow.cpp" line="9346"/>
-        <location filename="../src/mainwindow.cpp" line="9365"/>
-        <location filename="../src/mainwindow.cpp" line="9374"/>
+        <location filename="../src/mainwindow.cpp" line="9949"/>
+        <location filename="../src/mainwindow.cpp" line="9950"/>
+        <location filename="../src/mainwindow.cpp" line="9952"/>
+        <location filename="../src/mainwindow.cpp" line="9955"/>
+        <location filename="../src/mainwindow.cpp" line="9974"/>
+        <location filename="../src/mainwindow.cpp" line="9983"/>
         <source>Correct Checksum</source>
         <translation>校正校验和</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9347"/>
+        <location filename="../src/mainwindow.cpp" line="9956"/>
         <source>Recalculate and write checksum for:
 
 ECU: %1
@@ -7211,7 +7657,7 @@ ECU: %1
 此操作修改内存中的ROM数据（导出前不会保存）。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9367"/>
+        <location filename="../src/mainwindow.cpp" line="9976"/>
         <source>Checksum correction is not supported for this ECU.
 
 ECU: %1</source>
@@ -7220,7 +7666,7 @@ ECU: %1</source>
 ECU: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9369"/>
+        <location filename="../src/mainwindow.cpp" line="9978"/>
         <source>Native checksum correction unavailable for this ECU on macOS/Linux.
 
 ECU: %1</source>
@@ -7229,66 +7675,66 @@ ECU: %1</source>
 ECU: %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9374"/>
+        <location filename="../src/mainwindow.cpp" line="9983"/>
         <source>Checksum correction failed: %1</source>
         <translation>校验和修正失败：%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2201"/>
+        <location filename="../src/mainwindow.cpp" line="2251"/>
         <source>&lt;b&gt;Translate group &quot;%1&quot; (%2 maps)&lt;/b&gt;</source>
         <translation>&lt;b&gt;翻译群组&quot;%1&quot;（%2 个地图）&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2234"/>
+        <location filename="../src/mainwindow.cpp" line="2284"/>
         <source>Translating group &quot;%1&quot;…</source>
         <translation>正在翻译群组&quot;%1&quot;…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="2286"/>
+        <location filename="../src/mainwindow.cpp" line="2336"/>
         <source>Translated %1 maps in group &quot;%2&quot;.</source>
         <translation>翻译了群组&quot;%2&quot;中的 %1 个地图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3313"/>
+        <location filename="../src/mainwindow.cpp" line="3401"/>
         <source>Auto-detect &amp;Maps…</source>
         <translation>自动检测映射图(&amp;M)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="3316"/>
+        <location filename="../src/mainwindow.cpp" line="3404"/>
         <source>Auto-detect &amp;ECU…</source>
         <translation>自动检测ECU(&amp;E)…</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8220"/>
+        <location filename="../src/mainwindow.cpp" line="8493"/>
         <source>Select ROM to scan</source>
         <translation>选择要扫描的 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="4116"/>
-        <location filename="../src/mainwindow.cpp" line="8225"/>
-        <location filename="../src/mainwindow.cpp" line="8233"/>
-        <location filename="../src/mainwindow.cpp" line="8243"/>
-        <location filename="../src/mainwindow.cpp" line="8267"/>
-        <location filename="../src/mainwindow.cpp" line="8347"/>
-        <location filename="../src/mainwindow.cpp" line="8386"/>
+        <location filename="../src/mainwindow.cpp" line="4201"/>
+        <location filename="../src/mainwindow.cpp" line="8498"/>
+        <location filename="../src/mainwindow.cpp" line="8506"/>
+        <location filename="../src/mainwindow.cpp" line="8516"/>
+        <location filename="../src/mainwindow.cpp" line="8540"/>
+        <location filename="../src/mainwindow.cpp" line="8620"/>
+        <location filename="../src/mainwindow.cpp" line="8659"/>
         <source>Auto-detect Maps</source>
         <translation>自动检测映射图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8226"/>
-        <location filename="../src/mainwindow.cpp" line="8710"/>
+        <location filename="../src/mainwindow.cpp" line="8499"/>
+        <location filename="../src/mainwindow.cpp" line="9219"/>
         <source>Could not open file:
 %1</source>
         <translation>无法打开文件：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8234"/>
+        <location filename="../src/mainwindow.cpp" line="8507"/>
         <source>ROM is empty — nothing to scan.</source>
         <translation>ROM 为空 — 无内容可扫描。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8240"/>
+        <location filename="../src/mainwindow.cpp" line="8513"/>
         <source>Scanning ROM for map candidates…
 Source: %1
 Size: %2 KB</source>
@@ -7297,92 +7743,92 @@ Size: %2 KB</source>
 大小：%2 KB</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8268"/>
+        <location filename="../src/mainwindow.cpp" line="8541"/>
         <source>No map candidates found in the ROM.</source>
         <translation>在 ROM 中未找到候选映射图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8274"/>
+        <location filename="../src/mainwindow.cpp" line="8547"/>
         <source>Auto-detected Map Candidates — %1 (%2)</source>
         <translation>自动检测到的候选映射图 — %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8279"/>
+        <location filename="../src/mainwindow.cpp" line="8552"/>
         <source>Found %1 candidate map(s). Select rows and click “Add selected” to create them in the active project.</source>
         <translation>找到 %1 个候选映射图。选择行并点击&quot;添加所选&quot;以在当前项目中创建它们。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1374"/>
-        <location filename="../src/mainwindow.cpp" line="3445"/>
-        <location filename="../src/mainwindow.cpp" line="8287"/>
+        <location filename="../src/mainwindow.cpp" line="1428"/>
+        <location filename="../src/mainwindow.cpp" line="3536"/>
+        <location filename="../src/mainwindow.cpp" line="8560"/>
         <source>Address</source>
         <translation>地址</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8287"/>
+        <location filename="../src/mainwindow.cpp" line="8560"/>
         <source>W × H</source>
         <translation>宽 × 高</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8288"/>
+        <location filename="../src/mainwindow.cpp" line="8561"/>
         <source>Bits</source>
         <translation>位数</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8288"/>
+        <location filename="../src/mainwindow.cpp" line="8561"/>
         <source>Score</source>
         <translation>分数</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8288"/>
+        <location filename="../src/mainwindow.cpp" line="8561"/>
         <source>Reason</source>
         <translation>原因</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8329"/>
+        <location filename="../src/mainwindow.cpp" line="8602"/>
         <source>Add selected to project</source>
         <translation>将所选添加到项目</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8330"/>
+        <location filename="../src/mainwindow.cpp" line="8603"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8334"/>
+        <location filename="../src/mainwindow.cpp" line="8607"/>
         <source>Open or create a project to import these maps.</source>
         <translation>请打开或创建一个项目以导入这些映射图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8348"/>
+        <location filename="../src/mainwindow.cpp" line="8621"/>
         <source>No rows selected.</source>
         <translation>未选择任何行。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8387"/>
+        <location filename="../src/mainwindow.cpp" line="8660"/>
         <source>Added %1 new map(s) to the project.</source>
         <translation>已向项目添加 %1 个新映射图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8702"/>
+        <location filename="../src/mainwindow.cpp" line="9211"/>
         <source>Select ROM to identify</source>
         <translation>选择要识别的 ROM</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8709"/>
-        <location filename="../src/mainwindow.cpp" line="8718"/>
-        <location filename="../src/mainwindow.cpp" line="8740"/>
-        <location filename="../src/mainwindow.cpp" line="8762"/>
+        <location filename="../src/mainwindow.cpp" line="9218"/>
+        <location filename="../src/mainwindow.cpp" line="9227"/>
+        <location filename="../src/mainwindow.cpp" line="9249"/>
+        <location filename="../src/mainwindow.cpp" line="9271"/>
         <source>Auto-detect ECU</source>
         <translation>自动检测 ECU</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8719"/>
+        <location filename="../src/mainwindow.cpp" line="9228"/>
         <source>ROM is empty — nothing to detect.</source>
         <translation>ROM 为空——无内容可检测。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8733"/>
+        <location filename="../src/mainwindow.cpp" line="9242"/>
         <source>Identifying ECU…
 Source: %1
 Size: %2 KB%3</source>
@@ -7391,69 +7837,176 @@ Size: %2 KB%3</source>
 大小：%2 KB%3</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8735"/>
+        <location filename="../src/mainwindow.cpp" line="9244"/>
         <source> (decoded from %1 to %2 KB)</source>
         <translation>（从 %1 解码为 %2 KB）</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8776"/>
+        <location filename="../src/mainwindow.cpp" line="9272"/>
+        <source>No detector matched. The flash does not contain any of the 73 known ECU family anchors. (See RE/winOLS/winols_analysis/ECU_PATTERN_DB.json for the catalog.)</source>
+        <translation>没有匹配的检测器。闪存不包含 73 个已知 ECU 系列锚点中的任何一个。（目录请参见 RE/winOLS/winols_analysis/ECU_PATTERN_DB.json。）</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="9285"/>
         <source>Family</source>
         <translation>系列</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8777"/>
+        <location filename="../src/mainwindow.cpp" line="9286"/>
         <source>Detector</source>
         <translation>检测器</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8778"/>
+        <location filename="../src/mainwindow.cpp" line="9287"/>
         <source>HW number</source>
         <translation>硬件编号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8779"/>
+        <location filename="../src/mainwindow.cpp" line="9288"/>
         <source>SW number</source>
         <translation>软件编号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8780"/>
+        <location filename="../src/mainwindow.cpp" line="9289"/>
         <source>SW version</source>
         <translation>软件版本</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8781"/>
+        <location filename="../src/mainwindow.cpp" line="9290"/>
         <source>Production no.</source>
         <translation>生产编号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8782"/>
+        <location filename="../src/mainwindow.cpp" line="9291"/>
         <source>HW alt number</source>
         <translation>硬件备用编号</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8783"/>
+        <location filename="../src/mainwindow.cpp" line="9292"/>
         <source>Engine code</source>
         <translation>发动机代码</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8785"/>
+        <location filename="../src/mainwindow.cpp" line="9294"/>
         <source>ID block offset</source>
         <translation>ID 块偏移</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8790"/>
+        <location filename="../src/mainwindow.cpp" line="9299"/>
         <source>Data areas</source>
         <translation>数据区</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8796"/>
+        <location filename="../src/mainwindow.cpp" line="9305"/>
         <source>Raw ID block</source>
         <translation>原始 ID 块</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="8801"/>
+        <location filename="../src/mainwindow.cpp" line="9310"/>
         <source>Auto-detect ECU — %1</source>
         <translation>自动检测 ECU — %1</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="3099"/>
+        <source>&amp;Datalog</source>
+        <translation>数据日志(&amp;D)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11122"/>
+        <location filename="../src/mainwindow.cpp" line="11130"/>
+        <location filename="../src/mainwindow.cpp" line="11262"/>
+        <source>Open datalog</source>
+        <translation>打开数据日志</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11123"/>
+        <source>Vehical logs (*.csv);;All files (*)</source>
+        <translation>Vehical 日志 (*.csv);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11131"/>
+        <location filename="../src/mainwindow.cpp" line="11263"/>
+        <source>Failed to open %1:
+%2</source>
+        <translation>无法打开 %1:
+%2</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11151"/>
+        <source>&amp;Open Log…</source>
+        <translation>打开日志(&amp;O)…</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11155"/>
+        <source>&amp;Compare Logs…</source>
+        <translation>对比日志(&amp;C)…</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11160"/>
+        <source>Run &amp;Lua Script…</source>
+        <translation>运行 Lua 脚本(&amp;L)…</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11168"/>
+        <location filename="../src/mainwindow.cpp" line="11183"/>
+        <source>Run Lua Script</source>
+        <translation>运行 Lua 脚本</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11169"/>
+        <source>Lua scripts (*.lua);;All files (*)</source>
+        <translation>Lua 脚本 (*.lua);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="10461"/>
+        <location filename="../src/mainwindow.cpp" line="11184"/>
+        <source>Could not open %1</source>
+        <translation>无法打开 %1</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11197"/>
+        <source>Run Lua Script — consent required</source>
+        <translation>运行 Lua 脚本 — 需要确认</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11198"/>
+        <source>&lt;b&gt;About to execute:&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation>&lt;b&gt;即将执行:&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11200"/>
+        <source>This Lua script will run with privileges to:&lt;ul&gt;&lt;li&gt;read and modify the active project&apos;s ROM bytes;&lt;/li&gt;&lt;li&gt;read, write, and delete files inside the project tree     and the system temp directory;&lt;/li&gt;&lt;li&gt;make HTTP requests to allowlisted hosts;&lt;/li&gt;&lt;li&gt;query the WOLS similarity catalog.&lt;/li&gt;&lt;/ul&gt;Code-execution paths (&lt;code&gt;os.execute&lt;/code&gt;, &lt;code&gt;io.popen&lt;/code&gt;, loading native libraries, &lt;code&gt;dofile&lt;/code&gt;) are &lt;b&gt;blocked&lt;/b&gt; by the sandbox.&lt;br&gt;&lt;br&gt;&lt;b&gt;Only run scripts from sources you trust.&lt;/b&gt;&lt;br&gt;SHA-256: &lt;code&gt;%1…&lt;/code&gt;</source>
+        <translation>此 Lua 脚本将以下列权限运行:&lt;ul&gt;&lt;li&gt;读取并修改当前项目的 ROM 字节;&lt;/li&gt;&lt;li&gt;读取、写入和删除项目目录及系统临时目录中的文件;&lt;/li&gt;&lt;li&gt;向白名单主机发起 HTTP 请求;&lt;/li&gt;&lt;li&gt;查询 WOLS 相似度目录。&lt;/li&gt;&lt;/ul&gt;代码执行路径(&lt;code&gt;os.execute&lt;/code&gt;、&lt;code&gt;io.popen&lt;/code&gt;、加载本地库、&lt;code&gt;dofile&lt;/code&gt;)已被沙箱&lt;b&gt;阻止&lt;/b&gt;。&lt;br&gt;&lt;br&gt;&lt;b&gt;仅运行来自您信任来源的脚本。&lt;/b&gt;&lt;br&gt;SHA-256:&lt;code&gt;%1…&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11215"/>
+        <source>Run once</source>
+        <translation>运行一次</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11217"/>
+        <source>Trust this script</source>
+        <translation>信任此脚本</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11237"/>
+        <source>Lua error</source>
+        <translation>Lua 错误</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11242"/>
+        <source>Lua output</source>
+        <translation>Lua 输出</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11252"/>
+        <source>&amp;Recent</source>
+        <translation>最近(&amp;R)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="11272"/>
+        <source>&amp;Clear list</source>
+        <translation>清除列表(&amp;C)</translation>
     </message>
 </context>
 <context>
@@ -7543,6 +8096,467 @@ Size: %2 KB%3</source>
     </message>
 </context>
 <context>
+    <name>MapEditorView</name>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="286"/>
+        <source>Map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="313"/>
+        <source>Cell:</source>
+        <translation type="unfinished">单元格：</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="317"/>
+        <location filename="../src/mapeditorview.cpp" line="1289"/>
+        <source>8-bit</source>
+        <translation type="unfinished">8 位</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="318"/>
+        <location filename="../src/mapeditorview.cpp" line="1290"/>
+        <source>16-bit</source>
+        <translation type="unfinished">16 位</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="319"/>
+        <location filename="../src/mapeditorview.cpp" line="1291"/>
+        <source>32-bit</source>
+        <translation type="unfinished">32 位</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="330"/>
+        <source>Order:</source>
+        <translation type="unfinished">字节序：</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="334"/>
+        <location filename="../src/mapeditorview.cpp" line="1297"/>
+        <source>Big Endian</source>
+        <translation type="unfinished">大端</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="335"/>
+        <location filename="../src/mapeditorview.cpp" line="1298"/>
+        <source>Little Endian</source>
+        <translation type="unfinished">小端</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="340"/>
+        <source>Cols:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="346"/>
+        <source>Visual columns only — does not change the map dimensions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="352"/>
+        <location filename="../src/mapeditorview.cpp" line="2576"/>
+        <source>Undo  Ctrl+Z</source>
+        <translation type="unfinished">撤销  Ctrl+Z</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="353"/>
+        <location filename="../src/mapeditorview.cpp" line="2578"/>
+        <source>Redo  Ctrl+Y</source>
+        <translation type="unfinished">重做  Ctrl+Y</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="361"/>
+        <source>Show original values (read-only)</source>
+        <translation type="unfinished">显示原始值（只读）</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="363"/>
+        <source>Heat</source>
+        <translation type="unfinished">热图</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="366"/>
+        <source>Toggle heat map coloring on/off</source>
+        <translation type="unfinished">开启/关闭热图着色</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="372"/>
+        <source>Toggle 3D view</source>
+        <translation type="unfinished">切换 3D 视图</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="377"/>
+        <source>3D Simulation View</source>
+        <translation type="unfinished">3D 仿真视图</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="386"/>
+        <location filename="../src/mapeditorview.cpp" line="1306"/>
+        <source>Values</source>
+        <translation type="unfinished">数值</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="387"/>
+        <location filename="../src/mapeditorview.cpp" line="1307"/>
+        <source>Raw Hex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="388"/>
+        <location filename="../src/mapeditorview.cpp" line="1308"/>
+        <source>Raw Dec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="389"/>
+        <location filename="../src/mapeditorview.cpp" line="1309"/>
+        <source>Δ Original</source>
+        <translation type="unfinished">Δ 原始</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="390"/>
+        <location filename="../src/mapeditorview.cpp" line="1310"/>
+        <source>% Original</source>
+        <translation type="unfinished">% 原始</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="392"/>
+        <location filename="../src/mapeditorview.cpp" line="1312"/>
+        <source>Show physical values, raw storage values, or differences from the original ROM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="404"/>
+        <location filename="../src/mapeditorview.cpp" line="437"/>
+        <source>Translate</source>
+        <translation type="unfinished">翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="405"/>
+        <source>AI-translate map name and description (Pro)</source>
+        <translation type="unfinished">使用 AI 翻译地图名称和描述（Pro）</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="419"/>
+        <source>AI map translation requires a Pro account</source>
+        <translation type="unfinished">AI 地图翻译需要 Pro 账户</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="430"/>
+        <source>…</source>
+        <translation type="unfinished">…</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="456"/>
+        <source>AI map explanation — what does this map do?</source>
+        <translation type="unfinished">AI地图说明 — 这个地图有什么作用？</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="497"/>
+        <source>Configure an AI provider in the AI assistant settings first.</source>
+        <translation type="unfinished">请先在AI助手设置中配置AI提供商。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="566"/>
+        <source>Analyzing map structure</source>
+        <translation type="unfinished">正在分析地图结构</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="567"/>
+        <source>Reading ECU parameters</source>
+        <translation type="unfinished">正在读取ECU参数</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="568"/>
+        <source>Consulting calibration database</source>
+        <translation type="unfinished">正在查询标定数据库</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="569"/>
+        <source>Cross-referencing complementary maps</source>
+        <translation type="unfinished">正在交叉引用关联地图</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="570"/>
+        <source>Generating explanation</source>
+        <translation type="unfinished">正在生成说明</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="571"/>
+        <source>Almost there</source>
+        <translation type="unfinished">马上就好</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="609"/>
+        <source>Streaming...</source>
+        <translation type="unfinished">正在接收...</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="626"/>
+        <source>Done</source>
+        <translation type="unfinished">完成</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="639"/>
+        <source>AI error: %1
+
+Please try again.</source>
+        <translation type="unfinished">AI错误：%1
+
+请重试。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="642"/>
+        <source>Error</source>
+        <translation type="unfinished">错误</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="668"/>
+        <source>Font size</source>
+        <translation type="unfinished">字体大小</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="689"/>
+        <source>Δ  </source>
+        <translation type="unfinished">Δ  </translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="695"/>
+        <source>value</source>
+        <translation type="unfinished">数值</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="706"/>
+        <source>Add %  —  new = old × (1 + Δ÷100)
+Applies to all selected cells</source>
+        <translation type="unfinished">加百分比  —  新 = 旧 × (1 + Δ÷100)
+应用于所有选定单元格</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="709"/>
+        <source>Add value  —  new = old + Δ
+Applies to all selected cells</source>
+        <translation type="unfinished">加值  —  新 = 旧 + Δ
+应用于所有选定单元格</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="712"/>
+        <source>Set value  —  new = Δ
+Applies to all selected cells
+Tip: select cells and press Enter to type directly</source>
+        <translation type="unfinished">设定值  —  新 = Δ
+应用于所有选定单元格
+提示：选定单元格后按 Enter 可直接输入</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="723"/>
+        <location filename="../src/mapeditorview.cpp" line="1316"/>
+        <source>Interp</source>
+        <translation type="unfinished">插值</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="726"/>
+        <location filename="../src/mapeditorview.cpp" line="1318"/>
+        <source>Interpolate the selected cells
+Fills a block bilinearly from its four corners; a single row or
+column is filled linearly between its ends. Select at least 3 cells.</source>
+        <translation type="unfinished">对所选单元格进行插值
+从四个角对块进行双线性填充；单行或单列在两端之间线性填充。请至少选择 3 个单元格。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="744"/>
+        <source>Select cells  ·  Enter to edit directly  ·  Shift+click / Ctrl+click for multi-select</source>
+        <translation type="unfinished">选择单元格  ·  Enter 直接编辑  ·  Shift+点击 / Ctrl+点击多选</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="842"/>
+        <source>Float to Desktop (Dual Monitor)  (Alt+F5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="844"/>
+        <source>Re-dock into Main Workspace  (Alt+F5)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="847"/>
+        <source>Properties…</source>
+        <translation type="unfinished">属性…</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="849"/>
+        <source>Copy selection</source>
+        <translation type="unfinished">复制选区</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="850"/>
+        <source>Paste values</source>
+        <translation type="unfinished">粘贴数值</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="852"/>
+        <source>Export to CSV…</source>
+        <translation type="unfinished">导出到 CSV…</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="886"/>
+        <source>Export CSV</source>
+        <translation type="unfinished">导出 CSV</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="944"/>
+        <source>Fix address…</source>
+        <translation type="unfinished">修正地址…</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="953"/>
+        <source>Set Correct Address — %1</source>
+        <translation type="unfinished">设置正确地址 — %1</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="958"/>
+        <source>&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;RomHEX 14 could not verify this map&apos;s location in the linked ROM.&lt;br&gt;Enter the correct hex address from a trusted source (e.g. DAMOS file, EEPROM editor).</source>
+        <translation type="unfinished">&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;RomHEX 14 无法验证此 MAP 在已链接 ROM 中的位置。&lt;br&gt;请从可信来源（例如 DAMOS 文件、EEPROM 编辑器）输入正确的十六进制地址。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="983"/>
+        <source>Invalid address</source>
+        <translation type="unfinished">无效地址</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="983"/>
+        <source>Could not parse address.</source>
+        <translation type="unfinished">无法解析地址。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="994"/>
+        <source>No map loaded</source>
+        <translation type="unfinished">未加载地图</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1225"/>
+        <source>⚠  RomHEX 14 cannot guarantee this data is correct (link confidence: %1%).  Verify before editing.</source>
+        <translation type="unfinished">⚠  RomHEX 14 无法保证此数据的正确性（链接置信度：%1%）。编辑前请核实。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1338"/>
+        <source>%1 — %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1368"/>
+        <source>%1 — not yet supported</source>
+        <translation type="unfinished">%1 — 暂不支持</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1434"/>
+        <source>Rows: %1  Cols: %2  Min: %3  Max: %4  Range: %5%6</source>
+        <translation type="unfinished">行: %1  列: %2  最小: %3  最大: %4  范围: %5%6</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1452"/>
+        <source>ORIGINAL  (read-only)</source>
+        <translation type="unfinished">原始数据  （只读）</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1561"/>
+        <source>[row %1, col %2]  =  %3  (raw 0x%4)</source>
+        <translation type="unfinished">[行 %1, 列 %2]  =  %3  (原始 0x%4)</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1679"/>
+        <source>Map edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1776"/>
+        <source>Clamp selected cells</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1777"/>
+        <source>One or more calculated values exceed this cell type&apos;s range and will be clamped. Continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1826"/>
+        <source>Interpolate needs at least 3 cells across a row, column, or block.</source>
+        <translation type="unfinished">插值需要在行、列或块中至少选择 3 个单元格。</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1935"/>
+        <source>Enter a finite numeric value, or press Esc to cancel.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1940"/>
+        <source>Clamp cell value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="1941"/>
+        <source>The entered value exceeds this cell&apos;s range and will be clamped. Continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2293"/>
+        <source>Clamp pasted cells</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2294"/>
+        <source>One or more pasted values exceed this cell type&apos;s range and will be clamped. Continue?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2576"/>
+        <location filename="../src/mapeditorview.cpp" line="2584"/>
+        <source>Nothing to undo</source>
+        <translation type="unfinished">无可撤销操作</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2578"/>
+        <location filename="../src/mapeditorview.cpp" line="2587"/>
+        <source>Nothing to redo</source>
+        <translation type="unfinished">无可重做操作</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2585"/>
+        <source>Undo (%1 steps)  Ctrl+Z</source>
+        <translation type="unfinished">撤销 (%1 步)  Ctrl+Z</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2588"/>
+        <source>Redo (%1 steps)  Ctrl+Y</source>
+        <translation type="unfinished">重做 (%1 步)  Ctrl+Y</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2602"/>
+        <source>Editing  —  value will be written to %1 selected cells  ·  Enter confirm  ·  Tab next column  ·  ↑↓ next row  ·  Esc cancel</source>
+        <translation type="unfinished">编辑中  —  将写入 %1 个选中单元格  ·  Enter 确认  ·  Tab 下一列  ·  ↑↓ 下一行  ·  Esc 取消</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2603"/>
+        <source>Editing  —  Enter to confirm  ·  Tab next column  ·  ↑↓ next row  ·  Esc cancel</source>
+        <translation type="unfinished">编辑中  —  Enter 确认  ·  Tab 下一列  ·  ↑↓ 下一行  ·  Esc 取消</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2612"/>
+        <source>Click a cell to select  ·  Shift+click or Ctrl+click for multi-select  ·  Enter or type to edit</source>
+        <translation type="unfinished">点击单元格选择  ·  Shift/Ctrl+点击多选  ·  Enter 或输入内容编辑</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2616"/>
+        <source>1 cell selected  [row %1, col %2]  ·  Enter or type to edit  ·  Ctrl+Z undo</source>
+        <translation type="unfinished">已选择 1 个单元格  [行 %1, 列 %2]  ·  Enter 或输入编辑  ·  Ctrl+Z 撤销</translation>
+    </message>
+    <message>
+        <location filename="../src/mapeditorview.cpp" line="2620"/>
+        <source>%1 cells selected  ·  Enter or type to set all to the same value  ·  Use Δ bar for +% or add  ·  Ctrl+Z undo</source>
+        <translation type="unfinished">已选择 %1 个单元格  ·  Enter 或输入内容将所有单元格设为相同值  ·  Δ 栏用于加百分比或加值  ·  Ctrl+Z 撤销</translation>
+    </message>
+</context>
+<context>
     <name>MapListWidget</name>
     <message>
         <location filename="../src/maplistwidget.cpp" line="98"/>
@@ -7607,400 +8621,6 @@ Size: %2 KB%3</source>
         <location filename="../src/maplistwidget.cpp" line="565"/>
         <source>%1 of %2 maps shown</source>
         <translation>显示 %1 / %2 张地图</translation>
-    </message>
-</context>
-<context>
-    <name>MapEditorView</name>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="284"/>
-        <source>Map</source>
-        <translation>地图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="311"/>
-        <source>Cell:</source>
-        <translation>单元格：</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="315"/>
-        <location filename="../src/mapoverlay.cpp" line="1229"/>
-        <source>8-bit</source>
-        <translation>8 位</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="316"/>
-        <location filename="../src/mapoverlay.cpp" line="1230"/>
-        <source>16-bit</source>
-        <translation>16 位</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="317"/>
-        <location filename="../src/mapoverlay.cpp" line="1231"/>
-        <source>32-bit</source>
-        <translation>32 位</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="328"/>
-        <source>Order:</source>
-        <translation>字节序：</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="332"/>
-        <location filename="../src/mapoverlay.cpp" line="1237"/>
-        <source>Big Endian</source>
-        <translation>大端</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="333"/>
-        <location filename="../src/mapoverlay.cpp" line="1238"/>
-        <source>Little Endian</source>
-        <translation>小端</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="340"/>
-        <location filename="../src/mapoverlay.cpp" line="2459"/>
-        <source>Undo  Ctrl+Z</source>
-        <translation>撤销  Ctrl+Z</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="341"/>
-        <location filename="../src/mapoverlay.cpp" line="2461"/>
-        <source>Redo  Ctrl+Y</source>
-        <translation>重做  Ctrl+Y</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="349"/>
-        <source>Show original values (read-only)</source>
-        <translation>显示原始值（只读）</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="360"/>
-        <source>Toggle 3D view</source>
-        <translation>切换 3D 视图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="365"/>
-        <source>3D Simulation View</source>
-        <translation>3D 仿真视图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="374"/>
-        <location filename="../src/mapoverlay.cpp" line="1246"/>
-        <source>Values</source>
-        <translation>数值</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="375"/>
-        <location filename="../src/mapoverlay.cpp" line="1247"/>
-        <source>Δ Original</source>
-        <translation>Δ 原始</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="376"/>
-        <location filename="../src/mapoverlay.cpp" line="1248"/>
-        <source>% Original</source>
-        <translation>% 原始</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="378"/>
-        <location filename="../src/mapoverlay.cpp" line="1250"/>
-        <source>Show plain values, or the numeric difference from the original ROM</source>
-        <translation>显示原始数值，或相对于原始 ROM 的数值差异</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="654"/>
-        <source>Font size</source>
-        <translation>字体大小</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="675"/>
-        <source>Δ  </source>
-        <translation>Δ  </translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="681"/>
-        <source>value</source>
-        <translation>数值</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="692"/>
-        <source>Add %  —  new = old × (1 + Δ÷100)
-Applies to all selected cells</source>
-        <translation>加百分比  —  新 = 旧 × (1 + Δ÷100)
-应用于所有选定单元格</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="695"/>
-        <source>Add value  —  new = old + Δ
-Applies to all selected cells</source>
-        <translation>加值  —  新 = 旧 + Δ
-应用于所有选定单元格</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="698"/>
-        <source>Set value  —  new = Δ
-Applies to all selected cells
-Tip: select cells and press Enter to type directly</source>
-        <translation>设定值  —  新 = Δ
-应用于所有选定单元格
-提示：选定单元格后按 Enter 可直接输入</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="709"/>
-        <location filename="../src/mapoverlay.cpp" line="1254"/>
-        <source>Interp</source>
-        <translation>插值</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="712"/>
-        <location filename="../src/mapoverlay.cpp" line="1256"/>
-        <source>Interpolate the selected cells
-Fills a block bilinearly from its four corners; a single row or
-column is filled linearly between its ends. Select at least 3 cells.</source>
-        <translation>对所选单元格进行插值
-从四个角对块进行双线性填充；单行或单列在两端之间线性填充。请至少选择 3 个单元格。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="730"/>
-        <source>Select cells  ·  Enter to edit directly  ·  Shift+click / Ctrl+click for multi-select</source>
-        <translation>选择单元格  ·  Enter 直接编辑  ·  Shift+点击 / Ctrl+点击多选</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="927"/>
-        <source>&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;RomHEX 14 could not verify this map&apos;s location in the linked ROM.&lt;br&gt;Enter the correct hex address from a trusted source (e.g. DAMOS file, EEPROM editor).</source>
-        <translation>&lt;b&gt;%1&lt;/b&gt;&lt;br&gt;RomHEX 14 无法验证此 MAP 在已链接 ROM 中的位置。&lt;br&gt;请从可信来源（例如 DAMOS 文件、EEPROM 编辑器）输入正确的十六进制地址。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="963"/>
-        <source>No map loaded</source>
-        <translation>未加载地图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1169"/>
-        <source>⚠  RomHEX 14 cannot guarantee this data is correct (link confidence: %1%).  Verify before editing.</source>
-        <translation>⚠  RomHEX 14 无法保证此数据的正确性（链接置信度：%1%）。编辑前请核实。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1302"/>
-        <source>%1 — %2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1329"/>
-        <source>%1 — not yet supported</source>
-        <translation>%1 — 尚未支持</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1395"/>
-        <source>Rows: %1  Cols: %2  Min: %3  Max: %4  Range: %5%6</source>
-        <translation>行: %1  列: %2  最小: %3  最大: %4  范围: %5%6</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1413"/>
-        <source>ORIGINAL  (read-only)</source>
-        <translation>原始数据  （只读）</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1631"/>
-        <source>Map edit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1785"/>
-        <source>Interpolate needs at least 3 cells across a row, column, or block.</source>
-        <translation>插值需要在行、列或块中至少选择 3 个单元格。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2468"/>
-        <source>Undo (%1 steps)  Ctrl+Z</source>
-        <translation>撤销 (%1 步)  Ctrl+Z</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2471"/>
-        <source>Redo (%1 steps)  Ctrl+Y</source>
-        <translation>重做 (%1 步)  Ctrl+Y</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2486"/>
-        <source>Editing  —  value will be written to %1 selected cells  ·  Enter confirm  ·  Tab next column  ·  ↑↓ next row  ·  Esc cancel</source>
-        <translation>编辑中  —  将写入 %1 个选中单元格  ·  Enter 确认  ·  Tab 下一列  ·  ↑↓ 下一行  ·  Esc 取消</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2487"/>
-        <source>Editing  —  Enter to confirm  ·  Tab next column  ·  ↑↓ next row  ·  Esc cancel</source>
-        <translation>编辑中  —  Enter 确认  ·  Tab 下一列  ·  ↑↓ 下一行  ·  Esc 取消</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2497"/>
-        <source>Click a cell to select  ·  Shift+click or Ctrl+click for multi-select  ·  Enter or type to edit</source>
-        <translation>点击单元格选择  ·  Shift/Ctrl+点击多选  ·  Enter 或输入内容编辑</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2501"/>
-        <source>1 cell selected  [row %1, col %2]  ·  Enter or type to edit  ·  Ctrl+Z undo</source>
-        <translation>已选择 1 个单元格  [行 %1, 列 %2]  ·  Enter 或输入编辑  ·  Ctrl+Z 撤销</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2505"/>
-        <source>%1 cells selected  ·  Enter or type to set all to the same value  ·  Use Δ bar for +% or add  ·  Ctrl+Z undo</source>
-        <translation>已选择 %1 个单元格  ·  Enter 或输入内容将所有单元格设为相同值  ·  Δ 栏用于加百分比或加值  ·  Ctrl+Z 撤销</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="1508"/>
-        <source>[row %1, col %2]  =  %3  (raw 0x%4)</source>
-        <translation>[行 %1, 列 %2]  =  %3  (原始 0x%4)</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2459"/>
-        <location filename="../src/mapoverlay.cpp" line="2467"/>
-        <source>Nothing to undo</source>
-        <translation>无可撤销操作</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="2461"/>
-        <location filename="../src/mapoverlay.cpp" line="2470"/>
-        <source>Nothing to redo</source>
-        <translation>无可重做操作</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="390"/>
-        <location filename="../src/mapoverlay.cpp" line="423"/>
-        <source>Translate</source>
-        <translation>翻译</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="391"/>
-        <source>AI-translate map name and description (Pro)</source>
-        <translation>使用 AI 翻译地图名称和描述（Pro）</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="405"/>
-        <source>AI map translation requires a Pro account</source>
-        <translation>AI 地图翻译需要 Pro 账户</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="416"/>
-        <source>…</source>
-        <translation>…</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="820"/>
-        <source>Properties…</source>
-        <translation>属性…</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="822"/>
-        <source>Copy selection</source>
-        <translation>复制选择</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="823"/>
-        <source>Paste values</source>
-        <translation>粘贴数值</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="825"/>
-        <source>Export to CSV…</source>
-        <translation>导出到 CSV…</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="855"/>
-        <source>Export CSV</source>
-        <translation>导出 CSV</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="913"/>
-        <source>Fix address…</source>
-        <translation>修正地址…</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="922"/>
-        <source>Set Correct Address — %1</source>
-        <translation>设置正确地址 — %1</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="952"/>
-        <source>Invalid address</source>
-        <translation>无效地址</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="952"/>
-        <source>Could not parse address.</source>
-        <translation>无法解析地址。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="351"/>
-        <source>Heat</source>
-        <translation>热图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="354"/>
-        <source>Toggle heat map coloring on/off</source>
-        <translation>开启/关闭热图着色</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="552"/>
-        <source>Analyzing map structure</source>
-        <translation>正在分析地图结构</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="553"/>
-        <source>Reading ECU parameters</source>
-        <translation>正在读取ECU参数</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="554"/>
-        <source>Consulting calibration database</source>
-        <translation>正在查询标定数据库</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="555"/>
-        <source>Cross-referencing complementary maps</source>
-        <translation>正在交叉引用关联地图</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="556"/>
-        <source>Generating explanation</source>
-        <translation>正在生成说明</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="557"/>
-        <source>Almost there</source>
-        <translation>马上就好</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="442"/>
-        <source>AI map explanation — what does this map do?</source>
-        <translation>AI地图说明 — 这个地图有什么作用？</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="483"/>
-        <source>Configure an AI provider in the AI assistant settings first.</source>
-        <translation>请先在AI助手设置中配置AI提供商。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="625"/>
-        <source>AI error: %1
-
-Please try again.</source>
-        <translation>AI错误：%1
-
-请重试。</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="595"/>
-        <source>Streaming...</source>
-        <translation>正在接收...</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="612"/>
-        <source>Done</source>
-        <translation>完成</translation>
-    </message>
-    <message>
-        <location filename="../src/mapoverlay.cpp" line="628"/>
-        <source>Error</source>
-        <translation>错误</translation>
     </message>
 </context>
 <context>
@@ -9098,12 +9718,12 @@ Link a ROM first via the Compare menu.</source>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="227"/>
         <source>Local Projects</source>
-        <translation>Local Projects</translation>
+        <translation>本地项目</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="228"/>
         <source>WOLS Catalog</source>
-        <translation>WOLS Catalog</translation>
+        <translation>WOLS 目录</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="291"/>
@@ -9182,112 +9802,112 @@ Link a ROM first via the Compare menu.</source>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="471"/>
         <source>Source:</source>
-        <translation>Source:</translation>
+        <translation>来源：</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="474"/>
         <source>Settings…</source>
-        <translation>Settings…</translation>
+        <translation>设置…</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="475"/>
         <source>Configure WOLS catalog roots and per-cache folder mapping</source>
-        <translation>Configure WOLS catalog roots and per-cache folder mapping</translation>
+        <translation>配置 WOLS 目录根和缓存文件夹映射</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="478"/>
         <source>Re-scan WOLS catalog folders</source>
-        <translation>Re-scan WOLS catalog folders</translation>
+        <translation>重新扫描 WOLS 目录文件夹</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="479"/>
         <source>Build similarity index…</source>
-        <translation>Build similarity index…</translation>
+        <translation>构建相似度索引…</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="480"/>
         <source>Walk every .ols / .kp / .bin under the configured roots and compute a fuzzy fingerprint for each.  Required for the Find Similar Files feature.  May take hours for terabyte collections; can be paused and resumed.</source>
-        <translation>Walk every .ols / .kp / .bin under the configured roots and compute a fuzzy fingerprint for each.  Required for the Find Similar Files feature.  May take hours for terabyte collections; can be paused and resumed.</translation>
+        <translation>遍历已配置根目录下的每个 .ols / .kp / .bin 并计算模糊指纹。这是&quot;查找相似文件&quot;功能的必要条件。对于 TB 级文件集可能需要数小时；可暂停和恢复。</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="493"/>
         <source>Search:</source>
-        <translation>Search:</translation>
+        <translation>搜索：</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="495"/>
         <source>e.g. BMW 320d EDC17</source>
-        <translation>e.g. BMW 320d EDC17</translation>
+        <translation>例如 BMW 320d EDC17</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="505"/>
         <source>Make</source>
-        <translation>Make</translation>
+        <translation>品牌</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="505"/>
         <source>Model</source>
-        <translation>Model</translation>
+        <translation>型号</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="505"/>
         <source>Engine</source>
-        <translation>Engine</translation>
+        <translation>发动机</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="506"/>
         <source>Power</source>
-        <translation>Power</translation>
+        <translation>功率</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="506"/>
         <source>ECU make</source>
-        <translation>ECU make</translation>
+        <translation>ECU 品牌</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="506"/>
         <source>ECU model</source>
-        <translation>ECU model</translation>
+        <translation>ECU 型号</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="507"/>
         <source>File</source>
-        <translation>File</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="507"/>
         <source>Versions</source>
-        <translation>Versions</translation>
+        <translation>版本</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="565"/>
         <source>(no Cache_*.db found — configure roots)</source>
-        <translation>(no Cache_*.db found — configure roots)</translation>
+        <translation>（未找到 Cache_*.db — 请配置根目录）</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="567"/>
         <source>Set WOLS catalog roots in Settings</source>
-        <translation>Set WOLS catalog roots in Settings</translation>
+        <translation>在设置中配置 WOLS 目录根</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="587"/>
         <source>Error: %1</source>
-        <translation>Error: %1</translation>
+        <translation>错误：%1</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="616"/>
         <source>%1 records</source>
-        <translation>%1 records</translation>
+        <translation>%1 条记录</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="638"/>
         <source>%1 / %2 records</source>
-        <translation>%1 / %2 records</translation>
+        <translation>%1 / %2 条记录</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="664"/>
         <source>WOLS catalog</source>
-        <translation>WOLS catalog</translation>
+        <translation>WOLS 目录</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="665"/>
@@ -9307,7 +9927,7 @@ Use Settings to map %3 to its source folder, or add a scan-fallback root.</trans
         <location filename="../src/projectmanagerdlg.cpp" line="694"/>
         <location filename="../src/projectmanagerdlg.cpp" line="705"/>
         <source>WOLS Catalog settings</source>
-        <translation>WOLS Catalog settings</translation>
+        <translation>WOLS 目录设置</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="682"/>
@@ -9343,12 +9963,12 @@ Total scan-fallback roots: %3.</translation>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="719"/>
         <source>Pick a WinOLS database folder (contains Cache_*.db)</source>
-        <translation>Pick a WinOLS database folder (contains Cache_*.db)</translation>
+        <translation>选择 WinOLS 数据库文件夹（包含 Cache_*.db）</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="729"/>
         <source>Pick the source folder for %1 (contains the .ols files)</source>
-        <translation>Pick the source folder for %1 (contains the .ols files)</translation>
+        <translation>选择 %1 的源文件夹（包含 .ols 文件）</translation>
     </message>
     <message>
         <location filename="../src/projectmanagerdlg.cpp" line="299"/>
@@ -9869,14 +10489,14 @@ defined</source>
     <name>ProjectView</name>
     <message>
         <location filename="../src/projectview.cpp" line="42"/>
-        <location filename="../src/projectview.cpp" line="272"/>
-        <location filename="../src/projectview.cpp" line="625"/>
+        <location filename="../src/projectview.cpp" line="271"/>
+        <location filename="../src/projectview.cpp" line="605"/>
         <source>No project</source>
         <translation>无项目</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="54"/>
-        <location filename="../src/projectview.cpp" line="626"/>
+        <location filename="../src/projectview.cpp" line="606"/>
         <source>Version:</source>
         <translation>版本：</translation>
     </message>
@@ -9887,7 +10507,7 @@ defined</source>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="62"/>
-        <location filename="../src/projectview.cpp" line="627"/>
+        <location filename="../src/projectview.cpp" line="607"/>
         <source>+ Version</source>
         <translation>+ 版本</translation>
     </message>
@@ -9898,7 +10518,7 @@ defined</source>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="68"/>
-        <location filename="../src/projectview.cpp" line="628"/>
+        <location filename="../src/projectview.cpp" line="608"/>
         <source>Compare with:</source>
         <translation>与以下内容比较：</translation>
     </message>
@@ -9909,47 +10529,47 @@ defined</source>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="78"/>
-        <location filename="../src/projectview.cpp" line="629"/>
+        <location filename="../src/projectview.cpp" line="609"/>
         <source>Go to:</source>
         <translation>转到：</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="110"/>
-        <location filename="../src/projectview.cpp" line="631"/>
+        <location filename="../src/projectview.cpp" line="611"/>
         <source>Text</source>
         <translation>文本</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="111"/>
-        <location filename="../src/projectview.cpp" line="632"/>
+        <location filename="../src/projectview.cpp" line="612"/>
         <source>2d</source>
         <translation>2D</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="112"/>
-        <location filename="../src/projectview.cpp" line="633"/>
+        <location filename="../src/projectview.cpp" line="613"/>
         <source>3d</source>
         <translation>3D</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="144"/>
         <source>Open &quot;Current (working)&quot; in new window</source>
-        <translation>Open &quot;Current (working)&quot; in new window</translation>
+        <translation>在新窗口中打开&quot;当前（工作版本）&quot;</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="151"/>
         <source>Version %1</source>
-        <translation>Version %1</translation>
+        <translation>版本 %1</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="154"/>
         <source>Open &quot;%1&quot; in new window</source>
-        <translation>Open &quot;%1&quot; in new window</translation>
+        <translation>在新窗口中打开 &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="160"/>
         <source>(no extra versions)</source>
-        <translation>(no extra versions)</translation>
+        <translation>（无额外版本）</translation>
     </message>
     <message>
         <location filename="../src/projectview.cpp" line="194"/>
@@ -9977,86 +10597,86 @@ defined</source>
         <translation>Ctrl+3</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="451"/>
+        <location filename="../src/projectview.cpp" line="431"/>
         <source>★  Current (working)</source>
         <translation>★  当前（工作中）</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="462"/>
+        <location filename="../src/projectview.cpp" line="442"/>
         <source>Restore Version</source>
         <translation>恢复版本</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="464"/>
+        <location filename="../src/projectview.cpp" line="444"/>
         <source>Restore snapshot &lt;b&gt;%1&lt;/b&gt;?</source>
         <translation>恢复快照 &lt;b&gt;%1&lt;/b&gt;？</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="466"/>
+        <location filename="../src/projectview.cpp" line="446"/>
         <source>Unsaved changes to the current ROM will be lost.</source>
         <translation>当前 ROM 中未保存的更改将丢失。</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="467"/>
+        <location filename="../src/projectview.cpp" line="447"/>
         <source>Discard &amp;&amp; Restore</source>
         <translation>放弃并恢复</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="486"/>
+        <location filename="../src/projectview.cpp" line="466"/>
         <source>Save Version</source>
         <translation>保存版本</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="487"/>
+        <location filename="../src/projectview.cpp" line="467"/>
         <source>Enter a name for this snapshot:</source>
         <translation>输入此快照的名称：</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="512"/>
+        <location filename="../src/projectview.cpp" line="492"/>
         <source>%1  [%2 modified]</source>
         <translation>%1  [已修改 %2 处]</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="535"/>
+        <location filename="../src/projectview.cpp" line="515"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="538"/>
+        <location filename="../src/projectview.cpp" line="518"/>
         <source>Original</source>
         <translation>原始</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="555"/>
+        <location filename="../src/projectview.cpp" line="535"/>
         <source>[Version] %1  (%2)</source>
         <translation>[版本] %1  (%2)</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="636"/>
-        <location filename="../src/projectview.cpp" line="753"/>
+        <location filename="../src/projectview.cpp" line="616"/>
+        <location filename="../src/projectview.cpp" line="734"/>
         <source>No maps in this project yet</source>
         <translation>此项目暂无映射图</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="638"/>
+        <location filename="../src/projectview.cpp" line="618"/>
         <source>Import an A2L file to get characteristic-named maps, or run Auto-detect Maps to scan the ROM for likely candidates.</source>
         <translation>导入 A2L 文件以获得带特征名的映射图，或运行&quot;自动检测映射图&quot;扫描 ROM 寻找候选项。</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="640"/>
-        <location filename="../src/projectview.cpp" line="777"/>
-        <location filename="../src/projectview.cpp" line="787"/>
+        <location filename="../src/projectview.cpp" line="620"/>
+        <location filename="../src/projectview.cpp" line="758"/>
+        <location filename="../src/projectview.cpp" line="768"/>
         <source>Import A2L…</source>
         <translation>导入 A2L…</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="642"/>
-        <location filename="../src/projectview.cpp" line="765"/>
+        <location filename="../src/projectview.cpp" line="622"/>
+        <location filename="../src/projectview.cpp" line="746"/>
         <source>Import an A2L file to get characteristic-named maps. Auto-detection is already running in the background — its results will appear here as they&apos;re found.</source>
         <translation>导入 A2L 文件以获得带特征名的映射图。自动检测已在后台运行 — 结果将在找到时显示在此处。</translation>
     </message>
     <message>
-        <location filename="../src/projectview.cpp" line="725"/>
+        <location filename="../src/projectview.cpp" line="706"/>
         <source>Dismiss — don&apos;t show this hint again for this project</source>
         <translation>关闭 — 不再为此项目显示此提示</translation>
     </message>
@@ -10124,19 +10744,19 @@ defined</source>
         <translation>导入失败</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="1120"/>
-        <location filename="../src/mainwindow.cpp" line="1230"/>
-        <location filename="../src/mainwindow.cpp" line="2256"/>
+        <location filename="../src/mainwindow.cpp" line="1174"/>
+        <location filename="../src/mainwindow.cpp" line="1284"/>
+        <location filename="../src/mainwindow.cpp" line="2306"/>
         <source>Translating maps…  %1 / %2</source>
         <translation>正在转换 MAP…  %1 / %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9645"/>
+        <location filename="../src/mainwindow.cpp" line="10254"/>
         <source>No active project view.</source>
         <translation>无活动项目视图。</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="9667"/>
+        <location filename="../src/mainwindow.cpp" line="10276"/>
         <source>Select a map (or drag a range in the waveform / hex view) first.</source>
         <translation>请先选择标定图（或在波形/十六进制视图中拖拽范围）。</translation>
     </message>
@@ -10148,118 +10768,118 @@ defined</source>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="64"/>
         <source>Building similarity index</source>
-        <translation>Building similarity index</translation>
+        <translation>正在构建相似度索引</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="103"/>
         <source>Indexing ROM fingerprints</source>
-        <translation>Indexing ROM fingerprints</translation>
+        <translation>正在索引 ROM 指纹</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="107"/>
         <source>Computing similarity fingerprints for every .ols / .kp / .bin below the configured WinOLS roots.  This is a one-time scan; subsequent searches will be instant.</source>
-        <translation>Computing similarity fingerprints for every .ols / .kp / .bin below the configured WinOLS roots.  This is a one-time scan; subsequent searches will be instant.</translation>
+        <translation>正在为已配置的 WinOLS 根目录下的每个 .ols / .kp / .bin 计算相似度指纹。这是一次性扫描；后续搜索将即时完成。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="135"/>
         <source>Files</source>
-        <translation>Files</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="136"/>
         <source>Rate</source>
-        <translation>Rate</translation>
+        <translation>速率</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="137"/>
         <source>Elapsed</source>
-        <translation>Elapsed</translation>
+        <translation>已用时间</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="138"/>
         <source>ETA</source>
-        <translation>ETA</translation>
+        <translation>预计时间</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="142"/>
         <source>Currently</source>
-        <translation>Currently</translation>
+        <translation>当前</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="145"/>
         <source>preparing scan…</source>
-        <translation>preparing scan…</translation>
+        <translation>正在准备扫描…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="153"/>
         <source>Recent activity</source>
-        <translation>Recent activity</translation>
+        <translation>最近活动</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="162"/>
         <source>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop early — already-processed files are kept.</source>
-        <translation>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop early — already-processed files are kept.</translation>
+        <translation>可以放心过夜运行。按暂停挂起，按取消提前停止 — 已处理的文件会保留。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="171"/>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="190"/>
         <source>Pause</source>
-        <translation>Pause</translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="173"/>
         <source>Cancel</source>
-        <translation>Cancel</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="189"/>
         <source>Resume</source>
-        <translation>Resume</translation>
+        <translation>继续</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="192"/>
         <source>Paused.  No files are being read.  Click Resume to continue.</source>
-        <translation>Paused.  No files are being read.  Click Resume to continue.</translation>
+        <translation>已暂停。未在读取文件。点击继续以恢复。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="194"/>
         <source>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop.</source>
-        <translation>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop.</translation>
+        <translation>可以放心过夜运行。按暂停挂起，按取消停止。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="200"/>
         <source>Cancelling…</source>
-        <translation>Cancelling…</translation>
+        <translation>正在取消…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="201"/>
         <source>Stopping after the current file finishes…</source>
-        <translation>Stopping after the current file finishes…</translation>
+        <translation>当前文件完成后停止…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="268"/>
         <source>done</source>
-        <translation>done</translation>
+        <translation>完成</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="291"/>
         <source>Cancelled by user.  %1 files indexed.</source>
-        <translation>Cancelled by user.  %1 files indexed.</translation>
+        <translation>用户已取消。已索引 %1 个文件。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="293"/>
         <source>Done — %1 files indexed and ready to query.</source>
-        <translation>Done — %1 files indexed and ready to query.</translation>
+        <translation>完成 — 已索引 %1 个文件，可以查询。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="298"/>
         <source>You can close this dialog.</source>
-        <translation>You can close this dialog.</translation>
+        <translation>可以关闭此对话框。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="300"/>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="730"/>
@@ -10276,7 +10896,7 @@ defined</source>
         <location filename="../src/io/legion/LegionDlg.cpp" line="53"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="33"/>
         <source>Strong</source>
-        <translation>强一致</translation>
+        <translation>强</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="54"/>
@@ -10288,13 +10908,13 @@ defined</source>
         <location filename="../src/io/legion/LegionDlg.cpp" line="55"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="35"/>
         <source>Disputed</source>
-        <translation>有争议</translation>
+        <translation>存在分歧</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="56"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="36"/>
         <source>Outlier</source>
-        <translation>异常值</translation>
+        <translation>离群</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="57"/>
@@ -10324,17 +10944,17 @@ defined</source>
         <location filename="../src/io/legion/LegionDlg.cpp" line="68"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="48"/>
         <source>Map</source>
-        <translation>映射</translation>
+        <translation>地图</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="69"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="49"/>
         <source>Large map</source>
-        <translation>大型映射</translation>
+        <translation>大地图</translation>
     </message>
     <message>
-        <location filename="../src/lua/LuaApi_Global.cpp" line="274"/>
         <location filename="../src/lua/LuaEngine.cpp" line="229"/>
+        <location filename="../src/lua/LuaApi_Global.cpp" line="274"/>
         <source>Lua script</source>
         <translation>Lua 脚本</translation>
     </message>
@@ -10346,12 +10966,12 @@ defined</source>
     <message>
         <location filename="../src/lua/LuaApi_Http.cpp" line="110"/>
         <source>&lt;b&gt;Allow HTTP request to:&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;?</source>
-        <translation>&lt;b&gt;允许向以下地址发起 HTTP 请求：&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;？</translation>
+        <translation>&lt;b&gt;允许向以下主机发起 HTTP 请求:&lt;/b&gt;&lt;br&gt;&lt;code&gt;%1&lt;/code&gt;?</translation>
     </message>
     <message>
         <location filename="../src/lua/LuaApi_Http.cpp" line="112"/>
         <source>The script can upload files (including project data) to this host. Only allow hosts you trust.</source>
-        <translation>脚本可以将文件（包括项目数据）上传到此主机。仅允许您信任的主机。</translation>
+        <translation>该脚本可向此主机上传文件(包括项目数据)。请仅允许您信任的主机。</translation>
     </message>
     <message>
         <location filename="../src/lua/LuaApi_Http.cpp" line="115"/>
@@ -10364,9 +10984,215 @@ defined</source>
         <translation>始终允许此主机</translation>
     </message>
     <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="209"/>
+        <source>List All Tabs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="220"/>
+        <source>Detach Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="247"/>
+        <source>Minimize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="274"/>
+        <source>Close Tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="28"/>
+        <source>Value was clamped to the cell range</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="29"/>
+        <source>Cell lies outside the ROM data</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="30"/>
+        <source>NaN and infinity cannot be written</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="31"/>
+        <source>Scaling cannot convert this value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="304"/>
+        <source>Enter a raw value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="313"/>
+        <source>Invalid raw decimal value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mapvaluecodec.cpp" line="329"/>
+        <source>Raw hexadecimal value does not fit this cell</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog.cpp" line="780"/>
+        <source>Custom</source>
+        <translation type="unfinished">自定义</translation>
+    </message>
+    <message>
         <location filename="../src/lua/LuaApi_Project.cpp" line="182"/>
         <source>Lua script write</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RomCompareDlg</name>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="35"/>
+        <source>Compare  —  %1  vs  %2</source>
+        <translation>比较 — %1 与 %2</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="54"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="92"/>
+        <source>Create Patch Script…</source>
+        <translation>创建补丁脚本…</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="93"/>
+        <source>Generate a .rxpatch script from these differences and open the script editor</source>
+        <translation>从这些差异生成 .rxpatch 脚本并打开脚本编辑器</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="99"/>
+        <source>Export Map Pack…</source>
+        <translation>导出地图包…</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="100"/>
+        <source>Save the modified maps as a .rxpack file that can be applied to other ROMs</source>
+        <translation>将修改后的地图保存为 .rxpack 文件，可应用于其他 ROM</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="114"/>
+        <source>Create Patch</source>
+        <translation>创建补丁</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="120"/>
+        <source>&lt;b&gt;What should the patch include?&lt;/b&gt;</source>
+        <translation>&lt;b&gt;补丁应包含哪些内容？&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="125"/>
+        <source>Maps only  (cross-ECU compatible)</source>
+        <translation>仅地图（跨 ECU 兼容）</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="126"/>
+        <source>Only includes A2L map cell changes.
+Safe to apply to any ECU with the same map layout.
+You will need to recalculate checksums separately.</source>
+        <translation>仅包含 A2L 地图单元更改。
+可安全应用于具有相同地图布局的任何 ECU。
+您需要单独重新计算校验和。</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="136"/>
+        <source>Full patch  (exact reproduction — same ECU only)</source>
+        <translation>完整补丁（精确复制 — 仅限同款 ECU）</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="137"/>
+        <source>Also includes checksum/CRC bytes outside map regions.
+Reproduces the target ROM byte-for-byte.
+WARNING: Only apply to the same ECU variant and base ROM.</source>
+        <translation>还包含地图区域外的校验和/CRC 字节。
+逐字节复制目标 ROM。
+警告：仅限应用于同款 ECU 变体和基础 ROM。</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="146"/>
+        <source>&lt;small style=&apos;color:#8b949e;&apos;&gt;The %1 ROM has byte differences outside A2L maps (likely ECU-specific checksums). A full patch captures these for exact reproduction but will produce incorrect checksums if applied to a different base ROM.&lt;/small&gt;</source>
+        <translation>&lt;small style=&apos;color:#8b949e;&apos;&gt;%1 ROM 在 A2L 地图外存在字节差异（可能是 ECU 专用校验和）。完整补丁可捕获这些差异以精确复制，但应用于不同基础 ROM 时会产生错误的校验和。&lt;/small&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="160"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="197"/>
+        <source>Map</source>
+        <translation>地图</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="197"/>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="197"/>
+        <source>Changed cells</source>
+        <translation>变更单元格</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="197"/>
+        <source>Max Δ</source>
+        <translation>最大Δ</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="197"/>
+        <source>Avg Δ</source>
+        <translation>平均Δ</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="219"/>
+        <source>Reference: %1</source>
+        <translation>参考：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="241"/>
+        <source>Compare: %1</source>
+        <translation>比较：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="268"/>
+        <source>Map Differences  (%1)</source>
+        <translation>地图差异  (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="320"/>
+        <source>&lt;b&gt;%1&lt;/b&gt; of &lt;b&gt;%2&lt;/b&gt; maps have differences.  Reference: &lt;span style=&apos;color:#58a6ff;&apos;&gt;%3&lt;/span&gt;   Compare: &lt;span style=&apos;color:#d29a22;&apos;&gt;%4&lt;/span&gt;</source>
+        <translation>&lt;b&gt;%2&lt;/b&gt;个地图中有&lt;b&gt;%1&lt;/b&gt;个存在差异。参考：&lt;span style=&apos;color:#58a6ff;&apos;&gt;%3&lt;/span&gt;   比较：&lt;span style=&apos;color:#d29a22;&apos;&gt;%4&lt;/span&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="527"/>
+        <source>Byte-level differences between the two ROMs (same-length comparison):</source>
+        <translation>两个ROM之间的字节级差异（等长比较）：</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="537"/>
+        <source>Byte Diff  (%1 bytes)</source>
+        <translation>字节差异  (%1字节)</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="412"/>
+        <source>Reference: %1   —   %2</source>
+        <translation>参考：%1   —   %2</translation>
+    </message>
+    <message>
+        <location filename="../src/romcomparedlg.cpp" line="413"/>
+        <source>Compare: %1   —   %2</source>
+        <translation>比较：%1   —   %2</translation>
     </message>
 </context>
 <context>
@@ -11172,6 +11998,222 @@ This cannot be undone.</source>
     </message>
 </context>
 <context>
+    <name>ads::CAutoHideTab</name>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="394"/>
+        <source>Detach</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="399"/>
+        <source>Pin To...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="401"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="402"/>
+        <source>Left</source>
+        <translation type="unfinished">左侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="403"/>
+        <source>Right</source>
+        <translation type="unfinished">右侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="404"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="406"/>
+        <source>Unpin (Dock)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/AutoHideTab.cpp" line="408"/>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+</context>
+<context>
+    <name>ads::CDockAreaTitleBar</name>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="885"/>
+        <source>Detach</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="885"/>
+        <source>Detach Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="890"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="946"/>
+        <source>Unpin (Dock)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="890"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="951"/>
+        <source>Pin Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="896"/>
+        <source>Pin Group To...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="898"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="899"/>
+        <source>Left</source>
+        <translation type="unfinished">左侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="900"/>
+        <source>Right</source>
+        <translation type="unfinished">右侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="901"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="909"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="963"/>
+        <source>Minimize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="910"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="914"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="963"/>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="914"/>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="972"/>
+        <source>Close Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="920"/>
+        <source>Close Other Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="955"/>
+        <source>Pin Active Tab (Press Ctrl to Pin Group)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockAreaTitleBar.cpp" line="968"/>
+        <source>Close Active Tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ads::CDockManager</name>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockManager.cpp" line="537"/>
+        <source>Show View</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ads::CDockWidgetTab</name>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="636"/>
+        <source>Detach</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="640"/>
+        <source>Pin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="644"/>
+        <source>Pin To...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="646"/>
+        <source>Top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="647"/>
+        <source>Left</source>
+        <translation type="unfinished">左侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="648"/>
+        <source>Right</source>
+        <translation type="unfinished">右侧</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="649"/>
+        <source>Bottom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="654"/>
+        <source>Close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+    <message>
+        <location filename="../build-macos/_deps/qtadvanceddockingsystem-src/src/DockWidgetTab.cpp" line="658"/>
+        <source>Close Others</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>datalog::ChannelTreeWidget</name>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="29"/>
+        <source>Search channels…</source>
+        <translation>搜索通道…</translation>
+    </message>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="33"/>
+        <source>Clear</source>
+        <translation>清除</translation>
+    </message>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="34"/>
+        <source>Deselect all channels</source>
+        <translation>取消选择所有通道</translation>
+    </message>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="42"/>
+        <source>Channel</source>
+        <translation>通道</translation>
+    </message>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="42"/>
+        <source>Unit</source>
+        <translation>单位</translation>
+    </message>
+    <message>
+        <location filename="../src/datalog/ChannelTreeWidget.cpp" line="169"/>
+        <source>Other (raw)</source>
+        <translation>其他（原始）</translation>
+    </message>
+</context>
+<context>
     <name>datalog::CompareLogsDialog</name>
     <message>
         <location filename="../src/datalog/CompareLogsDialog.cpp" line="18"/>
@@ -11481,12 +12523,12 @@ A 系列：%1 · B 系列：%2</translation>
         <location filename="../src/io/legion/LegionDlg.cpp" line="134"/>
         <location filename="../src/io/legion/LegionDlg.cpp" line="346"/>
         <source>Find similar tunes in your catalog and review the changes they share.</source>
-        <translation>在您的目录中查找类似的调校，并查看它们共有的更改。</translation>
+        <translation>在目录中查找相似调校,并查看它们共有的更改。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="148"/>
         <source>Scan the catalog for similar tunes (≥%1%% match) and group them by intent.</source>
-        <translation>扫描目录查找相似的调校（匹配度 ≥%1%%）并按意图分组。</translation>
+        <translation>扫描目录以查找相似调校(匹配度 ≥%1%%),并按意图分组。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="155"/>
@@ -11517,17 +12559,17 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="178"/>
         <source>Common addresses</source>
-        <translation>公共地址</translation>
+        <translation>共同地址</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="179"/>
         <source>Keywords</source>
-        <translation>关键字</translation>
+        <translation>关键词</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="188"/>
         <source>Analyze group →</source>
-        <translation>分析此组 →</translation>
+        <translation>分析分组 →</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="191"/>
@@ -11538,7 +12580,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="207"/>
         <source>Min consensus:</source>
-        <translation>最低共识：</translation>
+        <translation>最低共识:</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="223"/>
@@ -11583,7 +12625,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="245"/>
         <source>← Back to groups</source>
-        <translation>← 返回组列表</translation>
+        <translation>← 返回分组</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="248"/>
@@ -11593,7 +12635,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="295"/>
         <source>Open a project with a ROM loaded first.</source>
-        <translation>请先打开一个已加载 ROM 的项目。</translation>
+        <translation>请先打开已加载 ROM 的项目。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="329"/>
@@ -11603,17 +12645,17 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="338"/>
         <source>Scan cancelled.</source>
-        <translation>已取消扫描。</translation>
+        <translation>扫描已取消。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="345"/>
         <source>No similar files were found in the catalog for this ROM.</source>
-        <translation>目录中未找到此 ROM 的相似文件。</translation>
+        <translation>未在目录中找到与此 ROM 相似的文件。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="353"/>
         <source>Scan complete. Pick a group to analyze.</source>
-        <translation>扫描完成。选择一个组进行分析。</translation>
+        <translation>扫描完成。请选择要分析的分组。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="360"/>
@@ -11633,32 +12675,32 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="375"/>
         <source>Scanning catalog for similar tunes…</source>
-        <translation>正在扫描目录以查找相似的调校…</translation>
+        <translation>正在扫描目录以查找相似调校…</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="429"/>
         <source>Group: %1 files · %2 · range 0x%3..0x%4</source>
-        <translation>组：%1 个文件 · %2 · 范围 0x%3..0x%4</translation>
+        <translation>分组:%1 个文件 · %2 · 范围 0x%3..0x%4</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="436"/>
         <source>Review the suggested changes. Tick the ones you want to apply.</source>
-        <translation>查看建议的更改。勾选您想要应用的项目。</translation>
+        <translation>查看建议的更改,勾选要应用的项。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="497"/>
         <source>%1 of %2 suggestions shown (≥%3%% consensus)</source>
-        <translation>显示 %1 / %2 条建议（共识 ≥%3%%）</translation>
+        <translation>显示 %1/%2 条建议(共识 ≥%3%%)</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="513"/>
         <source>Pick another group, or close.</source>
-        <translation>选择另一个组，或关闭。</translation>
+        <translation>选择其他分组,或关闭。</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionDlg.cpp" line="541"/>
         <source>Nothing selected to apply.</source>
-        <translation>未选择任何项目。</translation>
+        <translation>未选择要应用的项。</translation>
     </message>
 </context>
 <context>
@@ -11667,17 +12709,17 @@ A 系列：%1 · B 系列：%2</translation>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="230"/>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="269"/>
         <source>(select a suggestion)</source>
-        <translation>（选择一条建议）</translation>
+        <translation>(请选择一条建议)</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="243"/>
         <source>Contributing files</source>
-        <translation>贡献的文件</translation>
+        <translation>参与文件</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="248"/>
         <source>Source</source>
-        <translation>源</translation>
+        <translation>来源</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="248"/>
@@ -11687,7 +12729,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="249"/>
         <source>Δ at densest cell</source>
-        <translation>最密集单元格处的 Δ</translation>
+        <translation>最密单元格的 Δ</translation>
     </message>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="274"/>
@@ -11697,7 +12739,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/legion/LegionPreviewWidget.cpp" line="280"/>
         <source>Cell size: %1 B · Cells: %2 · Max samples: %3 · Consensus: %4</source>
-        <translation>单元格大小：%1 B · 单元格数：%2 · 最大样本：%3 · 共识：%4</translation>
+        <translation>单元大小:%1 B · 单元格:%2 · 最大样本:%3 · 共识:%4</translation>
     </message>
 </context>
 <context>
@@ -11830,6 +12872,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/ols/KpImporter.cpp" line="2632"/>
         <location filename="../src/io/ols/KpImporter.cpp" line="2665"/>
+        <location filename="../src/io/ols/KpImporter.cpp" line="2665"/>
         <source>Schema-%1 parser recognized %2 of %3 maps; refusing an incomplete import rather than guessing the remaining layout</source>
         <translation type="unfinished"></translation>
     </message>
@@ -11934,118 +12977,118 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="43"/>
         <source>Building similarity index</source>
-        <translation>Building similarity index</translation>
+        <translation>正在构建相似度索引</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="81"/>
         <source>Indexing ROM fingerprints</source>
-        <translation>Indexing ROM fingerprints</translation>
+        <translation>正在索引 ROM 指纹</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="85"/>
         <source>Computing similarity fingerprints for every .ols / .kp / .bin below the configured WOLS catalog roots.  This is a one-time scan; subsequent searches will be instant.</source>
-        <translation>Computing similarity fingerprints for every .ols / .kp / .bin below the configured WOLS catalog roots.  This is a one-time scan; subsequent searches will be instant.</translation>
+        <translation>正在为已配置的 WOLS 目录根下的每个 .ols / .kp / .bin 计算相似度指纹。这是一次性扫描；后续搜索将即时完成。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="109"/>
         <source>Files</source>
-        <translation>Files</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="110"/>
         <source>Rate</source>
-        <translation>Rate</translation>
+        <translation>速率</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="111"/>
         <source>Elapsed</source>
-        <translation>Elapsed</translation>
+        <translation>已用时间</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="112"/>
         <source>ETA</source>
-        <translation>ETA</translation>
+        <translation>预计时间</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="115"/>
         <source>Currently</source>
-        <translation>Currently</translation>
+        <translation>当前</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="118"/>
         <source>preparing scan…</source>
-        <translation>preparing scan…</translation>
+        <translation>正在准备扫描…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="125"/>
         <source>Recent activity</source>
-        <translation>Recent activity</translation>
+        <translation>最近活动</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="134"/>
         <source>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop early — already-processed files are kept.</source>
-        <translation>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop early — already-processed files are kept.</translation>
+        <translation>可以放心过夜运行。按暂停挂起，按取消提前停止 — 已处理的文件会保留。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="142"/>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="160"/>
         <source>Pause</source>
-        <translation>Pause</translation>
+        <translation>暂停</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="144"/>
         <source>Cancel</source>
-        <translation>Cancel</translation>
+        <translation>取消</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="160"/>
         <source>Resume</source>
-        <translation>Resume</translation>
+        <translation>继续</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="162"/>
         <source>Paused.  No files are being read.  Click Resume to continue.</source>
-        <translation>Paused.  No files are being read.  Click Resume to continue.</translation>
+        <translation>已暂停。未在读取文件。点击继续以恢复。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="163"/>
         <source>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop.</source>
-        <translation>Safe to leave running overnight.  Press Pause to suspend, Cancel to stop.</translation>
+        <translation>可以放心过夜运行。按暂停挂起，按取消停止。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="169"/>
         <source>Cancelling…</source>
-        <translation>Cancelling…</translation>
+        <translation>正在取消…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="170"/>
         <source>Stopping after the current file finishes…</source>
-        <translation>Stopping after the current file finishes…</translation>
+        <translation>当前文件完成后停止…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="219"/>
         <source>done</source>
-        <translation>done</translation>
+        <translation>完成</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="239"/>
         <source>Cancelled by user.  %1 files indexed.</source>
-        <translation>Cancelled by user.  %1 files indexed.</translation>
+        <translation>用户已取消。已索引 %1 个文件。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="240"/>
         <source>Done — %1 files indexed and ready to query.</source>
-        <translation>Done — %1 files indexed and ready to query.</translation>
+        <translation>完成 — 已索引 %1 个文件，可以查询。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="243"/>
         <source>You can close this dialog.</source>
-        <translation>You can close this dialog.</translation>
+        <translation>可以关闭此对话框。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/BuildIndexProgressDlg.cpp" line="245"/>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -12053,7 +13096,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="339"/>
         <source>Find similar files / projects</source>
-        <translation>Find similar files / projects</translation>
+        <translation>查找相似文件/项目</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="345"/>
@@ -12061,7 +13104,7 @@ A 系列：%1 · B 系列：%2</translation>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="1201"/>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="1238"/>
         <source>Find similar</source>
-        <translation>Find similar</translation>
+        <translation>查找相似</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="346"/>
@@ -12073,7 +13116,7 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="358"/>
         <source>Index: %1 files cached</source>
-        <translation>Index: %1 files cached</translation>
+        <translation>索引：已缓存 %1 个文件</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="364"/>
@@ -12083,42 +13126,42 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="403"/>
         <source>Source:</source>
-        <translation>Source:</translation>
+        <translation>来源：</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="405"/>
         <source>&lt;active project&gt;</source>
-        <translation>&lt;active project&gt;</translation>
+        <translation>&lt;当前项目&gt;</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="413"/>
         <source>Min similarity:</source>
-        <translation>Min similarity:</translation>
+        <translation>最低相似度：</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="428"/>
         <source>% Match</source>
-        <translation>% Match</translation>
+        <translation>% 匹配</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="428"/>
         <source>Source</source>
-        <translation>Source</translation>
+        <translation>源</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="428"/>
         <source>Byte%</source>
-        <translation>字节 %</translation>
+        <translation>字节%</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="429"/>
         <source>Make</source>
-        <translation>Make</translation>
+        <translation>品牌</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="429"/>
         <source>Model</source>
-        <translation>Model</translation>
+        <translation>型号</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="429"/>
@@ -12128,12 +13171,12 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="429"/>
         <source>SW</source>
-        <translation>SW</translation>
+        <translation>软件版本</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="429"/>
         <source>File</source>
-        <translation>File</translation>
+        <translation>文件</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="448"/>
@@ -12148,62 +13191,62 @@ A 系列：%1 · B 系列：%2</translation>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="451"/>
         <source>Rebuild index</source>
-        <translation>Rebuild index</translation>
+        <translation>重建索引</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="452"/>
         <source>Open</source>
-        <translation>Open</translation>
+        <translation>打开</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="455"/>
         <source>Open as comparison</source>
-        <translation>Open as comparison</translation>
+        <translation>作为对比打开</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="457"/>
         <source>Close</source>
-        <translation>Close</translation>
+        <translation>关闭</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="509"/>
         <source>Could not fingerprint source ROM: %1</source>
-        <translation>Could not fingerprint source ROM: %1</translation>
+        <translation>无法对源 ROM 进行指纹识别：%1</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="514"/>
         <source>Could not fingerprint source ROM</source>
-        <translation>Could not fingerprint source ROM</translation>
+        <translation>无法对源 ROM 进行指纹识别</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="520"/>
         <source>Source ROM is empty or all-padding — nothing to compare.</source>
-        <translation>Source ROM is empty or all-padding — nothing to compare.</translation>
+        <translation>源 ROM 为空或全是填充数据 — 无法对比。</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="530"/>
         <source>Searching %1 files…</source>
-        <translation>Searching %1 files…</translation>
+        <translation>正在搜索 %1 个文件…</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="552"/>
         <source>Search failed: %1</source>
-        <translation>Search failed: %1</translation>
+        <translation>搜索失败：%1</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="559"/>
         <source>Search failed</source>
-        <translation>Search failed</translation>
+        <translation>搜索失败</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="579"/>
         <source>%1 matches · %2 ms · index size %3</source>
-        <translation>%1 matches · %2 ms · index size %3</translation>
+        <translation>%1 个匹配 · %2 毫秒 · 索引大小 %3</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="638"/>
         <source>(file)</source>
-        <translation>(file)</translation>
+        <translation>（文件）</translation>
     </message>
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="645"/>
@@ -12288,7 +13331,7 @@ Copy it now? This reads your WinOLS Cache_*.db once (read-only) into a local dat
     <message>
         <location filename="../src/io/winols/SimilarFilesDlg.cpp" line="1239"/>
         <source>No scan roots configured.  Open Project Manager → WOLS Catalog → Settings to import paths from ols.cfg first.</source>
-        <translation>No scan roots configured.  Open Project Manager → WOLS Catalog → Settings to import paths from ols.cfg first.</translation>
+        <translation>未配置扫描根目录。请打开项目管理器 → WOLS 目录 → 设置，先从 ols.cfg 导入路径。</translation>
     </message>
 </context>
 </TS>

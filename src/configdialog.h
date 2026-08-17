@@ -46,6 +46,22 @@ private:
     // effective scale changed (QT_SCALE_FACTOR is fixed at startup).
     void saveScaleSettings();
 
+    // ── Theme preset / user-theme library helpers ───────────────────────
+    // Rebuilds the preset combo (Custom, built-ins, separator, user themes);
+    // selectData picks the item to select by its data() ("user:<path>").
+    void reloadThemeCombo(const QString &selectData = QString());
+    // Puts a theme into the working state: swatches, optional wave style,
+    // live preview, dialog restyle, dirty flag.
+    void setWorkingTheme(const AppColors &c, const WaveStyle *ws);
+    void restyleDialogAfterTheme();
+    void updateThemeButtons();          // Rename/Delete only for user themes
+    WaveStyle workingWaveStyle() const; // 2D style as edited in this dialog
+    void themeSaveAs();
+    void themeRename();
+    void themeDelete();
+    void themeExport();
+    void themeImport();
+
     // Live preview: push the dialog's working state into AppConfig and
     // notify all views — called on every control change.
     void previewNow();
@@ -85,6 +101,11 @@ private:
     QRadioButton *m_scaleManualRadio = nullptr;
     QSlider      *m_scaleSlider      = nullptr;
     QLabel       *m_scaleValueLbl    = nullptr;
+
+    // Theme preset / user-theme library widgets (Colors page)
+    QComboBox   *m_themeCombo     = nullptr;
+    QPushButton *m_btnThemeRename = nullptr;
+    QPushButton *m_btnThemeDelete = nullptr;
 
     // Button controls & status
     QPushButton *m_btnApply        = nullptr;

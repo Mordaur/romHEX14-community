@@ -5,11 +5,16 @@
  */
 
 #include "appconfig.h"
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QRegularExpression>
 #include <QSaveFile>
 #include <QSettings>
+#include <QStandardPaths>
+#include <algorithm>
 
 AppConfig::AppConfig() { applyDefaults(colors); }
 
@@ -717,5 +722,122 @@ bool AppConfig::importTheme(const QString &filePath, AppColors &colorsOut,
 
     if (nameOut)
         *nameOut = root.value("name").toString();
+    return true;
+}
+
+// ── User theme library ───────────────────────────────────────────────────────
+
+QString AppConfig::userThemesDir()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+           + QStringLiteral("/themes");
+}
+
+// Filesystem-safe slug for a theme name ("Night Rider!" -> "night-rider").
+static QString themeSlug(const QString &name)
+{
+    QString out;
+    for (const QChar ch : name.toLower())
+        out += ch.isLetterOrNumber() ? ch : QLatin1Char('-');
+    static const QRegularExpression dashes(QStringLiteral("-{2,}"));
+    out.replace(dashes, QStringLiteral("-"));
+    while (out.startsWith(QLatin1Char('-'))) out.remove(0, 1);
+    while (out.endsWith(QLatin1Char('-')))   out.chop(1);
+    return out.isEmpty() ? QStringLiteral("theme") : out;
+}
+
+QVector<AppConfig::UserTheme> AppConfig::userThemes()
+{
+    QVector<UserTheme> out;
+    const QDir dir(userThemesDir());
+    const QStringList files =
+        dir.entryList({QStringLiteral("*.rx14theme")}, QDir::Files);
+    for (const QString &f : files) {
+        UserTheme t;
+        t.filePath = dir.filePath(f);
+        if (!importTheme(t.filePath, t.colors, t.waveStyle, &t.name))
+            continue;                            // unreadable — skip silently
+        if (t.name.trimmed().isEmpty())
+            t.name = QFileInfo(f).completeBaseName();
+        out.append(t);
+    }
+    std::sort(out.begin(), out.end(),
+              [](const UserTheme &a, const UserTheme &b) {
+        return a.name.compare(b.name, Qt::CaseInsensitive) < 0;
+    });
+    return out;
+}
+
+bool AppConfig::saveUserTheme(const QString &name, const AppColors &colors,
+                              const WaveStyle &style, QString *pathOut,
+                              QString *errorOut)
+{
+    const QString trimmed = name.trimmed();
+    if (trimmed.isEmpty()) {
+        if (errorOut) *errorOut = QStringLiteral("theme name is empty");
+        return false;
+    }
+    QDir dir(userThemesDir());
+    if (!dir.mkpath(QStringLiteral("."))) {
+        if (errorOut) *errorOut = QStringLiteral("cannot create ")
+                                  + dir.absolutePath();
+        return false;
+    }
+
+    // Same name (case-insensitive) overwrites that theme's file; otherwise
+    // pick a fresh, unique file name.
+    QString path;
+    for (const UserTheme &t : userThemes()) {
+        if (t.name.compare(trimmed, Qt::CaseInsensitive) == 0) {
+            path = t.filePath;
+            break;
+        }
+    }
+    if (path.isEmpty()) {
+        const QString slug = themeSlug(trimmed);
+        path = dir.filePath(slug + QStringLiteral(".rx14theme"));
+        for (int n = 2; QFileInfo::exists(path); ++n)
+            path = dir.filePath(slug + QStringLiteral("-%1.rx14theme").arg(n));
+    }
+
+    if (!exportTheme(path, colors, style, trimmed, errorOut))
+        return false;
+    if (pathOut) *pathOut = path;
+    return true;
+}
+
+bool AppConfig::renameUserTheme(const QString &filePath,
+                                const QString &newName, QString *newPathOut,
+                                QString *errorOut)
+{
+    const QString trimmed = newName.trimmed();
+    if (trimmed.isEmpty()) {
+        if (errorOut) *errorOut = QStringLiteral("theme name is empty");
+        return false;
+    }
+    AppColors c;
+    WaveStyle ws;
+    if (!importTheme(filePath, c, ws, nullptr, errorOut))
+        return false;
+    // Rewrite under the new name, then drop the old file (skip the delete
+    // when the slug maps to the same file, e.g. only capitalization changed).
+    QString newPath;
+    if (!saveUserTheme(trimmed, c, ws, &newPath, errorOut))
+        return false;
+    if (QFileInfo(newPath) != QFileInfo(filePath))
+        QFile::remove(filePath);
+    if (newPathOut) *newPathOut = newPath;
+    return true;
+}
+
+bool AppConfig::deleteUserTheme(const QString &filePath, QString *errorOut)
+{
+    QFile f(filePath);
+    if (!f.exists())
+        return true;                             // already gone
+    if (!f.remove()) {
+        if (errorOut) *errorOut = f.errorString();
+        return false;
+    }
     return true;
 }

@@ -29,7 +29,9 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QGuiApplication>
+#include <QInputDialog>
 #include <QMessageBox>
 #include <QRadioButton>
 #include <QScreen>
@@ -363,147 +365,83 @@ void ConfigDialog::buildColorsPage()
         themeRow->setSpacing(10);
         auto *themeLabel = new QLabel(tr("Theme Preset:"));
         themeLabel->setStyleSheet("color:" + AppConfig::instance().colors.uiText.name() + "; font-size:10pt; font-weight:bold; background:transparent;");
-        auto *themeCombo = new QComboBox();
-        themeCombo->setMinimumWidth(200);
-        themeCombo->setStyleSheet(
+        m_themeCombo = new QComboBox();
+        m_themeCombo->setMinimumWidth(200);
+        m_themeCombo->setStyleSheet(
             "QComboBox { background:" + AppConfig::instance().colors.uiPanel.name() + "; color:" + AppConfig::instance().colors.uiText.name() + "; border:1px solid " + AppConfig::instance().colors.uiBorder.name() + ";"
             " border-radius:4px; padding:4px 8px; font-size:10pt; }"
             "QComboBox:hover { border-color:" + AppConfig::instance().colors.uiAccent.lighter(140).name() + "; }"
             "QComboBox::drop-down { border:none; }"
             "QComboBox QAbstractItemView { background:" + AppConfig::instance().colors.uiPanel.name() + "; color:" + AppConfig::instance().colors.uiText.name() + ";"
             " selection-background-color:" + AppConfig::instance().colors.uiAccent.name() + "; border:1px solid " + AppConfig::instance().colors.uiBorder.name() + "; }");
-        themeCombo->addItem(tr("Custom"), "custom");
-        for (const auto &t : ColorThemes::all())
-            themeCombo->addItem(tr(t.nameKey), QString::fromUtf8(t.id));
+        reloadThemeCombo();
 
-        connect(themeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                this, [this](int idx) {
-            if (idx <= 0) return;
-            const auto &themes = ColorThemes::all();
-            if (idx - 1 >= themes.size()) return;
-            m_working = themes[idx - 1].colors;
-            refreshSwatches();
-            previewNow();   // live preview — Apply persists, Cancel reverts
-            // Force refresh ALL widgets in this dialog with new theme
-            setStyleSheet("");  // clear
-            setStyleSheet(QString("QDialog { background:%1; color:%2; }"
-                "QGroupBox { background:%3; color:%2; border:1px solid %4; border-radius:6px; margin-top:8px; padding-top:14px; }"
-                "QGroupBox::title { subcontrol-origin:margin; left:10px; padding:0 4px; color:%5; }"
-                "QLabel { color:%2; background:transparent; }"
-                "QScrollArea { background:%1; border:none; }"
-                "QWidget#colorsContent { background:%1; }")
-                .arg(Theme::bgRoot(), Theme::textPrimary(), Theme::bgCard(), Theme::border(), Theme::accent()));
-            // Also refresh the nav sidebar
-            if (m_nav) m_nav->setStyleSheet(QString(
-                "QListWidget { background:%1; color:%2; border:none; border-right:1px solid %3; }"
-                "QListWidget::item { padding:8px 12px; }"
-                "QListWidget::item:selected { background:%4; color:white; border-radius:4px; }")
-                .arg(Theme::bgCard(), Theme::textMuted(), Theme::border(), Theme::primary()));
+        connect(m_themeCombo, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                this, [this](int) {
+            const QString data = m_themeCombo->currentData().toString();
+            if (data.isEmpty() || data == QLatin1String("custom")) {
+                updateThemeButtons();
+                return;
+            }
+            if (data.startsWith(QLatin1String("user:"))) {
+                AppColors c;
+                WaveStyle ws;
+                if (AppConfig::importTheme(data.mid(5), c, ws))
+                    setWorkingTheme(c, &ws);
+            } else {
+                for (const auto &t : ColorThemes::all()) {
+                    if (data == QLatin1String(t.id)) {
+                        setWorkingTheme(t.colors, nullptr);
+                        break;
+                    }
+                }
+            }
+            updateThemeButtons();
         });
 
         themeRow->addWidget(themeLabel);
-        themeRow->addWidget(themeCombo, 1);
+        themeRow->addWidget(m_themeCombo, 1);
 
-        // ── Skin files: export / import (.rx14theme) ────────────────────
+        // ── Theme library management + skin file exchange ───────────────
+        auto *mgmtRow = new QHBoxLayout();
+        mgmtRow->setSpacing(8);
+        auto *btnSaveAs = new QPushButton(tr("Save As…"));
+        btnSaveAs->setToolTip(tr("Save the current colors as a new theme"));
+        m_btnThemeRename = new QPushButton(tr("Rename…"));
+        m_btnThemeRename->setToolTip(
+            tr("Rename the selected theme (your themes only)"));
+        m_btnThemeDelete = new QPushButton(tr("Delete"));
+        m_btnThemeDelete->setToolTip(
+            tr("Delete the selected theme (built-in themes cannot be "
+               "deleted)"));
         auto *btnExport = new QPushButton(tr("Export…"));
-        auto *btnImport = new QPushButton(tr("Import…"));
         btnExport->setToolTip(tr("Save the current colors and 2D style as a "
                                  "theme file (.rx14theme)"));
-        btnImport->setToolTip(tr("Load a theme file (.rx14theme) — previewed "
-                                 "live, Apply makes it permanent"));
-        themeRow->addWidget(btnExport);
-        themeRow->addWidget(btnImport);
+        auto *btnImport = new QPushButton(tr("Import…"));
+        btnImport->setToolTip(tr("Load a theme file (.rx14theme) — it is "
+                                 "added to your themes and previewed live"));
+        mgmtRow->addWidget(btnSaveAs);
+        mgmtRow->addWidget(m_btnThemeRename);
+        mgmtRow->addWidget(m_btnThemeDelete);
+        mgmtRow->addStretch();
+        mgmtRow->addWidget(btnExport);
+        mgmtRow->addWidget(btnImport);
 
-        // Current 2D wave style as edited in this dialog (falls back to the
-        // applied config when the widgets don't exist yet).
-        auto workingWaveStyle = [this]() {
-            WaveStyle ws = AppConfig::instance().waveStyle;
-            if (m_waveShapeCombo) {
-                ws.shape = static_cast<WaveStyle::Shape>(
-                    m_waveShapeCombo->currentIndex());
-                ws.lineWidth      = m_waveWidthSpin->value();
-                ws.dotSize        = m_waveDotSpin->value();
-                ws.fillUnderCurve = m_waveFillCheck->isChecked();
-            }
-            return ws;
-        };
-
-        connect(btnExport, &QPushButton::clicked, this,
-                [this, themeCombo, workingWaveStyle]() {
-            const QString base = themeCombo->currentIndex() > 0
-                                     ? themeCombo->currentText()
-                                     : tr("Custom Theme");
-            QString suggested =
-                QStandardPaths::writableLocation(
-                    QStandardPaths::DocumentsLocation)
-                + "/" + base.simplified().replace(QLatin1Char(' '),
-                                                  QLatin1Char('_'))
-                + QStringLiteral(".rx14theme");
-            const QString path = QFileDialog::getSaveFileName(this,
-                tr("Export Theme"), suggested,
-                tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
-            if (path.isEmpty())
-                return;
-            QString err;
-            if (!AppConfig::exportTheme(path, m_working, workingWaveStyle(),
-                                        base, &err)) {
-                QMessageBox::warning(this, tr("Export Theme"),
-                    tr("Could not write the theme file:\n%1").arg(err));
-                return;
-            }
-            if (m_applyStatusLbl) {
-                m_applyStatusLbl->setText(
-                    tr("<span style='color:#3fb950;'>✓ Theme "
-                       "exported</span>"));
-                QTimer::singleShot(2500, m_applyStatusLbl, &QLabel::clear);
-            }
-        });
-
-        connect(btnImport, &QPushButton::clicked, this,
-                [this, themeCombo]() {
-            const QString path = QFileDialog::getOpenFileName(this,
-                tr("Import Theme"),
-                QStandardPaths::writableLocation(
-                    QStandardPaths::DocumentsLocation),
-                tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
-            if (path.isEmpty())
-                return;
-            AppColors imported;
-            WaveStyle ws;
-            QString name, err;
-            if (!AppConfig::importTheme(path, imported, ws, &name, &err)) {
-                QMessageBox::warning(this, tr("Import Theme"),
-                    tr("Could not load the theme file:\n%1").arg(err));
-                return;
-            }
-            m_working = imported;
-            if (m_waveShapeCombo) {
-                QSignalBlocker b1(m_waveShapeCombo), b2(m_waveWidthSpin),
-                               b3(m_waveDotSpin),    b4(m_waveFillCheck);
-                m_waveShapeCombo->setCurrentIndex(
-                    static_cast<int>(ws.shape));
-                m_waveWidthSpin->setValue(ws.lineWidth);
-                m_waveDotSpin->setValue(ws.dotSize);
-                m_waveFillCheck->setChecked(ws.fillUnderCurve);
-            }
-            {   // imported skins are "Custom" — don't re-trigger a preset
-                QSignalBlocker b(themeCombo);
-                themeCombo->setCurrentIndex(0);
-            }
-            refreshSwatches();
-            previewNow();       // live preview — Apply persists, Cancel reverts
-            markDirty();
-            if (m_applyStatusLbl) {
-                m_applyStatusLbl->setText(
-                    tr("<span style='color:#3fb950;'>✓ Imported "
-                       "“%1”</span>")
-                        .arg(name.isEmpty() ? tr("theme") : name));
-                QTimer::singleShot(4000, m_applyStatusLbl, &QLabel::clear);
-            }
-        });
+        connect(btnSaveAs, &QPushButton::clicked,
+                this, &ConfigDialog::themeSaveAs);
+        connect(m_btnThemeRename, &QPushButton::clicked,
+                this, &ConfigDialog::themeRename);
+        connect(m_btnThemeDelete, &QPushButton::clicked,
+                this, &ConfigDialog::themeDelete);
+        connect(btnExport, &QPushButton::clicked,
+                this, &ConfigDialog::themeExport);
+        connect(btnImport, &QPushButton::clicked,
+                this, &ConfigDialog::themeImport);
 
         vbox->addLayout(themeRow);
+        vbox->addLayout(mgmtRow);
         vbox->addSpacing(6);
+        updateThemeButtons();
     }
 
     // ── Map Highlight Bands ──────────────────────────────────────────────────
@@ -831,6 +769,279 @@ void ConfigDialog::saveScaleSettings()
     if (ret == QMessageBox::Yes) {
         accept();                                // close settings first
         QTimer::singleShot(0, [] { UiScale::requestRestart(); });
+    }
+}
+
+// ── Theme preset / user-theme library ────────────────────────────────────────
+
+// Built-in names (raw + translated) and ids are reserved.
+static bool builtinThemeNameTaken(const QString &name)
+{
+    if (name.compare(QObject::tr("Custom"), Qt::CaseInsensitive) == 0)
+        return true;
+    for (const auto &t : ColorThemes::all()) {
+        if (name.compare(QLatin1String(t.nameKey), Qt::CaseInsensitive) == 0
+            || name.compare(QObject::tr(t.nameKey), Qt::CaseInsensitive) == 0
+            || name.compare(QLatin1String(t.id), Qt::CaseInsensitive) == 0)
+            return true;
+    }
+    return false;
+}
+
+void ConfigDialog::reloadThemeCombo(const QString &selectData)
+{
+    if (!m_themeCombo)
+        return;
+    QSignalBlocker block(m_themeCombo);
+    const QString want = !selectData.isEmpty()
+                             ? selectData
+                             : m_themeCombo->currentData().toString();
+    m_themeCombo->clear();
+    m_themeCombo->addItem(tr("Custom"), QStringLiteral("custom"));
+    for (const auto &t : ColorThemes::all())
+        m_themeCombo->addItem(tr(t.nameKey), QString::fromUtf8(t.id));
+    const auto users = AppConfig::userThemes();
+    if (!users.isEmpty())
+        m_themeCombo->insertSeparator(m_themeCombo->count());
+    for (const auto &u : users)
+        m_themeCombo->addItem(u.name, QStringLiteral("user:") + u.filePath);
+    const int idx = m_themeCombo->findData(want);
+    m_themeCombo->setCurrentIndex(idx >= 0 ? idx : 0);
+    updateThemeButtons();
+}
+
+void ConfigDialog::updateThemeButtons()
+{
+    const bool isUser =
+        m_themeCombo && m_themeCombo->currentData().toString()
+                            .startsWith(QLatin1String("user:"));
+    if (m_btnThemeRename) m_btnThemeRename->setEnabled(isUser);
+    if (m_btnThemeDelete) m_btnThemeDelete->setEnabled(isUser);
+}
+
+WaveStyle ConfigDialog::workingWaveStyle() const
+{
+    WaveStyle ws = AppConfig::instance().waveStyle;
+    if (m_waveShapeCombo) {
+        ws.shape = static_cast<WaveStyle::Shape>(
+            m_waveShapeCombo->currentIndex());
+        ws.lineWidth      = m_waveWidthSpin->value();
+        ws.dotSize        = m_waveDotSpin->value();
+        ws.fillUnderCurve = m_waveFillCheck->isChecked();
+    }
+    return ws;
+}
+
+void ConfigDialog::setWorkingTheme(const AppColors &c, const WaveStyle *ws)
+{
+    m_working = c;
+    if (ws && m_waveShapeCombo) {
+        QSignalBlocker b1(m_waveShapeCombo), b2(m_waveWidthSpin),
+                       b3(m_waveDotSpin),    b4(m_waveFillCheck);
+        m_waveShapeCombo->setCurrentIndex(static_cast<int>(ws->shape));
+        m_waveWidthSpin->setValue(ws->lineWidth);
+        m_waveDotSpin->setValue(ws->dotSize);
+        m_waveFillCheck->setChecked(ws->fillUnderCurve);
+    }
+    refreshSwatches();
+    previewNow();       // live preview — Apply persists, Cancel reverts
+    restyleDialogAfterTheme();
+    markDirty();
+}
+
+void ConfigDialog::restyleDialogAfterTheme()
+{
+    // Force refresh ALL widgets in this dialog with the new theme
+    setStyleSheet("");  // clear
+    setStyleSheet(QString("QDialog { background:%1; color:%2; }"
+        "QGroupBox { background:%3; color:%2; border:1px solid %4; border-radius:6px; margin-top:8px; padding-top:14px; }"
+        "QGroupBox::title { subcontrol-origin:margin; left:10px; padding:0 4px; color:%5; }"
+        "QLabel { color:%2; background:transparent; }"
+        "QScrollArea { background:%1; border:none; }"
+        "QWidget#colorsContent { background:%1; }")
+        .arg(Theme::bgRoot(), Theme::textPrimary(), Theme::bgCard(), Theme::border(), Theme::accent()));
+    // Also refresh the nav sidebar
+    if (m_nav) m_nav->setStyleSheet(QString(
+        "QListWidget { background:%1; color:%2; border:none; border-right:1px solid %3; }"
+        "QListWidget::item { padding:8px 12px; }"
+        "QListWidget::item:selected { background:%4; color:white; border-radius:4px; }")
+        .arg(Theme::bgCard(), Theme::textMuted(), Theme::border(), Theme::primary()));
+}
+
+void ConfigDialog::themeSaveAs()
+{
+    bool ok = false;
+    const QString name = QInputDialog::getText(this, tr("Save Theme As"),
+        tr("Theme name:"), QLineEdit::Normal, tr("My Theme"), &ok).trimmed();
+    if (!ok || name.isEmpty())
+        return;
+    if (builtinThemeNameTaken(name)) {
+        QMessageBox::warning(this, tr("Save Theme As"),
+            tr("“%1” is a built-in theme name — pick another.").arg(name));
+        return;
+    }
+    for (const auto &u : AppConfig::userThemes()) {
+        if (name.compare(u.name, Qt::CaseInsensitive) == 0) {
+            if (QMessageBox::question(this, tr("Save Theme As"),
+                    tr("A theme named “%1” already exists. Replace it?")
+                        .arg(u.name)) != QMessageBox::Yes)
+                return;
+            break;
+        }
+    }
+    QString path, err;
+    if (!AppConfig::saveUserTheme(name, m_working, workingWaveStyle(),
+                                  &path, &err)) {
+        QMessageBox::warning(this, tr("Save Theme As"),
+            tr("Could not save the theme:\n%1").arg(err));
+        return;
+    }
+    reloadThemeCombo(QStringLiteral("user:") + path);
+    if (m_applyStatusLbl) {
+        m_applyStatusLbl->setText(
+            tr("<span style='color:#3fb950;'>✓ Theme “%1” saved</span>")
+                .arg(name));
+        QTimer::singleShot(2500, m_applyStatusLbl, &QLabel::clear);
+    }
+}
+
+void ConfigDialog::themeRename()
+{
+    const QString data =
+        m_themeCombo ? m_themeCombo->currentData().toString() : QString();
+    if (!data.startsWith(QLatin1String("user:")))
+        return;                                  // built-ins are read-only
+    const QString path    = data.mid(5);
+    const QString oldName = m_themeCombo->currentText();
+    bool ok = false;
+    const QString newName = QInputDialog::getText(this, tr("Rename Theme"),
+        tr("New name:"), QLineEdit::Normal, oldName, &ok).trimmed();
+    if (!ok || newName.isEmpty() || newName == oldName)
+        return;
+    if (builtinThemeNameTaken(newName)) {
+        QMessageBox::warning(this, tr("Rename Theme"),
+            tr("“%1” is a built-in theme name — pick another.").arg(newName));
+        return;
+    }
+    for (const auto &u : AppConfig::userThemes()) {
+        if (u.filePath != path
+            && newName.compare(u.name, Qt::CaseInsensitive) == 0) {
+            QMessageBox::warning(this, tr("Rename Theme"),
+                tr("A theme named “%1” already exists.").arg(newName));
+            return;
+        }
+    }
+    QString newPath, err;
+    if (!AppConfig::renameUserTheme(path, newName, &newPath, &err)) {
+        QMessageBox::warning(this, tr("Rename Theme"),
+            tr("Could not rename the theme:\n%1").arg(err));
+        return;
+    }
+    reloadThemeCombo(QStringLiteral("user:") + newPath);
+}
+
+void ConfigDialog::themeDelete()
+{
+    const QString data =
+        m_themeCombo ? m_themeCombo->currentData().toString() : QString();
+    if (!data.startsWith(QLatin1String("user:")))
+        return;                                  // built-ins can't be deleted
+    const QString path = data.mid(5);
+    const QString name = m_themeCombo->currentText();
+    if (QMessageBox::question(this, tr("Delete Theme"),
+            tr("Delete theme “%1”? Its file will be removed.").arg(name))
+        != QMessageBox::Yes)
+        return;
+    QString err;
+    if (!AppConfig::deleteUserTheme(path, &err)) {
+        QMessageBox::warning(this, tr("Delete Theme"),
+            tr("Could not delete the theme:\n%1").arg(err));
+        return;
+    }
+    // Colors stay as they are — the selection just becomes "Custom".
+    reloadThemeCombo(QStringLiteral("custom"));
+    if (m_applyStatusLbl) {
+        m_applyStatusLbl->setText(
+            tr("<span style='color:#3fb950;'>✓ Theme “%1” deleted</span>")
+                .arg(name));
+        QTimer::singleShot(2500, m_applyStatusLbl, &QLabel::clear);
+    }
+}
+
+void ConfigDialog::themeExport()
+{
+    const QString base =
+        (m_themeCombo && m_themeCombo->currentIndex() > 0)
+            ? m_themeCombo->currentText()
+            : tr("Custom Theme");
+    const QString suggested =
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)
+        + "/" + base.simplified().replace(QLatin1Char(' '), QLatin1Char('_'))
+        + QStringLiteral(".rx14theme");
+    const QString path = QFileDialog::getSaveFileName(this,
+        tr("Export Theme"), suggested,
+        tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
+    if (path.isEmpty())
+        return;
+    QString err;
+    if (!AppConfig::exportTheme(path, m_working, workingWaveStyle(), base,
+                                &err)) {
+        QMessageBox::warning(this, tr("Export Theme"),
+            tr("Could not write the theme file:\n%1").arg(err));
+        return;
+    }
+    if (m_applyStatusLbl) {
+        m_applyStatusLbl->setText(
+            tr("<span style='color:#3fb950;'>✓ Theme exported</span>"));
+        QTimer::singleShot(2500, m_applyStatusLbl, &QLabel::clear);
+    }
+}
+
+void ConfigDialog::themeImport()
+{
+    const QString path = QFileDialog::getOpenFileName(this,
+        tr("Import Theme"),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
+        tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
+    if (path.isEmpty())
+        return;
+    AppColors imported;
+    WaveStyle ws;
+    QString name, err;
+    if (!AppConfig::importTheme(path, imported, ws, &name, &err)) {
+        QMessageBox::warning(this, tr("Import Theme"),
+            tr("Could not load the theme file:\n%1").arg(err));
+        return;
+    }
+    if (name.trimmed().isEmpty())
+        name = QFileInfo(path).completeBaseName();
+
+    // Add to the user library under a non-clashing name.
+    auto taken = [](const QString &n) {
+        if (builtinThemeNameTaken(n))
+            return true;
+        for (const auto &u : AppConfig::userThemes())
+            if (n.compare(u.name, Qt::CaseInsensitive) == 0)
+                return true;
+        return false;
+    };
+    QString unique = name;
+    for (int n = 2; taken(unique); ++n)
+        unique = name + QStringLiteral(" (%1)").arg(n);
+
+    QString savedPath;
+    if (!AppConfig::saveUserTheme(unique, imported, ws, &savedPath, &err)) {
+        QMessageBox::warning(this, tr("Import Theme"),
+            tr("Could not add the theme to your library:\n%1").arg(err));
+        return;
+    }
+    setWorkingTheme(imported, &ws);
+    reloadThemeCombo(QStringLiteral("user:") + savedPath);
+    if (m_applyStatusLbl) {
+        m_applyStatusLbl->setText(
+            tr("<span style='color:#3fb950;'>✓ Imported “%1”</span>")
+                .arg(unique));
+        QTimer::singleShot(4000, m_applyStatusLbl, &QLabel::clear);
     }
 }
 
