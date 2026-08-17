@@ -8,6 +8,7 @@
 #include "uiwidgets.h"
 #include "configdialog.h"
 #include "appconstants.h"
+#include "uiscale.h"
 #include <QDesktopServices>
 #include <QTimer>
 #include <QToolButton>
@@ -27,6 +28,12 @@
 #include <QPainter>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include <QGuiApplication>
+#include <QMessageBox>
+#include <QRadioButton>
+#include <QScreen>
+#include <QSlider>
+#include <cmath>
 
 static void applySwatchStyle(QPushButton *btn, const QColor &col)
 {
@@ -54,8 +61,19 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     , m_origLongNames(AppConfig::instance().showLongMapNames)
 {
     setWindowTitle(tr("Configuration"));
-    setMinimumSize(660, 560);
-    resize(660, 560);
+    // Never demand more than the screen can show — at high UI scales a fixed
+    // 660x560 minimum can push the button row off-screen and lock the user
+    // out of Apply entirely.
+    {
+        QScreen *scr = parent ? parent->screen()
+                              : QGuiApplication::primaryScreen();
+        const QSize avail = scr ? scr->availableGeometry().size()
+                                : QSize(660, 560);
+        const QSize fit(qMin(660, avail.width() - 20),
+                        qMin(560, avail.height() - 40));
+        setMinimumSize(fit);
+        resize(fit);
+    }
     setModal(true);
 
     setStyleSheet(
@@ -126,6 +144,7 @@ ConfigDialog::ConfigDialog(QWidget *parent)
         previewNow();                       // AppConfig now holds the working state
         AppConfig::instance().save();
         saveAISettings();
+        saveScaleSettings();
         // The applied state becomes the new revert baseline for Cancel
         m_original      = m_working;
         m_origStyle     = AppConfig::instance().waveStyle;
@@ -171,6 +190,18 @@ ConfigDialog::ConfigDialog(QWidget *parent)
 
     restoreGeometry(rx14::appSettings()
                     .value("dialogGeometry/ConfigDialog").toByteArray());
+
+    // A geometry saved under a different UI scale can be bigger than this
+    // screen — clamp so the button row stays reachable.
+    if (QScreen *scr = parent ? parent->screen()
+                              : QGuiApplication::primaryScreen()) {
+        const QRect a = scr->availableGeometry();
+        if (width() > a.width() || height() > a.height())
+            resize(qMin(width(), a.width()), qMin(height(), a.height()));
+        if (!a.contains(frameGeometry()))
+            move(qBound(a.left(), x(), qMax(a.left(), a.right() - width())),
+                 qBound(a.top(),  y(), qMax(a.top(), a.bottom() - height())));
+    }
 }
 
 void ConfigDialog::closeEvent(QCloseEvent *event)
@@ -596,8 +627,110 @@ void ConfigDialog::buildDisplayPage()
     mapLay->addWidget(hint);
 
     lay->addWidget(mapGroup);
+
+    // ── Interface scale ─────────────────────────────────────────────────
+    auto *scaleGroup = new QGroupBox(tr("Interface Scale"));
+    scaleGroup->setStyleSheet(mapGroup->styleSheet());
+    auto *scaleLay = new QVBoxLayout(scaleGroup);
+
+    const QString radioStyle =
+        "color:" + AppConfig::instance().colors.uiText.name() + "; font-size:9pt;";
+    const double rec = UiScale::recommendedForScreen(screen());
+
+    m_scaleAutoRadio = new QRadioButton(
+        tr("Automatic — match this display (recommended: %1%)")
+            .arg(qRound(rec * 100)));
+    m_scaleAutoRadio->setStyleSheet(radioStyle);
+    scaleLay->addWidget(m_scaleAutoRadio);
+
+    auto *manualRow = new QHBoxLayout;
+    m_scaleManualRadio = new QRadioButton(tr("Custom:"));
+    m_scaleManualRadio->setStyleSheet(radioStyle);
+
+    m_scaleSlider = new QSlider(Qt::Horizontal);
+    // Cap the selectable range at what still fits this display, so a value
+    // that would push dialog buttons off-screen can't be picked at all.
+    const int maxPct = qMax(100,
+        int(std::floor(UiScale::fitCapForScreen(screen()) * 20.0)) * 5);
+    m_scaleSlider->setRange(100, maxPct);
+    m_scaleSlider->setSingleStep(5);
+    m_scaleSlider->setPageStep(25);
+    m_scaleSlider->setTickPosition(QSlider::TicksBelow);
+    m_scaleSlider->setTickInterval(25);
+    m_scaleSlider->setValue(qRound(UiScale::manualScale() * 100));
+
+    m_scaleValueLbl = new QLabel(QStringLiteral("%1%").arg(m_scaleSlider->value()));
+    m_scaleValueLbl->setStyleSheet(radioStyle);
+    m_scaleValueLbl->setFixedWidth(44);
+    m_scaleValueLbl->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    manualRow->addWidget(m_scaleManualRadio);
+    manualRow->addWidget(m_scaleSlider, 1);
+    manualRow->addWidget(m_scaleValueLbl);
+    scaleLay->addLayout(manualRow);
+
+    auto *scaleHint = new QLabel(
+        tr("Scaling is applied at startup — Apply offers a quick restart. "
+           "Currently running at %1%. The range is capped at %2% so windows "
+           "always fit this display.")
+            .arg(qRound(UiScale::appliedScale() * 100))
+            .arg(maxPct));
+    scaleHint->setStyleSheet("color:#6e7681; font-size:8pt;");
+    scaleHint->setWordWrap(true);
+    scaleLay->addWidget(scaleHint);
+
+    const bool autoMode = (UiScale::mode() == QLatin1String("auto"));
+    m_scaleAutoRadio->setChecked(autoMode);
+    m_scaleManualRadio->setChecked(!autoMode);
+    m_scaleSlider->setEnabled(!autoMode);
+
+    connect(m_scaleAutoRadio, &QRadioButton::toggled, this, [this](bool on) {
+        m_scaleSlider->setEnabled(!on);
+        markDirty();
+    });
+    connect(m_scaleSlider, &QSlider::valueChanged, this, [this](int v) {
+        // Snap to 5% steps so the label matches what gets saved.
+        const int snapped = qRound(v / 5.0) * 5;
+        if (snapped != v) { m_scaleSlider->setValue(snapped); return; }
+        m_scaleValueLbl->setText(QStringLiteral("%1%").arg(snapped));
+        markDirty();
+    });
+
+    lay->addWidget(scaleGroup);
     lay->addStretch();
     m_stack->addWidget(page);
+}
+
+void ConfigDialog::saveScaleSettings()
+{
+    if (!m_scaleAutoRadio)
+        return;
+    const bool autoMode = m_scaleAutoRadio->isChecked();
+    const double manual = m_scaleSlider->value() / 100.0;
+
+    QSettings s = rx14::appSettings();
+    s.setValue(QString::fromUtf8(UiScale::kModeKey),
+               autoMode ? QStringLiteral("auto") : QStringLiteral("manual"));
+    s.setValue(QString::fromUtf8(UiScale::kManualKey), manual);
+    // Record the dialog's screen so an immediate restart computes the auto
+    // scale for the display the user is actually looking at.
+    if (QScreen *scr = screen())
+        s.setValue(QString::fromUtf8(UiScale::kLastScreenKey), scr->geometry());
+    s.sync();
+
+    const double target =
+        autoMode ? UiScale::recommendedForScreen(screen()) : manual;
+    if (std::abs(target - UiScale::appliedScale()) <= 0.01)
+        return;                                  // nothing to rescale
+
+    const auto ret = QMessageBox::question(this, tr("Restart to Rescale"),
+        tr("The interface scale becomes %1% after a restart. "
+           "Restart romHEX14 now?").arg(qRound(target * 100)),
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    if (ret == QMessageBox::Yes) {
+        accept();                                // close settings first
+        QTimer::singleShot(0, [] { UiScale::requestRestart(); });
+    }
 }
 
 // ── XOR obfuscation (mirrors aiassistant.cpp) ─────────────────────────────────

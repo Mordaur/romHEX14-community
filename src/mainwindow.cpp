@@ -74,8 +74,14 @@
 #include "aifunctionsdlg.h"
 #include "aiassistant.h"
 #include "uiwidgets.h"
+#include "uiscale.h"
 #include "brandlogo.h"
 #include "commandpalette.h"
+#include <QAbstractButton>
+#include <QScreen>
+#include <QShowEvent>
+#include <QWindow>
+#include <cmath>
 #include "projectregistry.h"
 #include <QStackedWidget>
 #include <QListWidget>
@@ -9787,7 +9793,59 @@ void MainWindow::closeEvent(QCloseEvent *e)
     QString autoSaveDir = ProjectRegistry::defaultProjectDir() + "/autosave";
     QDir(autoSaveDir).removeRecursively();
 
+    // Remember which screen we lived on so the next launch can pick the
+    // right auto UI scale for it (see UiScale::startupScale).
+    if (QScreen *scr = screen())
+        rx14::appSettings().setValue(QString::fromUtf8(UiScale::kLastScreenKey),
+                                     scr->geometry());
+
     e->accept();
+}
+
+void MainWindow::showEvent(QShowEvent *e)
+{
+    QMainWindow::showEvent(e);
+    if (!m_screenWatchConnected && windowHandle()) {
+        m_screenWatchConnected = true;
+        connect(windowHandle(), &QWindow::screenChanged,
+                this, &MainWindow::onScreenChanged);
+    }
+}
+
+void MainWindow::onScreenChanged(QScreen *scr)
+{
+    if (!scr)
+        return;
+    // Keep the stored screen current even if we never prompt — a plain
+    // relaunch should already adapt to wherever the window sits now.
+    rx14::appSettings().setValue(QString::fromUtf8(UiScale::kLastScreenKey),
+                                 scr->geometry());
+
+    if (UiScale::mode() != QLatin1String("auto"))
+        return;
+    const double recommended = UiScale::recommendedForScreen(scr);
+    if (std::abs(recommended - UiScale::appliedScale()) < 0.24)
+        return;                                  // close enough — stay put
+    if (m_scalePromptedScreens.contains(scr->name()))
+        return;
+    m_scalePromptedScreens.insert(scr->name());
+
+    auto *box = new QMessageBox(QMessageBox::Question,
+        tr("Display Changed"),
+        tr("This display looks best at an interface scale of %1%. "
+           "Restart romHEX14 now to apply it?")
+            .arg(qRound(recommended * 100)),
+        QMessageBox::NoButton, this);
+    QAbstractButton *restartBtn =
+        box->addButton(tr("Restart Now"), QMessageBox::AcceptRole);
+    box->addButton(tr("Later"), QMessageBox::RejectRole);
+    box->setAttribute(Qt::WA_DeleteOnClose);
+    connect(box, &QMessageBox::buttonClicked, this,
+            [restartBtn](QAbstractButton *b) {
+        if (b == restartBtn)
+            UiScale::requestRestart();
+    });
+    box->open();                                 // non-modal — don't block work
 }
 
 // ── Map pack / patch script ───────────────────────────────────────────────────

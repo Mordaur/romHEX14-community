@@ -16,6 +16,8 @@
 
 class QCloseEvent;
 class QPushButton;
+class QRadioButton;
+class QSlider;
 
 class ConfigDialog : public QDialog {
     Q_OBJECT
@@ -40,6 +42,9 @@ private:
     void buildAIPage();
     void loadAIProviderFields(int index);
     void saveAISettings();
+    // Persist interface-scale mode/value; offers an in-place restart when the
+    // effective scale changed (QT_SCALE_FACTOR is fixed at startup).
+    void saveScaleSettings();
 
     // Live preview: push the dialog's working state into AppConfig and
     // notify all views — called on every control change.
@@ -74,6 +79,12 @@ private:
     QLineEdit   *m_aiUrlEdit         = nullptr;
     QCheckBox   *m_showLongNamesCheck = nullptr;
     QLabel      *m_supportLabel      = nullptr;
+
+    // Interface scale widgets (Display page)
+    QRadioButton *m_scaleAutoRadio   = nullptr;
+    QRadioButton *m_scaleManualRadio = nullptr;
+    QSlider      *m_scaleSlider      = nullptr;
+    QLabel       *m_scaleValueLbl    = nullptr;
 
     // Button controls & status
     QPushButton *m_btnApply        = nullptr;

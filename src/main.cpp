@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QDateTime>
 #include <QSharedMemory>
+#include <QElapsedTimer>
+#include <QThread>
 #include <QRegularExpression>
 #include <atomic>
 #include <csignal>
@@ -18,6 +20,7 @@
 #include <cstring>
 #include "appconstants.h"
 #include "mainwindow.h"
+#include "uiscale.h"
 #include "logger.h"
 #include "version.h"
 #include "appconfig.h"
@@ -298,6 +301,25 @@ int main(int argc, char *argv[])
 #endif
 #endif // RX14_PRO_BUILD
 
+    // ── Interface scale (MUST be applied before QApplication) ──────────────
+    // macOS/Qt don't surface the OS "large text" accessibility setting, so we
+    // provide our own scale. QT_SCALE_FACTOR zooms the whole UI (text AND
+    // layout) uniformly, which stays clean with the app's fixed-size widgets.
+    // "auto" mode (default) derives the factor from the physical density of
+    // the screen the window last lived on, so a 57" desk monitor and a Retina
+    // laptop each get a sensible scale without touching Settings.
+    {
+        QSettings s(QString::fromUtf8(rx14::kOrgName),
+                    QString::fromUtf8(rx14::kAppName));
+        const QRect lastScreen =
+            s.value(QString::fromUtf8(UiScale::kLastScreenKey)).toRect();
+        const double scale = UiScale::startupScale(lastScreen);
+        if (scale > 1.001 && scale <= 3.0
+            && !qEnvironmentVariableIsSet("QT_SCALE_FACTOR")) {
+            qputenv("QT_SCALE_FACTOR", QByteArray::number(scale, 'g', 4));
+        }
+    }
+
     // ── Application ────────────────────────────────────────────────────────
     QApplication app(argc, argv);
     app.setApplicationName(QString::fromUtf8(rx14::kAppName));
@@ -337,7 +359,18 @@ int main(int argc, char *argv[])
 
     // ── Single instance check ───────────────────────────────────────────
     QSharedMemory singleLock("romHEX14_SingleInstance_Lock");
-    if (!singleLock.create(1)) {
+    bool lockAcquired = singleLock.create(1);
+    if (!lockAcquired && qEnvironmentVariableIsSet("RX14_RESTART")) {
+        // Self-relaunch (e.g. UI-scale change): the old instance may still be
+        // shutting down and holding the lock — wait for it to release.
+        QElapsedTimer t;
+        t.start();
+        while (!lockAcquired && t.elapsed() < 10000) {
+            QThread::msleep(150);
+            lockAcquired = singleLock.create(1);
+        }
+    }
+    if (!lockAcquired) {
         // Another instance is running — bring it to front on Windows
 #ifdef Q_OS_WIN
         HWND existing = FindWindowW(nullptr, L"romHEX 14");
@@ -361,6 +394,9 @@ int main(int argc, char *argv[])
         Logger::instance().init(logPath);
     }
 
+    LOG_INFO(QString("UI scale: %1% (%2 mode)")
+             .arg(qRound(UiScale::appliedScale() * 100))
+             .arg(UiScale::mode()));
     LOG_INFO(QString("romHEX14 v%1 starting on %2")
              .arg(app.applicationVersion())
              .arg(QDateTime::currentDateTime().toString(Qt::ISODate)));

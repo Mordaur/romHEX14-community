@@ -145,6 +145,8 @@ set(SOURCES
     src/romparser.cpp
     src/appconfig.cpp
     src/configdialog.cpp
+    src/uiscale.cpp
+    src/uiscale.h
     src/romlinker.cpp
     src/romlinkdialog.cpp
     src/rompatch.cpp
@@ -516,6 +518,8 @@ elseif(APPLE)
         set_source_files_properties("${CMAKE_CURRENT_SOURCE_DIR}/resources/icon.icns"
             PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     endif()
+    # CoreGraphics: display metrics for the auto UI scale (src/uiscale.cpp)
+    target_link_libraries(rx14 PRIVATE "-framework CoreGraphics")
 endif()
 
 # ── Deploy checksumhelper.exe and ChecksumDLL next to the executable ──────────

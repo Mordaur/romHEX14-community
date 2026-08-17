@@ -49,6 +49,8 @@ class DiffPanel;
 class SavepointManager;
 class SavepointsPanel;
 class QDockWidget;
+class QScreen;
+class QShowEvent;
 namespace ads {
 class CDockManager;
 class CDockWidget;
@@ -153,7 +155,15 @@ protected:
     void dragEnterEvent(QDragEnterEvent *e) override;
     void dropEvent(QDropEvent *e) override;
     void closeEvent(QCloseEvent *e) override;
+    void showEvent(QShowEvent *e) override;
     bool eventFilter(QObject *obj, QEvent *ev) override;
+
+private:
+    // UI-scale: offer a rescale-restart when the window lands on a screen
+    // whose recommended scale differs from the one applied at startup.
+    void onScreenChanged(QScreen *scr);
+    QSet<QString> m_scalePromptedScreens;   // prompted once per screen/session
+    bool          m_screenWatchConnected = false;
 
 private slots:
     // Project menu
