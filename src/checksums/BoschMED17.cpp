@@ -13,6 +13,8 @@
 #include "Med17Rsa.h"
 #include "Med17Variant.h"
 
+#include <QStringList>
+
 #include <algorithm>
 #include <cstring>
 #include <vector>
@@ -99,18 +101,27 @@ BoschMED17::Status BoschMED17::correct(QByteArray& rom, QString& errorMsg) {
     }
 
     int correctedCount = 0;
-    int failedCount = 0;
+    int structurallyInvalidCount = 0;
+    int blankSignatureCount = 0;
+    int forgeFailedCount = 0;
     for (const auto& descriptor : descriptors) {
         if (descriptor.rsaSignatureValid)
             continue;
 
+        // No RSA key decodes this signature.  A signature block still holding
+        // all 0xAFAFAFAF filler was never flashed (blank); any other
+        // non-decodable block is structurally invalid — the ROM may be
+        // corrupted or signed with an unsupported key.
         if (descriptor.signatureKeyIndex > 0x8b) {
-            ++failedCount;
+            if (descriptor.blankWordFlag)
+                ++structurallyInvalidCount;
+            else
+                ++blankSignatureCount;
             continue;
         }
         const auto key = MED17::publicKeyForIndex(descriptor.signatureKeyIndex);
         if (!key) {
-            ++failedCount;
+            ++structurallyInvalidCount;
             continue;
         }
 
@@ -120,13 +131,13 @@ BoschMED17::Status BoschMED17::correct(QByteArray& rom, QString& errorMsg) {
             rom.mid(static_cast<qsizetype>(descriptor.signatureOffset), 128);
         const auto decoded = MED17::verifyRsaSignatureBlock(existingSignature, *key);
         if (decoded.status != MED17::RsaSignatureStatus::Valid) {
-            ++failedCount;
+            ++structurallyInvalidCount;
             continue;
         }
 
         const auto result = MED17::forgeCorrectedSignature(rom, descriptor, decoded);
         if (result.status != MED17::CorrectionStatus::Corrected) {
-            ++failedCount;
+            ++forgeFailedCount;
             continue;
         }
 
@@ -135,9 +146,20 @@ BoschMED17::Status BoschMED17::correct(QByteArray& rom, QString& errorMsg) {
         ++correctedCount;
     }
 
-    if (correctedCount == 0 && failedCount != 0) {
-        errorMsg = QStringLiteral("%1 MED17 RSA/CVN signature(s) could not be corrected")
-                       .arg(failedCount);
+    if (correctedCount == 0
+        && (structurallyInvalidCount + blankSignatureCount + forgeFailedCount) != 0) {
+        QStringList reasons;
+        if (structurallyInvalidCount != 0)
+            reasons << QStringLiteral(
+                           "%1 signature(s) structurally invalid — ROM may be corrupted or uses an "
+                           "unsupported RSA key").arg(structurallyInvalidCount);
+        if (blankSignatureCount != 0)
+            reasons << QStringLiteral("%1 signature(s) blank (all 0xAFAFAFAF) — never flashed")
+                           .arg(blankSignatureCount);
+        if (forgeFailedCount != 0)
+            reasons << QStringLiteral("%1 signature(s) could not be re-signed (forge failed)")
+                           .arg(forgeFailedCount);
+        errorMsg = reasons.join(QStringLiteral("; "));
         return Status::Error;
     }
 

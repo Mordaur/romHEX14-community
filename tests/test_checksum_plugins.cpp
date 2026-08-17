@@ -12,6 +12,7 @@
 
 #include "checksums/IChecksumPlugin.h"
 #include "checksums/BoschMED17.h"
+#include "checksums/BoschME7.h"
 
 static int g_testsRun = 0;
 static int g_testsPassed = 0;
@@ -114,6 +115,121 @@ static void testMed17AndRsaMath() {
     TEST_ASSERT(verifyRes.status == Checksum::Common::RsaVerifyStatus::InvalidPadding, "Zeroed signature rejected with InvalidPadding");
 }
 
+static void testBoschMe7Engine() {
+    std::cout << "\n=== Test Suite 6: Bosch ME7.x Native C++ Engine ===" << std::endl;
+
+    // 1. Create synthetic 512KB ME7 ROM
+    QByteArray rom(512 * 1024, 0x00);
+    for (int i = 0; i < rom.size(); i += 4) {
+        rom[i] = static_cast<char>(i & 0xFF);
+        rom[i + 1] = static_cast<char>((i >> 8) & 0xFF);
+    }
+
+    // Set 512KB ME7 marker
+    rom[0x8214] = 0x55;
+    rom[0x8215] = static_cast<char>(0xAA);
+
+    TEST_ASSERT(Checksum::BoschME7::isSupported(rom), "512KB ME7 binary identified by parser");
+
+    // Uncorrected ROM should report Mismatch
+    QString details;
+    auto verifyPre = Checksum::BoschME7::verify(rom, details);
+    TEST_ASSERT(verifyPre == Checksum::BoschME7::Status::Mismatch, "Uncorrected ME7 ROM returns Status::Mismatch");
+
+    // Run correction
+    auto correctRes = Checksum::BoschME7::correct(rom, details);
+    TEST_ASSERT(correctRes == Checksum::BoschME7::Status::OK, "ME7 correct() returns Status::OK");
+
+    // Re-verify corrected ROM
+    auto verifyPost = Checksum::BoschME7::verify(rom, details);
+    TEST_ASSERT(verifyPost == Checksum::BoschME7::Status::OK, "Corrected ME7 ROM passes verification with Status::OK");
+}
+
+// ── Test 7: MED17 Correction Failure Diagnostics ─────────────────────────────
+// Build a minimal synthetic MED17 image with one FADECAFE descriptor whose
+// 0x80-byte signature region is caller-chosen, to exercise the failure
+// categorization in BoschMED17::correct() without real firmware fixtures.
+//
+// Layout (see Med17Descriptor.cpp parseDescriptors):
+//   header @0x1000, FADECAFE/CAFEAFFE @0x1040, signature @0xdf7d, DEADBEEF
+//   @0x11000; header+4 block length 0x10000 seeds the trailer scan, header+0x0c
+//   address 0x13000, raw crcStart/crcEnd 0x3000/0x10000 → crc range 0x1000..0xdf7c,
+//   signature = crcEndExclusive(0xe000) − 0x83 = 0xdf7d.
+static QByteArray makeSyntheticMed17Rom(const QByteArray& signatureBytes) {
+    QByteArray rom(0x20000, '\x00');
+
+    const int header = 0x1000;
+    rom[header + 0] = '\x30';      // type
+    rom[header + 2] = '\x00';      // subtype
+    // header+4: block length (LE) 0x10000 → scan seed 0x11040 → DEADBEEF @0x11000
+    rom[header + 4] = '\x00';
+    rom[header + 5] = '\x00';
+    rom[header + 6] = '\x01';
+    rom[header + 7] = '\x00';
+    // header+0x0c: header address (LE) 0x13000 >= trailerOffset
+    rom[header + 0x0c] = '\x00';
+    rom[header + 0x0d] = '\x30';
+    rom[header + 0x0e] = '\x01';
+    rom[header + 0x0f] = '\x00';
+    // header+0x38: raw crcStart (LE) 0x3000
+    rom[header + 0x38] = '\x00';
+    rom[header + 0x39] = '\x30';
+    // header+0x3c: raw crcEnd (LE) 0x10000
+    rom[header + 0x3c] = '\x00';
+    rom[header + 0x3d] = '\x00';
+    rom[header + 0x3e] = '\x01';
+    rom[header + 0x3f] = '\x00';
+
+    // FADECAFE / CAFEAFFE marker.
+    rom[0x1040] = '\xfe';
+    rom[0x1041] = '\xca';
+    rom[0x1042] = '\xde';
+    rom[0x1043] = '\xfa';
+    rom[0x1044] = '\xfe';
+    rom[0x1045] = '\xaf';
+    rom[0x1046] = '\xfe';
+    rom[0x1047] = '\xca';
+
+    // DEADBEEF trailer.
+    rom[0x11000] = '\xef';
+    rom[0x11001] = '\xbe';
+    rom[0x11002] = '\xad';
+    rom[0x11003] = '\xde';
+
+    // Signature region.
+    for (int i = 0; i < qMin(0x80, signatureBytes.size()); ++i)
+        rom[0xdf7d + i] = signatureBytes[i];
+    return rom;
+}
+
+static void testMed17CorrectDiagnostics() {
+    std::cout << "\n=== Test Suite 7: MED17 Correction Failure Diagnostics ===" << std::endl;
+
+    // Blank signature (all 0xAFAFAFAF): reported as never-flashed, not as a
+    // generic correction failure.
+    {
+        QByteArray rom = makeSyntheticMed17Rom(QByteArray(0x80, '\xaf'));
+        QString err;
+        const auto status = Checksum::BoschMED17::correct(rom, err);
+        TEST_ASSERT(status == Checksum::BoschMED17::Status::Error,
+                    "Blank signature returns Status::Error");
+        TEST_ASSERT(err.contains(QStringLiteral("blank")),
+                    "Error message identifies blank (never-flashed) signature");
+    }
+
+    // Corrupt signature (non-blank, matches no RSA key): reported as
+    // structurally invalid, which maps to a corrupt image or unsupported key.
+    {
+        QByteArray rom = makeSyntheticMed17Rom(QByteArray(0x80, '\xaa'));
+        QString err;
+        const auto status = Checksum::BoschMED17::correct(rom, err);
+        TEST_ASSERT(status == Checksum::BoschMED17::Status::Error,
+                    "Structurally-invalid signature returns Status::Error");
+        TEST_ASSERT(err.contains(QStringLiteral("structurally invalid")),
+                    "Error message identifies structurally-invalid signature");
+    }
+}
+
 int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
 
@@ -125,6 +241,8 @@ int main(int argc, char *argv[]) {
     testFailClosedOnInvalidRom();
     testPatchDiffCalculation();
     testMed17AndRsaMath();
+    testBoschMe7Engine();
+    testMed17CorrectDiagnostics();
 
     std::cout << "\n==========================================================" << std::endl;
     std::cout << "Test Summary: " << g_testsPassed << "/" << g_testsRun << " passed." << std::endl;
