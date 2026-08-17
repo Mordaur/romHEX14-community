@@ -2026,7 +2026,9 @@ void MainWindow::buildLeftPanel()
             folder.replace(QLatin1Char('\\'), QLatin1Char('/'));
             while (folder.contains(QStringLiteral("//")))
                 folder.replace(QStringLiteral("//"), QStringLiteral("/"));
-            while (folder.startsWith(QLatin1Char('/'))) folder.removeFirst();
+            // remove(0,1), not removeFirst(): QString::removeFirst needs
+            // Qt 6.5, and Linux builds target Ubuntu's Qt 6.4.
+            while (folder.startsWith(QLatin1Char('/'))) folder.remove(0, 1);
             while (folder.endsWith(QLatin1Char('/'))) folder.chop(1);
             if (chosen == actNewFolder && folder.isEmpty()) return;
 
