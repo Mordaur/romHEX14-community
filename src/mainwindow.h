@@ -165,6 +165,10 @@ private:
     QSet<QString> m_scalePromptedScreens;   // prompted once per screen/session
     bool          m_screenWatchConnected = false;
 
+    // Restyle the ADS dock chrome (tabs, title bars, containers) from the
+    // current AppConfig colors; called at startup and on every theme change.
+    void applyDockManagerTheme();
+
 private slots:
     // Project menu
     void actProjectManager();

@@ -28,11 +28,13 @@
 #include <QPainter>
 #include <QDoubleSpinBox>
 #include <QSpinBox>
+#include <QFileDialog>
 #include <QGuiApplication>
 #include <QMessageBox>
 #include <QRadioButton>
 #include <QScreen>
 #include <QSlider>
+#include <QStandardPaths>
 #include <cmath>
 
 static void applySwatchStyle(QPushButton *btn, const QColor &col)
@@ -401,6 +403,105 @@ void ConfigDialog::buildColorsPage()
 
         themeRow->addWidget(themeLabel);
         themeRow->addWidget(themeCombo, 1);
+
+        // ── Skin files: export / import (.rx14theme) ────────────────────
+        auto *btnExport = new QPushButton(tr("Export…"));
+        auto *btnImport = new QPushButton(tr("Import…"));
+        btnExport->setToolTip(tr("Save the current colors and 2D style as a "
+                                 "theme file (.rx14theme)"));
+        btnImport->setToolTip(tr("Load a theme file (.rx14theme) — previewed "
+                                 "live, Apply makes it permanent"));
+        themeRow->addWidget(btnExport);
+        themeRow->addWidget(btnImport);
+
+        // Current 2D wave style as edited in this dialog (falls back to the
+        // applied config when the widgets don't exist yet).
+        auto workingWaveStyle = [this]() {
+            WaveStyle ws = AppConfig::instance().waveStyle;
+            if (m_waveShapeCombo) {
+                ws.shape = static_cast<WaveStyle::Shape>(
+                    m_waveShapeCombo->currentIndex());
+                ws.lineWidth      = m_waveWidthSpin->value();
+                ws.dotSize        = m_waveDotSpin->value();
+                ws.fillUnderCurve = m_waveFillCheck->isChecked();
+            }
+            return ws;
+        };
+
+        connect(btnExport, &QPushButton::clicked, this,
+                [this, themeCombo, workingWaveStyle]() {
+            const QString base = themeCombo->currentIndex() > 0
+                                     ? themeCombo->currentText()
+                                     : tr("Custom Theme");
+            QString suggested =
+                QStandardPaths::writableLocation(
+                    QStandardPaths::DocumentsLocation)
+                + "/" + base.simplified().replace(QLatin1Char(' '),
+                                                  QLatin1Char('_'))
+                + QStringLiteral(".rx14theme");
+            const QString path = QFileDialog::getSaveFileName(this,
+                tr("Export Theme"), suggested,
+                tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
+            if (path.isEmpty())
+                return;
+            QString err;
+            if (!AppConfig::exportTheme(path, m_working, workingWaveStyle(),
+                                        base, &err)) {
+                QMessageBox::warning(this, tr("Export Theme"),
+                    tr("Could not write the theme file:\n%1").arg(err));
+                return;
+            }
+            if (m_applyStatusLbl) {
+                m_applyStatusLbl->setText(
+                    tr("<span style='color:#3fb950;'>✓ Theme "
+                       "exported</span>"));
+                QTimer::singleShot(2500, m_applyStatusLbl, &QLabel::clear);
+            }
+        });
+
+        connect(btnImport, &QPushButton::clicked, this,
+                [this, themeCombo]() {
+            const QString path = QFileDialog::getOpenFileName(this,
+                tr("Import Theme"),
+                QStandardPaths::writableLocation(
+                    QStandardPaths::DocumentsLocation),
+                tr("romHEX14 Themes (*.rx14theme);;All Files (*)"));
+            if (path.isEmpty())
+                return;
+            AppColors imported;
+            WaveStyle ws;
+            QString name, err;
+            if (!AppConfig::importTheme(path, imported, ws, &name, &err)) {
+                QMessageBox::warning(this, tr("Import Theme"),
+                    tr("Could not load the theme file:\n%1").arg(err));
+                return;
+            }
+            m_working = imported;
+            if (m_waveShapeCombo) {
+                QSignalBlocker b1(m_waveShapeCombo), b2(m_waveWidthSpin),
+                               b3(m_waveDotSpin),    b4(m_waveFillCheck);
+                m_waveShapeCombo->setCurrentIndex(
+                    static_cast<int>(ws.shape));
+                m_waveWidthSpin->setValue(ws.lineWidth);
+                m_waveDotSpin->setValue(ws.dotSize);
+                m_waveFillCheck->setChecked(ws.fillUnderCurve);
+            }
+            {   // imported skins are "Custom" — don't re-trigger a preset
+                QSignalBlocker b(themeCombo);
+                themeCombo->setCurrentIndex(0);
+            }
+            refreshSwatches();
+            previewNow();       // live preview — Apply persists, Cancel reverts
+            markDirty();
+            if (m_applyStatusLbl) {
+                m_applyStatusLbl->setText(
+                    tr("<span style='color:#3fb950;'>✓ Imported "
+                       "“%1”</span>")
+                        .arg(name.isEmpty() ? tr("theme") : name));
+                QTimer::singleShot(4000, m_applyStatusLbl, &QLabel::clear);
+            }
+        });
+
         vbox->addLayout(themeRow);
         vbox->addSpacing(6);
     }

@@ -5,6 +5,10 @@
  */
 
 #include "appconfig.h"
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSaveFile>
 #include <QSettings>
 
 AppConfig::AppConfig() { applyDefaults(colors); }
@@ -494,61 +498,76 @@ const QVector<ColorTheme> &ColorThemes::all()
     return themes;
 }
 
+// One (key, member) row per themable color. mapBand/waveRow arrays are
+// enumerated separately in forEachColor.
+namespace {
+struct ColorField {
+    const char *key;
+    QColor AppColors::*member;
+};
+const ColorField kColorFields[] = {
+    { "hexBg",           &AppColors::hexBg },
+    { "hexText",         &AppColors::hexText },
+    { "hexModified",     &AppColors::hexModified },
+    { "hexSelected",     &AppColors::hexSelected },
+    { "hexOffset",       &AppColors::hexOffset },
+    { "hexHeaderBg",     &AppColors::hexHeaderBg },
+    { "hexHeaderText",   &AppColors::hexHeaderText },
+    { "hexBarDefault",   &AppColors::hexBarDefault },
+    { "mapCellBg",       &AppColors::mapCellBg },
+    { "mapCellText",     &AppColors::mapCellText },
+    { "mapCellModified", &AppColors::mapCellModified },
+    { "mapGridLine",     &AppColors::mapGridLine },
+    { "mapAxisXBg",      &AppColors::mapAxisXBg },
+    { "mapAxisXText",    &AppColors::mapAxisXText },
+    { "mapAxisYBg",      &AppColors::mapAxisYBg },
+    { "mapAxisYText",    &AppColors::mapAxisYText },
+    { "waveBg",          &AppColors::waveBg },
+    { "waveGridMajor",   &AppColors::waveGridMajor },
+    { "waveGridMinor",   &AppColors::waveGridMinor },
+    { "waveLine",        &AppColors::waveLine },
+    { "waveOverviewBg",  &AppColors::waveOverviewBg },
+    { "uiBg",            &AppColors::uiBg },
+    { "uiPanel",         &AppColors::uiPanel },
+    { "uiBorder",        &AppColors::uiBorder },
+    { "uiText",          &AppColors::uiText },
+    { "uiTextDim",       &AppColors::uiTextDim },
+    { "uiAccent",        &AppColors::uiAccent },
+    { "topBarBg",        &AppColors::topBarBg },
+    { "toolbarBg",       &AppColors::toolbarBg },
+    { "statusBarBg",     &AppColors::statusBarBg },
+    { "treeBg",          &AppColors::treeBg },
+    { "treeSelected",    &AppColors::treeSelected },
+    { "buttonBg",        &AppColors::buttonBg },
+    { "buttonText",      &AppColors::buttonText },
+    { "inputBg",         &AppColors::inputBg },
+    { "inputBorder",     &AppColors::inputBorder },
+};
+} // namespace
+
+void AppConfig::forEachColor(AppColors &c,
+    const std::function<void(const QString &, QColor &)> &fn)
+{
+    for (int i = 0; i < 5; ++i)
+        fn(QString("mapBand%1").arg(i), c.mapBand[i]);
+    for (int i = 0; i < 8; ++i)
+        fn(QString("waveRow%1").arg(i), c.waveRow[i]);
+    for (const auto &f : kColorFields)
+        fn(QString::fromUtf8(f.key), c.*(f.member));
+}
+
 void AppConfig::load()
 {
     QSettings s("CT14", "RX14");
     AppColors def; applyDefaults(def);
 
-    auto rd = [&](const QString &key, const QColor &fb) -> QColor {
-        QString v = s.value(key).toString();
-        if (v.isEmpty()) return fb;
-        QColor c(v); return c.isValid() ? c : fb;
-    };
-
-    for (int i = 0; i < 5; ++i)
-        colors.mapBand[i] = rd(QString("colors/mapBand%1").arg(i), def.mapBand[i]);
-    for (int i = 0; i < 8; ++i)
-        colors.waveRow[i] = rd(QString("colors/waveRow%1").arg(i), def.waveRow[i]);
-
-    colors.hexBg         = rd("colors/hexBg",         def.hexBg);
-    colors.hexText       = rd("colors/hexText",       def.hexText);
-    colors.hexModified   = rd("colors/hexModified",   def.hexModified);
-    colors.hexSelected   = rd("colors/hexSelected",   def.hexSelected);
-    colors.hexOffset     = rd("colors/hexOffset",     def.hexOffset);
-    colors.hexHeaderBg   = rd("colors/hexHeaderBg",   def.hexHeaderBg);
-    colors.hexHeaderText = rd("colors/hexHeaderText", def.hexHeaderText);
-    colors.hexBarDefault = rd("colors/hexBarDefault", def.hexBarDefault);
-
-    colors.mapCellBg       = rd("colors/mapCellBg",       def.mapCellBg);
-    colors.mapCellText     = rd("colors/mapCellText",     def.mapCellText);
-    colors.mapCellModified = rd("colors/mapCellModified", def.mapCellModified);
-    colors.mapGridLine     = rd("colors/mapGridLine",     def.mapGridLine);
-    colors.mapAxisXBg      = rd("colors/mapAxisXBg",      def.mapAxisXBg);
-    colors.mapAxisXText    = rd("colors/mapAxisXText",     def.mapAxisXText);
-    colors.mapAxisYBg      = rd("colors/mapAxisYBg",      def.mapAxisYBg);
-    colors.mapAxisYText    = rd("colors/mapAxisYText",     def.mapAxisYText);
-
-    colors.waveBg         = rd("colors/waveBg",         def.waveBg);
-    colors.waveGridMajor  = rd("colors/waveGridMajor",  def.waveGridMajor);
-    colors.waveGridMinor  = rd("colors/waveGridMinor",  def.waveGridMinor);
-    colors.waveLine       = rd("colors/waveLine",       def.waveLine);
-    colors.waveOverviewBg = rd("colors/waveOverviewBg", def.waveOverviewBg);
-
-    colors.uiBg      = rd("colors/uiBg",      def.uiBg);
-    colors.uiPanel   = rd("colors/uiPanel",   def.uiPanel);
-    colors.uiBorder  = rd("colors/uiBorder",  def.uiBorder);
-    colors.uiText    = rd("colors/uiText",    def.uiText);
-    colors.uiTextDim = rd("colors/uiTextDim", def.uiTextDim);
-    colors.uiAccent      = rd("colors/uiAccent",      def.uiAccent);
-    colors.topBarBg      = rd("colors/topBarBg",      def.topBarBg);
-    colors.toolbarBg     = rd("colors/toolbarBg",     def.toolbarBg);
-    colors.statusBarBg   = rd("colors/statusBarBg",   def.statusBarBg);
-    colors.treeBg        = rd("colors/treeBg",        def.treeBg);
-    colors.treeSelected  = rd("colors/treeSelected",  def.treeSelected);
-    colors.buttonBg      = rd("colors/buttonBg",      def.buttonBg);
-    colors.buttonText    = rd("colors/buttonText",    def.buttonText);
-    colors.inputBg       = rd("colors/inputBg",       def.inputBg);
-    colors.inputBorder   = rd("colors/inputBorder",   def.inputBorder);
+    colors = def;
+    forEachColor(colors, [&](const QString &key, QColor &target) {
+        const QString v = s.value("colors/" + key).toString();
+        if (v.isEmpty()) return;                 // keep default
+        const QColor c(v);
+        if (c.isValid()) target = c;
+    });
     showLongMapNames = s.value("display/showLongMapNames", true).toBool();
 
     int sh = s.value("wave2d/shape",
@@ -568,52 +587,9 @@ void AppConfig::load()
 void AppConfig::save()
 {
     QSettings s("CT14", "RX14");
-    auto wr = [&](const QString &key, const QColor &c) {
-        s.setValue(key, c.name(QColor::HexArgb));
-    };
-
-    for (int i = 0; i < 5; ++i) wr(QString("colors/mapBand%1").arg(i), colors.mapBand[i]);
-    for (int i = 0; i < 8; ++i) wr(QString("colors/waveRow%1").arg(i), colors.waveRow[i]);
-
-    wr("colors/hexBg",         colors.hexBg);
-    wr("colors/hexText",       colors.hexText);
-    wr("colors/hexModified",   colors.hexModified);
-    wr("colors/hexSelected",   colors.hexSelected);
-    wr("colors/hexOffset",     colors.hexOffset);
-    wr("colors/hexHeaderBg",   colors.hexHeaderBg);
-    wr("colors/hexHeaderText", colors.hexHeaderText);
-    wr("colors/hexBarDefault", colors.hexBarDefault);
-
-    wr("colors/mapCellBg",       colors.mapCellBg);
-    wr("colors/mapCellText",     colors.mapCellText);
-    wr("colors/mapCellModified", colors.mapCellModified);
-    wr("colors/mapGridLine",     colors.mapGridLine);
-    wr("colors/mapAxisXBg",      colors.mapAxisXBg);
-    wr("colors/mapAxisXText",    colors.mapAxisXText);
-    wr("colors/mapAxisYBg",      colors.mapAxisYBg);
-    wr("colors/mapAxisYText",    colors.mapAxisYText);
-
-    wr("colors/waveBg",         colors.waveBg);
-    wr("colors/waveGridMajor",  colors.waveGridMajor);
-    wr("colors/waveGridMinor",  colors.waveGridMinor);
-    wr("colors/waveLine",       colors.waveLine);
-    wr("colors/waveOverviewBg", colors.waveOverviewBg);
-
-    wr("colors/uiBg",      colors.uiBg);
-    wr("colors/uiPanel",   colors.uiPanel);
-    wr("colors/uiBorder",  colors.uiBorder);
-    wr("colors/uiText",    colors.uiText);
-    wr("colors/uiTextDim", colors.uiTextDim);
-    wr("colors/uiAccent",      colors.uiAccent);
-    wr("colors/topBarBg",      colors.topBarBg);
-    wr("colors/toolbarBg",     colors.toolbarBg);
-    wr("colors/statusBarBg",   colors.statusBarBg);
-    wr("colors/treeBg",        colors.treeBg);
-    wr("colors/treeSelected",  colors.treeSelected);
-    wr("colors/buttonBg",      colors.buttonBg);
-    wr("colors/buttonText",    colors.buttonText);
-    wr("colors/inputBg",       colors.inputBg);
-    wr("colors/inputBorder",   colors.inputBorder);
+    forEachColor(colors, [&](const QString &key, QColor &c) {
+        s.setValue("colors/" + key, c.name(QColor::HexArgb));
+    });
     s.setValue("display/showLongMapNames", showLongMapNames);
 
     s.setValue("wave2d/shape",        static_cast<int>(waveStyle.shape));
@@ -631,4 +607,115 @@ void AppConfig::resetToDefaults()
     applyDefaults(colors);
     waveStyle = WaveStyle();
     emit colorsChanged();
+}
+
+// ── Theme skin files ─────────────────────────────────────────────────────────
+// {
+//   "format": "rx14-theme", "version": 1, "name": "My Skin",
+//   "colors": { "hexBg": "#ff10141b", ... },        // any subset
+//   "wave2d": { "shape": 1, "lineWidth": 1.5, "dotSize": 0,
+//               "fillUnderCurve": false }           // optional
+// }
+
+static const char *kThemeFormatTag = "rx14-theme";
+static constexpr int kThemeVersion = 1;
+
+bool AppConfig::exportTheme(const QString &filePath, const AppColors &colors,
+                            const WaveStyle &style, const QString &name,
+                            QString *errorOut)
+{
+    QJsonObject colorsObj;
+    // forEachColor takes a mutable ref; we only read from it here.
+    forEachColor(const_cast<AppColors &>(colors),
+                 [&](const QString &key, QColor &c) {
+        colorsObj.insert(key, c.name(QColor::HexArgb));
+    });
+
+    QJsonObject waveObj;
+    waveObj.insert("shape",          static_cast<int>(style.shape));
+    waveObj.insert("lineWidth",      style.lineWidth);
+    waveObj.insert("dotSize",        style.dotSize);
+    waveObj.insert("fillUnderCurve", style.fillUnderCurve);
+
+    QJsonObject root;
+    root.insert("format",  QString::fromUtf8(kThemeFormatTag));
+    root.insert("version", kThemeVersion);
+    if (!name.trimmed().isEmpty())
+        root.insert("name", name.trimmed());
+    root.insert("colors", colorsObj);
+    root.insert("wave2d", waveObj);
+
+    QSaveFile f(filePath);
+    if (!f.open(QIODevice::WriteOnly)) {
+        if (errorOut) *errorOut = f.errorString();
+        return false;
+    }
+    f.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
+    if (!f.commit()) {
+        if (errorOut) *errorOut = f.errorString();
+        return false;
+    }
+    return true;
+}
+
+bool AppConfig::importTheme(const QString &filePath, AppColors &colorsOut,
+                            WaveStyle &styleOut, QString *nameOut,
+                            QString *errorOut)
+{
+    QFile f(filePath);
+    if (!f.open(QIODevice::ReadOnly)) {
+        if (errorOut) *errorOut = f.errorString();
+        return false;
+    }
+    QJsonParseError perr;
+    const QJsonDocument doc = QJsonDocument::fromJson(f.readAll(), &perr);
+    if (doc.isNull() || !doc.isObject()) {
+        if (errorOut)
+            *errorOut = perr.error != QJsonParseError::NoError
+                        ? perr.errorString()
+                        : QStringLiteral("not a JSON object");
+        return false;
+    }
+    const QJsonObject root = doc.object();
+    if (root.value("format").toString() != QLatin1String(kThemeFormatTag)) {
+        if (errorOut) *errorOut = QStringLiteral("not a romHEX14 theme file");
+        return false;
+    }
+    if (root.value("version").toInt(1) > kThemeVersion) {
+        if (errorOut)
+            *errorOut = QStringLiteral("theme was made by a newer romHEX14 "
+                                       "version");
+        return false;
+    }
+    const QJsonObject colorsObj = root.value("colors").toObject();
+    if (colorsObj.isEmpty()) {
+        if (errorOut) *errorOut = QStringLiteral("theme has no colors");
+        return false;
+    }
+
+    applyDefaults(colorsOut);                    // partial skins stay valid
+    forEachColor(colorsOut, [&](const QString &key, QColor &target) {
+        const QJsonValue v = colorsObj.value(key);
+        if (!v.isString()) return;
+        const QColor c(v.toString());
+        if (c.isValid()) target = c;
+    });
+
+    styleOut = WaveStyle();
+    const QJsonObject waveObj = root.value("wave2d").toObject();
+    if (!waveObj.isEmpty()) {
+        int sh = waveObj.value("shape")
+                     .toInt(static_cast<int>(WaveStyle::Shape::LineDots));
+        if (sh < 0 || sh > 4) sh = static_cast<int>(WaveStyle::Shape::LineDots);
+        styleOut.shape     = static_cast<WaveStyle::Shape>(sh);
+        styleOut.lineWidth = qBound(0.5, waveObj.value("lineWidth")
+                                             .toDouble(1.5), 6.0);
+        styleOut.dotSize   = qBound(0, waveObj.value("dotSize").toInt(0), 8);
+        styleOut.fillUnderCurve = waveObj.value("fillUnderCurve")
+                                      .toBool(false);
+    }
+
+    if (nameOut)
+        *nameOut = root.value("name").toString();
+    return true;
 }

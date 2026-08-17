@@ -7,6 +7,7 @@
 #pragma once
 #include <QObject>
 #include <QColor>
+#include <functional>
 
 struct AppColors {
     // ── Map highlight bands ─────────────────────────────────────────────────
@@ -112,6 +113,25 @@ public:
     void load();
     void save();
     void resetToDefaults();
+
+    // ── Theme skins (.rx14theme, JSON) ──────────────────────────────────────
+    // Enumerates every themable color as (key, member ref). The QSettings
+    // store, skin export, and skin import all share this one field list, so
+    // adding a color to AppColors + the table wires it everywhere at once.
+    static void forEachColor(AppColors &c,
+        const std::function<void(const QString &key, QColor &color)> &fn);
+
+    // Writes colors + 2D wave style as a versioned JSON skin file.
+    static bool exportTheme(const QString &filePath, const AppColors &colors,
+                            const WaveStyle &style, const QString &name,
+                            QString *errorOut = nullptr);
+
+    // Reads a skin file. Colors start from Midnight defaults and the file's
+    // entries overlay them, so partial skins stay valid; unknown keys are
+    // ignored (older app reading a newer skin degrades gracefully).
+    static bool importTheme(const QString &filePath, AppColors &colorsOut,
+                            WaveStyle &styleOut, QString *nameOut = nullptr,
+                            QString *errorOut = nullptr);
 
 signals:
     void colorsChanged();

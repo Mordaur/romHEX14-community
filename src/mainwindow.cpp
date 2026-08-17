@@ -361,19 +361,8 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
     m_dockManager = new ads::CDockManager();
     m_dockManager->setObjectName(QStringLiteral("workspaceDockManager"));
-    m_dockManager->setColorSchemeMode(ads::CDockManager::ColorSchemeMode::Dark);
-    // ADS's default_dark.css paints the active tab with a palette(window)->palette(dark)
-    // gradient; this app themes via stylesheet so its QPalette stays light and that
-    // gradient renders white->grey. Flatten the dock chrome with explicit dark colors.
-    m_dockManager->setStyleSheet(m_dockManager->styleSheet() + QStringLiteral(
-        "\nads--CDockWidgetTab { background:#0d1117; border-right:1px solid #21262d; }"
-        "\nads--CDockWidgetTab[activeTab=\"true\"] { background:#161b22; }"
-        "\nads--CDockWidgetTab QLabel { color:#7d8590; }"
-        "\nads--CDockWidgetTab[activeTab=\"true\"] QLabel { color:#e7eefc; }"
-        "\nads--CDockAreaTitleBar { background:#0d1117; border-bottom:1px solid #21262d; }"
-        "\nads--CDockWidget { background:#0d1117; border-top:1px solid #21262d; }"
-        "\nads--CDockContainerWidget { background:#0d1117; }"
-        "\nads--CDockAreaWidget { background:#0d1117; }"));
+    // Dock chrome colors come from applyDockManagerTheme(), invoked via
+    // applyUiTheme() below and on every later theme change.
     connect(m_dockManager, &ads::CDockManager::focusedDockWidgetChanged, this,
             [this](ads::CDockWidget *, ads::CDockWidget *current) {
         if (!current)
@@ -9143,22 +9132,9 @@ void MainWindow::applyUiTheme()
     }
     qApp->setStyleSheet(qss);
 
-    // ADS owns its theme stylesheet. FollowPalette keeps its tab, splitter and
-    // drag-overlay assets coherent with the application palette; replacing the
-    // manager stylesheet here would discard those assets.
-    if (m_dockManager) {
-        m_dockManager->setColorSchemeMode(ads::CDockManager::ColorSchemeMode::Dark);
-        // Re-apply the flat dark dock chrome — setColorSchemeMode reloads ADS's CSS.
-        m_dockManager->setStyleSheet(m_dockManager->styleSheet() + QStringLiteral(
-            "\nads--CDockWidgetTab { background:#0d1117; border-right:1px solid #21262d; }"
-            "\nads--CDockWidgetTab[activeTab=\"true\"] { background:#161b22; }"
-            "\nads--CDockWidgetTab QLabel { color:#7d8590; }"
-            "\nads--CDockWidgetTab[activeTab=\"true\"] QLabel { color:#e7eefc; }"
-            "\nads--CDockAreaTitleBar { background:#0d1117; border-bottom:1px solid #21262d; }"
-            "\nads--CDockWidget { background:#0d1117; border-top:1px solid #21262d; }"
-            "\nads--CDockContainerWidget { background:#0d1117; }"
-            "\nads--CDockAreaWidget { background:#0d1117; }"));
-    }
+    // Dock chrome follows the theme too (rebuilds ADS's sheet from scratch,
+    // so repeated re-themes never stack overrides).
+    applyDockManagerTheme();
 
     // Left panel & tree
     auto hex = [](const QColor &col) { return col.name(); };
@@ -9810,6 +9786,55 @@ void MainWindow::showEvent(QShowEvent *e)
         connect(windowHandle(), &QWindow::screenChanged,
                 this, &MainWindow::onScreenChanged);
     }
+}
+
+void MainWindow::applyDockManagerTheme()
+{
+    if (!m_dockManager)
+        return;
+    const AppColors &c = AppConfig::instance().colors;
+
+    // Pick the ADS light/dark bundle from the theme's background, not the
+    // (unused) application palette.
+    const bool light = c.uiBg.lightness() >= 128;
+    m_dockManager->setColorSchemeMode(
+        light ? ads::CDockManager::ColorSchemeMode::Light
+              : ads::CDockManager::ColorSchemeMode::Dark);
+
+    // Rebuild the pristine bundled sheet ourselves (mirrors ADS's private
+    // loadStylesheet file choice) so re-theming never stacks duplicate
+    // overrides on top of an already-overridden sheet.
+    QString cssFile = QStringLiteral(":ads/stylesheets/");
+    cssFile += ads::CDockManager::testConfigFlag(
+                   ads::CDockManager::FocusHighlighting)
+                   ? QStringLiteral("focus_highlighting")
+                   : QStringLiteral("default");
+#if defined(Q_OS_UNIX) && !defined(Q_OS_MACOS)
+    cssFile += QStringLiteral("_linux");
+#endif
+    if (!light)
+        cssFile += QStringLiteral("_dark");
+    cssFile += QStringLiteral(".css");
+
+    QString base;
+    QFile f(cssFile);
+    if (f.open(QIODevice::ReadOnly))
+        base = QString::fromUtf8(f.readAll());
+
+    // ADS's bundled css paints tab chrome from QPalette gradients; this app
+    // themes via stylesheet so the palette is meaningless. Flatten the dock
+    // chrome with the theme's own colors instead of hardcoded dark ones.
+    m_dockManager->setStyleSheet(base + QString(
+        "\nads--CDockWidgetTab { background:%1; border-right:1px solid %2; }"
+        "\nads--CDockWidgetTab[activeTab=\"true\"] { background:%3; }"
+        "\nads--CDockWidgetTab QLabel { color:%4; }"
+        "\nads--CDockWidgetTab[activeTab=\"true\"] QLabel { color:%5; }"
+        "\nads--CDockAreaTitleBar { background:%1; border-bottom:1px solid %2; }"
+        "\nads--CDockWidget { background:%1; border-top:1px solid %2; }"
+        "\nads--CDockContainerWidget { background:%1; }"
+        "\nads--CDockAreaWidget { background:%1; }")
+        .arg(c.uiBg.name(), c.uiBorder.name(), c.uiPanel.name(),
+             c.uiTextDim.name(), c.uiText.name()));
 }
 
 void MainWindow::onScreenChanged(QScreen *scr)
