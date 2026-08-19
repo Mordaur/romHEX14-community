@@ -16,19 +16,10 @@ set(RX14_VERSION_NUMERIC "${RX14_VERSION_MAJOR}.${RX14_VERSION_MINOR}.${RX14_VER
 
 project(RX14 VERSION ${RX14_VERSION_NUMERIC} LANGUAGES C CXX)
 
-# Fetch ADS 5.0.0 during configuration rather than requiring a nested Git
-# checkout. The immutable release commit keeps every developer and CI build on
-# the same code while avoiding an unreleased master snapshot.
-include(FetchContent)
+# Vendored Qt Advanced Docking System 5.0.0 (LGPL-2.1-or-later)
+set(ADS_VERSION "5.0.0" CACHE STRING "ADS version" FORCE)
 set(BUILD_EXAMPLES OFF CACHE BOOL "Build ADS example applications" FORCE)
-FetchContent_Declare(
-    QtAdvancedDockingSystem
-    GIT_REPOSITORY https://github.com/githubuser0xFFFF/Qt-Advanced-Docking-System.git
-    # ADS 5.0.0 release commit
-    GIT_TAG 433b0c90b44d8f17d059204176ff6e0d6d3783e3
-    EXCLUDE_FROM_ALL
-)
-FetchContent_MakeAvailable(QtAdvancedDockingSystem)
+add_subdirectory(third_party/qt-advanced-docking-system EXCLUDE_FROM_ALL)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}" CACHE PATH "" FORCE)
 
 configure_file(
