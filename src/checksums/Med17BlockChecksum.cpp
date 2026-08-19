@@ -270,7 +270,7 @@ struct SubBlock {
 };
 
 struct SubBlockTable {
-    std::array<uint8_t, kMaxBlocks> count{};
+    std::array<uint16_t, kMaxBlocks> count{};
     std::array<std::array<SubBlock, kMaxSubBlocks>, kMaxBlocks> entries{};
 };
 
@@ -279,10 +279,10 @@ void addSubBlockEntry(SubBlockTable& t, uint8_t block, uint32_t start, uint32_t 
 {
     if (block >= kMaxBlocks || type >= kMaxBlocks)
         return;
-    uint8_t& n = t.count[block];
+    uint16_t& n = t.count[block];
     if (n >= kMaxSubBlocks)
         return;
-    for (uint8_t i = 0; i < n; ++i) {
+    for (uint16_t i = 0; i < n; ++i) {
         if (t.entries[block][i].end == start - 1 && t.entries[block][i].type == type) {
             t.entries[block][i].end = end;
             return;
@@ -328,7 +328,7 @@ void buildSubBlockTable(const RomView& rom, const std::vector<Descriptor>& descr
 // FUN_100376d0 — IsOffsetInForeignBlock.
 bool isOffsetInForeignBlock(const SubBlockTable& t, uint8_t block, uint32_t offset)
 {
-    for (uint8_t i = 0; i < t.count[block]; ++i) {
+    for (uint16_t i = 0; i < t.count[block]; ++i) {
         const SubBlock& sb = t.entries[block][i];
         if (sb.start < offset && offset <= sb.end && sb.type != block)
             return true;
@@ -339,7 +339,7 @@ bool isOffsetInForeignBlock(const SubBlockTable& t, uint8_t block, uint32_t offs
 // FUN_10037640 — IsOffsetInOwnBlock.
 bool isOffsetInOwnBlock(const SubBlockTable& t, uint8_t block, uint32_t offset)
 {
-    for (uint8_t i = 0; i < t.count[block]; ++i) {
+    for (uint16_t i = 0; i < t.count[block]; ++i) {
         const SubBlock& sb = t.entries[block][i];
         if (sb.start < offset && offset <= sb.end && sb.type == block)
             return true;
@@ -351,7 +351,7 @@ bool isOffsetInOwnBlock(const SubBlockTable& t, uint8_t block, uint32_t offset)
 uint32_t getFirstSubBlockStart(const SubBlockTable& t, uint8_t block)
 {
     uint32_t result = 0xffffffff;
-    for (uint8_t i = 0; i < t.count[block]; ++i)
+    for (uint16_t i = 0; i < t.count[block]; ++i)
         if (t.entries[block][i].type == block) {
             result = t.entries[block][i].start;
             break;
@@ -363,7 +363,7 @@ uint32_t getFirstSubBlockStart(const SubBlockTable& t, uint8_t block)
 uint32_t getLastSubBlockEnd(const SubBlockTable& t, uint8_t block)
 {
     uint32_t result = 0xffffffff;
-    for (uint8_t i = 0; i < t.count[block]; ++i)
+    for (uint16_t i = 0; i < t.count[block]; ++i)
         if (t.entries[block][i].type == block)
             result = t.entries[block][i].end;
     return result;
@@ -582,7 +582,7 @@ void propagateChecksumAdjustment(const RomView& rom, const SubBlockTable& t,
                                  const std::vector<Descriptor>& descriptors,
                                  uint8_t block, uint32_t offset, uint32_t length, bool write)
 {
-    for (uint8_t i = 0; i < t.count[block]; ++i) {
+    for (uint16_t i = 0; i < t.count[block]; ++i) {
         const SubBlock& sb = t.entries[block][i];
         if (sb.start < offset && offset <= sb.end && sb.type != block)
             adjustChecksumEndBoundary(rom, descriptors[sb.type], offset, length, write);
