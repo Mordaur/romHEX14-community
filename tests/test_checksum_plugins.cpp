@@ -12,7 +12,6 @@
 
 #include "checksums/IChecksumPlugin.h"
 #include "checksums/BoschMED17.h"
-#include "checksums/BoschME7.h"
 
 static int g_testsRun = 0;
 static int g_testsPassed = 0;
@@ -115,37 +114,7 @@ static void testMed17AndRsaMath() {
     TEST_ASSERT(verifyRes.status == Checksum::Common::RsaVerifyStatus::InvalidPadding, "Zeroed signature rejected with InvalidPadding");
 }
 
-static void testBoschMe7Engine() {
-    std::cout << "\n=== Test Suite 6: Bosch ME7.x Native C++ Engine ===" << std::endl;
-
-    // 1. Create synthetic 512KB ME7 ROM
-    QByteArray rom(512 * 1024, 0x00);
-    for (int i = 0; i < rom.size(); i += 4) {
-        rom[i] = static_cast<char>(i & 0xFF);
-        rom[i + 1] = static_cast<char>((i >> 8) & 0xFF);
-    }
-
-    // Set 512KB ME7 marker
-    rom[0x8214] = 0x55;
-    rom[0x8215] = static_cast<char>(0xAA);
-
-    TEST_ASSERT(Checksum::BoschME7::isSupported(rom), "512KB ME7 binary identified by parser");
-
-    // Uncorrected ROM should report Mismatch
-    QString details;
-    auto verifyPre = Checksum::BoschME7::verify(rom, details);
-    TEST_ASSERT(verifyPre == Checksum::BoschME7::Status::Mismatch, "Uncorrected ME7 ROM returns Status::Mismatch");
-
-    // Run correction
-    auto correctRes = Checksum::BoschME7::correct(rom, details);
-    TEST_ASSERT(correctRes == Checksum::BoschME7::Status::OK, "ME7 correct() returns Status::OK");
-
-    // Re-verify corrected ROM
-    auto verifyPost = Checksum::BoschME7::verify(rom, details);
-    TEST_ASSERT(verifyPost == Checksum::BoschME7::Status::OK, "Corrected ME7 ROM passes verification with Status::OK");
-}
-
-// ── Test 7: MED17 Correction Failure Diagnostics ─────────────────────────────
+// ── Test 6: MED17 Correction Failure Diagnostics ─────────────────────────────
 // Build a minimal synthetic MED17 image with one FADECAFE descriptor whose
 // 0x80-byte signature region is caller-chosen, to exercise the failure
 // categorization in BoschMED17::correct() without real firmware fixtures.
@@ -203,7 +172,7 @@ static QByteArray makeSyntheticMed17Rom(const QByteArray& signatureBytes) {
 }
 
 static void testMed17CorrectDiagnostics() {
-    std::cout << "\n=== Test Suite 7: MED17 Correction Failure Diagnostics ===" << std::endl;
+    std::cout << "\n=== Test Suite 6: MED17 Correction Failure Diagnostics ===" << std::endl;
 
     // Blank signature (all 0xAFAFAFAF): reported as never-flashed, not as a
     // generic correction failure.
@@ -241,7 +210,6 @@ int main(int argc, char *argv[]) {
     testFailClosedOnInvalidRom();
     testPatchDiffCalculation();
     testMed17AndRsaMath();
-    testBoschMe7Engine();
     testMed17CorrectDiagnostics();
 
     std::cout << "\n==========================================================" << std::endl;

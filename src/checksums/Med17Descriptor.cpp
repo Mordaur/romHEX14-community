@@ -794,10 +794,10 @@ std::vector<Descriptor> parseDescriptors(const QByteArray& rom)
         // as the SHA-1) at record+0xa0 and flags whether the 128-byte signature
         // region holds a non-blank (non-0xAFAFAFAF) dword.
         descriptor.storedCrc32 = calculateDescriptorCrc32(data, crcStart, crcEndInclusive);
-        descriptor.blankWordFlag = false;
+        descriptor.hasNonBlankWord = false;
         for (size_t i = 0; i < kSignatureSize; i += 4) {
             if (readLe32(data, signatureOffset + i) != 0xafafafafu) {
-                descriptor.blankWordFlag = true;
+                descriptor.hasNonBlankWord = true;
                 break;
             }
         }

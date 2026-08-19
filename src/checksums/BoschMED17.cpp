@@ -113,7 +113,7 @@ BoschMED17::Status BoschMED17::correct(QByteArray& rom, QString& errorMsg) {
         // non-decodable block is structurally invalid — the ROM may be
         // corrupted or signed with an unsupported key.
         if (descriptor.signatureKeyIndex > 0x8b) {
-            if (descriptor.blankWordFlag)
+            if (descriptor.hasNonBlankWord)
                 ++structurallyInvalidCount;
             else
                 ++blankSignatureCount;

@@ -39,7 +39,7 @@ struct Descriptor {
     bool hasSubTable = false;
     uint32_t subTableOffset = 0;
     uint32_t subTableCount = 0;
-    bool blankWordFlag = false;
+    bool hasNonBlankWord = false; // true if signature region contains non-0xAFAFAFAF data (not blank)
     bool rsaSignatureValid = false;
 };
 
